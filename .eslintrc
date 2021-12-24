@@ -1,0 +1,21 @@
+{
+    "extends": [
+        "next/core-web-vitals",
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "plugin:prettier/recommended",
+        "prettier"
+    ],
+    "env": {
+        "es6": true,
+        "jquery": false,
+        "browser": true,
+        "amd": true,
+        "commonjs": true,
+        "node": true
+    },
+    "plugins": ["react", "react-hooks", "prettier"],
+    "rules": {
+        "react/react-in-jsx-scope": 0
+    }
+}
