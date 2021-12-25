@@ -6,7 +6,9 @@ import styles from '../styles/Home.module.css';
 
 export default function Home() {
     useEffect(() => {
-        api.get('/admins').then((res) => alert(res.data));
+        api.get('/admins', { params: { page: 0, limit: 10 } }).then((res) =>
+            alert(res.data),
+        );
     }, []);
 
     return (
