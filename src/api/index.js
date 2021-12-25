@@ -12,4 +12,6 @@ export const serverSideApi = axios.create({
     withCredentials: true,
 });
 
+export const fetcher = (...args) => api.get(...args).then((res) => res.data);
+
 export default api;

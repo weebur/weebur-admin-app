@@ -11,25 +11,24 @@ const StyledContentLayout = styled(Layout)`
 `;
 
 const StyledContent = styled(Content)`
-    margin: 24px 46px 0;
+    margin: 24px auto 0;
+    width: 100%;
+    max-width: 1600px;
     overflow: initial;
 `;
 
 const LayoutBackground = styled.div`
     display: flex;
     flex-direction: column;
-    padding: 24px;
 `;
 
 function AppLayout({ children }) {
     return (
         <StyledLayout>
             <SideBar />
-            <StyledContentLayout className="site-layout">
+            <StyledContentLayout>
                 <StyledContent>
-                    <LayoutBackground className="site-layout-background">
-                        {children}
-                    </LayoutBackground>
+                    <LayoutBackground>{children}</LayoutBackground>
                 </StyledContent>
             </StyledContentLayout>
         </StyledLayout>

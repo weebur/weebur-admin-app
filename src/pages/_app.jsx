@@ -1,5 +1,6 @@
-import '../styles/globals.css';
 import 'antd/dist/antd.css';
+import '../styles/globals.css';
+
 import AppLayout from '../component/Layout';
 import { ConfigProvider } from 'antd';
 import theme from '../theme';

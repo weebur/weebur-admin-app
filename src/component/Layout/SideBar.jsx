@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import { menu } from '../../constants/menu';
 
 const Logo = styled.div`
-    padding: 20px;
+    margin-top: 40px;
+    padding: 10px 24px;
 `;
 
 const AdminUser = styled.div`
@@ -14,7 +15,7 @@ const AdminUser = styled.div`
     justify-content: center;
     align-items: center;
     margin: 20px 0;
-    min-height: 100px;
+    padding: 10px 0;
 `;
 
 const StyledSider = styled(Sider)`
