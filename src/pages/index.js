@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect } from 'react';
-import api from '../api';
 import styles from '../styles/Home.module.css';
 
 export default function Home() {
