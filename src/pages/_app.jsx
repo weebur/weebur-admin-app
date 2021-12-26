@@ -1,22 +1,18 @@
-import 'antd/dist/antd.css';
+import 'antd/dist/antd.variable.min.css';
 import '../styles/globals.css';
 
-import AppLayout from '../component/Layout';
 import { ConfigProvider } from 'antd';
+import AppLayout from '../component/Layout';
 import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
-import React from 'react';
 
 typeof window !== 'undefined' &&
     ConfigProvider.config({
         theme: {
             primaryColor: theme.color.primary,
+            textColor: theme.color.text,
         },
     });
-
-if (typeof document === 'undefined') {
-    React.useLayoutEffect = React.useEffect;
-}
 
 function MyApp({ Component, pageProps }) {
     return (

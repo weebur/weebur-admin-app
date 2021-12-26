@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import { useEffect } from 'react';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import ContentSpace from '../../component/Layout/ContentSpace';
@@ -23,6 +23,7 @@ function Admins() {
                 <div>검색 영역</div>
                 <div>
                     <AdminsSearchForm />
+                    <Button type="primary">검색</Button>
                 </div>
             </ContentSpace>
         </ContentLayout>
