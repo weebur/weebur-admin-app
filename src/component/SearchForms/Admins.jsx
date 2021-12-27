@@ -1,30 +1,35 @@
 import { useForm } from 'react-hook-form';
 import Input from '../Form/Input';
+import SubmitButton from '../Form/SubmitButton';
 
-function AdminsSearchForm() {
-    const {
-        register,
-        handleSubmit,
-        watch,
-        formState: { errors },
-    } = useForm();
-    const onSubmit = (data) => console.log(data);
+import styled from 'styled-components';
 
-    console.log(watch('example')); // watch input value by passing the name of it
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+`;
+
+const InputWrapper = styled.div`
+    display: flex;
+    gap: 10px;
+`;
+
+function AdminsSearchForm({ onSubmit }) {
+    const { register, handleSubmit } = useForm();
 
     return (
-        /* "handleSubmit" will validate your inputs before invoking "onSubmit" */
-        <form onSubmit={handleSubmit(onSubmit)}>
-            {/* register your input into the hook by invoking the "register" function */}
-            <Input label="이름" defaultValue="test" {...register('example')} />
+        <Form onSubmit={handleSubmit(onSubmit)}>
+            <InputWrapper>
+                <Input label="이름" {...register('name')} />
+                <Input label="이메일" {...register('email')} />
+            </InputWrapper>
 
-            {/* include validation with required or other standard HTML validation rules */}
-            <Input {...register('exampleRequired', { required: true })} />
-            {/* errors will return when field validation fails  */}
-            {errors.exampleRequired && <span>This field is required</span>}
-
-            <input type="submit" />
-        </form>
+            <InputWrapper>
+                <SubmitButton text="검색" />
+            </InputWrapper>
+        </Form>
     );
 }
 

@@ -1,29 +1,62 @@
 import { forwardRef, useState } from 'react';
 import styled from 'styled-components';
 
-const StyledLabel = styled.label``;
+const InputWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+`;
 
-const StyledInput = styled.input``;
+const StyledLabel = styled.label`
+    color: ${({ theme }) => theme.color.light};
+    font-size: ${({ theme }) => theme.fontSize.small};
+
+    ${({ focused, theme }) =>
+        focused &&
+        `
+        color: ${theme.color.text}
+    `}
+`;
+
+const StyledInput = styled.input`
+    display: flex;
+    align-items: center;
+    outline: none;
+    box-sizing: border-box;
+
+    color: ${({ theme }) => theme.color.light};
+    border: 1px solid ${({ theme }) => theme.color.light};
+    border-radius: 4px;
+
+    padding: 10px 12px;
+    height: 40px;
+    width: 100%;
+    font-size: 15px;
+
+    :focus {
+        border: 1px solid ${({ theme }) => theme.color.text};
+        color: ${({ theme }) => theme.color.text};
+    }
+`;
 
 const Input = forwardRef((props, ref) => {
     const [focused, setFocused] = useState(false);
     const { label, ...rest } = props;
+
     return (
-        <div>
+        <InputWrapper>
             <StyledLabel focused={focused}>{label}</StyledLabel>
             <StyledInput
                 ref={ref}
-                onFocus={(e) => {
+                autoComplete="off"
+                onFocus={() => {
                     setFocused(true);
-                    rest.onFocus(e);
                 }}
-                onBlur={(e) => {
+                onBlurCapture={() => {
                     setFocused(false);
-                    rest.onBlur(e);
                 }}
                 {...rest}
             />
-        </div>
+        </InputWrapper>
     );
 });
 

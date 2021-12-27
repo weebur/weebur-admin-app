@@ -3,6 +3,7 @@ import { Space } from 'antd';
 import styled from 'styled-components';
 
 const StyledSpace = styled(Space)`
+    display: flex;
     background: #ffffff;
     width: 100%;
     border-radius: 5px;
