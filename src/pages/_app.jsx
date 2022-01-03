@@ -14,7 +14,7 @@ typeof window !== 'undefined' &&
         },
     });
 
-function MyApp({ Component, pageProps }) {
+function App({ Component, pageProps }) {
     return (
         <ThemeProvider theme={theme}>
             <AppLayout>
@@ -24,4 +24,4 @@ function MyApp({ Component, pageProps }) {
     );
 }
 
-export default MyApp;
+export default App;

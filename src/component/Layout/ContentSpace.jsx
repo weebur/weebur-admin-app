@@ -1,8 +1,6 @@
-import { Space } from 'antd';
-
 import styled from 'styled-components';
 
-const StyledSpace = styled(Space)`
+const StyledSpace = styled.div`
     display: flex;
     background: #ffffff;
     width: 100%;

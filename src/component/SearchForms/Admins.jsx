@@ -3,6 +3,7 @@ import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
 
 import styled from 'styled-components';
+import CommonButton from '../Button';
 
 const Form = styled.form`
     display: flex;
@@ -16,8 +17,8 @@ const InputWrapper = styled.div`
     gap: 10px;
 `;
 
-function AdminsSearchForm({ onSubmit }) {
-    const { register, handleSubmit } = useForm();
+function AdminsSearchForm({ defaultValues = {}, onSubmit, onReset }) {
+    const { register, handleSubmit } = useForm({ defaultValues });
 
     return (
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -28,6 +29,7 @@ function AdminsSearchForm({ onSubmit }) {
 
             <InputWrapper>
                 <SubmitButton text="검색" />
+                <CommonButton onClick={onReset}>초기화</CommonButton>
             </InputWrapper>
         </Form>
     );

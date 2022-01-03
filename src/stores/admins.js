@@ -1,22 +1,39 @@
 import create from 'zustand';
 import { fetchAdmins } from '../api/AdminAPI';
+import { toQueryObject } from '../utils/queryString';
 
-export const useAdminsStore = create((set) => ({
-    admins: [],
-    pageInfo: {},
+const useAdminsStore = create((set) => ({
+    admins: {},
     loading: false,
     error: null,
-    fetchAdmins: async ({ page, limit }) => {
+    fetchAdmins: async ({ name, email, page, limit }, loadMore) => {
         try {
-            set(() => ({ loading: true }));
-            const { result: admins, ...pageInfo } = await fetchAdmins({
-                page,
-                limit,
-            });
+            set({ loading: true });
 
-            set(() => ({ admins, pageInfo, loading: false }));
+            const admins = await fetchAdmins(
+                toQueryObject({ name, email, page, limit }),
+            );
+
+            if (loadMore) {
+                set((state) => ({
+                    admins: {
+                        ...admins,
+                        result: [
+                            ...(state.admins?.result || []),
+                            ...admins.result,
+                        ],
+                    },
+                }));
+            } else {
+                set({ admins });
+            }
+
+            set({ loading: false });
         } catch (error) {
-            set(() => ({ error }));
+            set({ error });
+            set({ loading: false });
         }
     },
 }));
+
+export default useAdminsStore;
