@@ -3,7 +3,8 @@ import { Button, Col, Row } from 'antd';
 import styled from 'styled-components';
 
 const StyledCol = styled(Col)`
-    font-size: ${({ theme }) => theme.fontSize.large};
+    padding-left: 10px;
+    font-size: ${({ theme }) => theme.fontSize.xxLarge};
     font-weight: 400;
 `;
 

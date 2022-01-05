@@ -1,4 +1,4 @@
-import { Spin, Typography } from 'antd';
+import { Typography } from 'antd';
 import styled from 'styled-components';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import ContentSpace from '../../component/Layout/ContentSpace';
@@ -6,7 +6,7 @@ import AdminsSearchForm from '../../component/SearchForms/Admins';
 
 import { useRouter } from 'next/router';
 import { toQueryObject } from '../../utils/queryString';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useAdminsStore from '../../stores/admins';
 import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 import List from '../../component/List';
@@ -16,12 +16,15 @@ import Loader from '../../component/Loader';
 const limit = 15;
 
 const SearchFormWrapper = styled.div`
-    padding: 20px 0;
+    padding: 50px 0;
 `;
 
 const SummaryWrapper = styled.div`
-    padding: 20px 0;
-    margin-top: 20px;
+    margin: 55px 0 30px;
+`;
+
+const SearchFormTitle = styled.div`
+    margin-bottom: 18px;
 `;
 
 function Admins({ name, email }) {
@@ -29,7 +32,7 @@ function Admins({ name, email }) {
 
     const ref = useRef();
 
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
 
     const fetchAdmins = useAdminsStore((state) => state.fetchAdmins);
@@ -39,7 +42,7 @@ function Admins({ name, email }) {
     const loadAdmins = async (more) => {
         setIsLoading(true);
 
-        await fetchAdmins({ page: more ? page : 1, limit, name, email }, more);
+        await fetchAdmins({ page: more ? page : 0, limit, name, email }, more);
 
         setIsLoading(false);
     };
@@ -54,16 +57,20 @@ function Admins({ name, email }) {
 
     useEffect(() => {
         loadAdmins();
+        setPage(0);
     }, [name, email]);
 
     useEffect(() => {
-        if (isLoading || page === 1) return;
+        if (isLoading || !page) return;
         loadAdmins(true);
     }, [page]);
 
     return (
-        <ContentLayout title="어드민 목록">
-            <Typography.Title level={5}>어드민 검색</Typography.Title>
+        <ContentLayout>
+            <SearchFormTitle>
+                <Typography.Title level={4}>어드민 검색</Typography.Title>
+            </SearchFormTitle>
+
             <ContentSpace align="center">
                 <SearchFormWrapper>
                     <AdminsSearchForm

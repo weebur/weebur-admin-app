@@ -9,7 +9,7 @@ const Form = styled.form`
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 30px;
 `;
 
 const InputWrapper = styled.div`
@@ -29,7 +29,9 @@ function AdminsSearchForm({ defaultValues = {}, onSubmit, onReset }) {
 
             <InputWrapper>
                 <SubmitButton text="검색" />
-                <CommonButton onClick={onReset}>초기화</CommonButton>
+                <CommonButton light onClick={onReset}>
+                    초기화
+                </CommonButton>
             </InputWrapper>
         </Form>
     );

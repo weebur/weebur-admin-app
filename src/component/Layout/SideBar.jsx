@@ -24,7 +24,7 @@ const StyledSider = styled(Sider)`
     position: fixed;
     left: 0;
     background: #ffffff;
-    border-right: 1px solid ${({ theme }) => theme.color.lightBorder};
+    border-right: none;
 `;
 
 const StyledMenu = styled(Menu)`

@@ -30,10 +30,10 @@ const StyledInput = styled.input`
     padding: 10px 12px;
     height: 40px;
     width: 100%;
-    font-size: 15px;
+    font-size: ${({ theme }) => theme.fontSize.large};
 
     :focus {
-        border: 1px solid ${({ theme }) => theme.color.text};
+        border: 1px solid ${({ theme }) => theme.color.primary};
         color: ${({ theme }) => theme.color.text};
     }
 `;
