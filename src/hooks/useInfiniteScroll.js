@@ -22,8 +22,6 @@ function useInfiniteScroll(callback, target, disconnect, deps = []) {
             observer.disconnect();
         };
     }, [handleObserver, target, disconnect, ...deps]);
-
-    return {};
 }
 
 export default useInfiniteScroll;

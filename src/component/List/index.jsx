@@ -1,11 +1,7 @@
-import { Col, Row } from 'antd';
-import Grid from 'antd/lib/card/Grid';
-import Paragraph from 'antd/lib/typography/Paragraph';
-import Text from 'antd/lib/typography/Text';
-import { forwardRef } from 'react';
+import { Checkbox, Col, Row } from 'antd';
+import { forwardRef, useState } from 'react';
 
 import styled from 'styled-components';
-import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 
 const ListWrapper = styled.div`
     display: flex;
@@ -20,12 +16,26 @@ const StyledRow = styled(Row)`
     height: 80px;
     padding: 0 10px;
     border-bottom: 1px solid ${({ theme }) => theme.color.lightBorder};
+    font-size: ${({ theme }) => theme.fontSize.large};
+    transition: background 0.3s;
+    cursor: pointer;
+
+    ${({ checked, theme }) =>
+        checked &&
+        `
+        background: ${theme.color.lightBackground}
+    `}
+
+    :hover {
+        background: ${({ theme }) => theme.color.lightBackground};
+    }
 `;
 
 const StyledHeader = styled(Row)`
-    padding: 10px;
-    border-bottom: 1.5px solid ${({ theme }) => theme.color.text};
+    padding: 13px 10px;
+    border-bottom: 2px solid ${({ theme }) => theme.color.text};
     color: ${({ theme }) => theme.color.light};
+    text-align: left;
 `;
 
 const Ellipsis = styled.div`
@@ -37,37 +47,76 @@ const Ellipsis = styled.div`
     word-wrap: break-word;
 `;
 
-const List = forwardRef(function NestedList({ data = [] }, ref) {
+const List = forwardRef(function NestedList(
+    { data = [], headers, withCheckBox },
+    ref,
+) {
+    const [checkedList, setCheckedList] = useState([]);
+    const [indeterminate, setIndeterminate] = useState(true);
+    const [checkAll, setCheckAll] = useState(false);
+
+    const handleCheckBoxChange = (item) => {
+        let listLength = checkedList.length;
+
+        if (checkedList.includes(item)) {
+            listLength--;
+            setCheckedList(
+                checkedList.filter((checkedItem) => checkedItem !== item),
+            );
+        } else {
+            listLength++;
+            setCheckedList([...checkedList, item]);
+        }
+
+        setIndeterminate(data.length > listLength && listLength > 0);
+        setCheckAll(data.length === listLength);
+    };
+
+    const handleCheckAllChange = (e) => {
+        const checked = e.target.checked;
+
+        setCheckedList(checked ? data.map((item) => item.id) : []);
+        setIndeterminate(false);
+        setCheckAll(checked);
+    };
+
     return (
         <ListWrapper>
             <StyledHeader>
-                <Col span={8}>이름</Col>
-                <Col span={8}>등급</Col>
-                <Col span={8}>이메일</Col>
+                {withCheckBox && (
+                    <Col span={1}>
+                        <Checkbox
+                            indeterminate={indeterminate}
+                            onChange={handleCheckAllChange}
+                            checked={checkAll}
+                        />
+                    </Col>
+                )}
+                {headers.map(({ key, label, span }) => (
+                    <Col key={key} span={span}>
+                        {label}
+                    </Col>
+                ))}
             </StyledHeader>
-            {data.map((item, i) => {
+            {data.map(({ id, rows }, i) => {
                 const isLast = i === data.length - 1;
                 return (
-                    <StyledRow
-                        ref={isLast ? ref : null}
-                        key={item._id}
-                        gutter={10}
-                    >
-                        <Col span={8}>
-                            <Ellipsis ellipsis={{ rows: 2 }}>
-                                {item.name}
-                            </Ellipsis>
+                    <StyledRow ref={isLast ? ref : null} key={id} gutter={10}>
+                        <Col span={1}>
+                            <Checkbox
+                                onChange={(e) => {
+                                    handleCheckBoxChange(id, e.target.checked);
+                                }}
+                                checked={checkedList.includes(id)}
+                            />
                         </Col>
-                        <Col span={8}>
-                            <Ellipsis ellipsis={{ rows: 2 }}>
-                                {item.class}
-                            </Ellipsis>
-                        </Col>
-                        <Col span={8}>
-                            <Ellipsis ellipsis={{ rows: 2 }}>
-                                {item.email}
-                            </Ellipsis>
-                        </Col>
+                        {rows.map(({ key, span, Component }) => (
+                            <Col key={key} span={span}>
+                                <Ellipsis ellipsis={{ rows: 2 }}>
+                                    {Component}
+                                </Ellipsis>
+                            </Col>
+                        ))}
                     </StyledRow>
                 );
             })}

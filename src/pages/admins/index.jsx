@@ -27,6 +27,12 @@ const SearchFormTitle = styled.div`
     margin-bottom: 18px;
 `;
 
+const headers = [
+    { key: 'name', label: '이름', span: 7 },
+    { key: 'class', label: '등급', span: 8 },
+    { key: 'email', label: '이메일', span: 8 },
+];
+
 function Admins({ name, email }) {
     const router = useRouter();
 
@@ -38,6 +44,19 @@ function Admins({ name, email }) {
     const fetchAdmins = useAdminsStore((state) => state.fetchAdmins);
     const admins = useAdminsStore((state) => state.admins);
     const { hasNext } = admins;
+
+    const adminList = admins?.result?.map((result) => {
+        return {
+            id: result._id,
+            rows: headers.map(({ key, span }) => {
+                return {
+                    key,
+                    Component: result[key],
+                    span,
+                };
+            }),
+        };
+    });
 
     const loadAdmins = async (more) => {
         setIsLoading(true);
@@ -90,7 +109,12 @@ function Admins({ name, email }) {
             </SummaryWrapper>
 
             <ContentSpace>
-                <List ref={ref} data={admins.result} />
+                <List
+                    withCheckBox
+                    ref={ref}
+                    headers={headers}
+                    data={adminList}
+                />
                 {isLoading && <Loader />}
             </ContentSpace>
         </ContentLayout>

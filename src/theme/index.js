@@ -2,7 +2,7 @@ const theme = {
     color: {
         main: '#242545',
         primary: '#1152f2',
-        lightBorder: '#f0f0f0',
+        lightBorder: '#cfcfcf',
         light: '#a5a5a5',
         text: '#313131',
         hover: '#5297ff',

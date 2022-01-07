@@ -28,8 +28,8 @@ function AdminsSearchForm({ defaultValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper>
-                <SubmitButton text="검색" />
-                <CommonButton light onClick={onReset}>
+                <SubmitButton small primary text="검색" />
+                <CommonButton small light onClick={onReset}>
                     초기화
                 </CommonButton>
             </InputWrapper>

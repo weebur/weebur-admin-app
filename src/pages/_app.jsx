@@ -5,6 +5,9 @@ import { ConfigProvider } from 'antd';
 import AppLayout from '../component/Layout';
 import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
+import { setTwoToneColor } from '@ant-design/icons';
+
+setTwoToneColor(theme.color.primary);
 
 typeof window !== 'undefined' &&
     ConfigProvider.config({

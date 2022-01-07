@@ -54,8 +54,8 @@ const StyledInput = styled.input`
     }
 `;
 
-function SubmitButton({ text = '제출' }) {
-    return <StyledInput type="submit" value={text} />;
+function SubmitButton({ text = '제출', ...props }) {
+    return <StyledInput type="submit" value={text} {...props} />;
 }
 
 export default SubmitButton;

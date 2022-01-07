@@ -28,8 +28,9 @@ const StyledInput = styled.input`
     border-radius: 4px;
 
     padding: 10px 12px;
-    height: 40px;
+    height: 44px;
     width: 100%;
+    min-width: 210px;
     font-size: ${({ theme }) => theme.fontSize.large};
 
     :focus {
