@@ -30,6 +30,14 @@ function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
     return (
         <Form onSubmit={formik.handleSubmit}>
             <InputWrapper>
+                <RangePicker
+                    label="등록일"
+                    onChange={formik.setFieldValue}
+                    from={formik.values.from}
+                    to={formik.values.to}
+                />
+            </InputWrapper>
+            <InputWrapper>
                 <Input
                     name="name"
                     label="이름"
@@ -43,15 +51,6 @@ function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     onChange={formik.setFieldValue}
                     value={formik.values.category}
                     options={Object.values(companyCategories)}
-                />
-            </InputWrapper>
-
-            <InputWrapper>
-                <RangePicker
-                    label="등록일"
-                    onChange={formik.setFieldValue}
-                    from={formik.values.from}
-                    to={formik.values.to}
                 />
             </InputWrapper>
 

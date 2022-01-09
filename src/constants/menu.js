@@ -24,10 +24,15 @@ export const menu = [
         path: '/workshops/calendar',
         Icon: CalendarOutlined,
     },
-    { key: 'clients', name: '회원 관리', path: '/clients', Icon: UserOutlined },
+    {
+        key: 'clients',
+        name: '회원 관리(ok)',
+        path: '/clients',
+        Icon: UserOutlined,
+    },
     {
         key: 'companies',
-        name: '회사 관리',
+        name: '회사 관리(ok)',
         path: '/companies',
         Icon: GlobalOutlined,
     },
@@ -51,7 +56,7 @@ export const menu = [
     },
     {
         key: 'admins',
-        name: '어드민',
+        name: '어드민(ok)',
         path: '/admins',
         Icon: SettingOutlined,
     },

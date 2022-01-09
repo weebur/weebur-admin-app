@@ -8,7 +8,7 @@ const InputWrapper = styled.div`
     flex-direction: column;
 `;
 
-const StyledSelect = styled(Select)`
+export const StyledSelect = styled(Select)`
     & > .ant-select-selector {
         display: flex;
         align-items: center;
@@ -23,17 +23,22 @@ const StyledSelect = styled(Select)`
         border: solid 1px
             ${({ focused, theme }) =>
                 focused ? theme.color.primary : theme.color.light};
-    }
 
-    .ant-select-selection-item {
-        padding: 9px 5px 10px 10px;
+        .ant-select-selection-search {
+            display: flex;
+            align-items: center;
+            padding: 9px 6px 10px 10px;
+        }
+
+        .ant-select-selection-item {
+            padding-left: 5px;
+        }
     }
 `;
 
 function SelectBox({ options, label, onChange, ...props }) {
     const [focused, setFocused] = useState(false);
 
-    console.log(focused);
     return (
         <InputWrapper>
             <Label focused={focused}>{label}</Label>

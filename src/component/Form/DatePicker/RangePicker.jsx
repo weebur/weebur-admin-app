@@ -29,7 +29,7 @@ function RangePicker({ onChange, from, to, label }) {
                         onFocus={() => {
                             setFocused(true);
                         }}
-                        onBlurCapture={() => {
+                        onBlur={() => {
                             setFocused(false);
                         }}
                     />
@@ -43,7 +43,7 @@ function RangePicker({ onChange, from, to, label }) {
                         onFocus={() => {
                             setFocused(true);
                         }}
-                        onBlurCapture={() => {
+                        onBlur={() => {
                             setFocused(false);
                         }}
                     />

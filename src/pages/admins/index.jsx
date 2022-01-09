@@ -37,7 +37,6 @@ function Admins({ name, email }) {
     });
 
     const fetchNext = () => {
-        console.log('fetch');
         fetchAdmins(
             { ...searchQueries, page: next, limit: SEARCH_LIMIT },
             true,

@@ -1,6 +1,5 @@
 import create from 'zustand';
 import { fetchAdmins } from '../api/AdminAPI';
-import { toQueryObject } from '../utils/queryString';
 
 const useAdminsStore = create((set) => ({
     admins: {},
@@ -10,9 +9,7 @@ const useAdminsStore = create((set) => ({
         try {
             set({ loading: true });
 
-            const admins = await fetchAdmins(
-                toQueryObject({ name, email, page, limit }),
-            );
+            const admins = await fetchAdmins({ name, email, page, limit });
 
             if (loadMore) {
                 set((state) => ({

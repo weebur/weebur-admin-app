@@ -40,6 +40,10 @@ const StyledHeader = styled(Row)`
     text-align: left;
 `;
 
+const StyledCol = styled(Col)`
+    padding: 0 5px;
+`;
+
 const Ellipsis = styled.div`
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -83,18 +87,18 @@ function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
         <ListWrapper>
             <StyledHeader>
                 {withCheckBox && (
-                    <Col span={1}>
+                    <StyledCol span={1}>
                         <Checkbox
                             indeterminate={indeterminate}
                             onChange={handleCheckAllChange}
                             checked={checkAll}
                         />
-                    </Col>
+                    </StyledCol>
                 )}
                 {headers.map(({ key, label, span }) => (
-                    <Col key={key} span={span}>
+                    <StyledCol key={key} span={span}>
                         {label}
-                    </Col>
+                    </StyledCol>
                 ))}
             </StyledHeader>
             <InfiniteScroll
@@ -116,7 +120,7 @@ function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
                     return (
                         <StyledRow key={id} gutter={10}>
                             {withCheckBox && (
-                                <Col span={1}>
+                                <StyledCol span={1}>
                                     <Checkbox
                                         onChange={(e) => {
                                             handleCheckBoxChange(
@@ -126,14 +130,14 @@ function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
                                         }}
                                         checked={checkedList.includes(id)}
                                     />
-                                </Col>
+                                </StyledCol>
                             )}
                             {rows.map(({ key, span, Component }) => (
-                                <Col key={key} span={span}>
+                                <StyledCol key={key} span={span}>
                                     <Ellipsis ellipsis={{ rows: 2 }}>
                                         {Component}
                                     </Ellipsis>
-                                </Col>
+                                </StyledCol>
                             ))}
                         </StyledRow>
                     );

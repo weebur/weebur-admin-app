@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import Label from '../Label';
 import { useState } from 'react';
+import { COMMON_FORMAT } from '../../../constants/date';
 
 const DayjsPicker = dynamic(() => import('./DayjsPicker'), { ssr: false });
 
@@ -39,7 +40,7 @@ function DatePicker({ label, value, name, onChange, ...props }) {
             <Label focused={focused}>{label}</Label>
             <StyledDatePicker
                 name={name}
-                format="YY-MM-DD"
+                format={COMMON_FORMAT}
                 picker="date"
                 placeholder="날짜를 선택해주세요"
                 value={value ? dayjs(value) : null}
@@ -49,7 +50,7 @@ function DatePicker({ label, value, name, onChange, ...props }) {
                 onFocus={() => {
                     setFocused(true);
                 }}
-                onBlurCapture={() => {
+                onBlur={() => {
                     setFocused(false);
                 }}
                 {...props}

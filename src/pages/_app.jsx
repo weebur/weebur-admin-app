@@ -18,9 +18,11 @@ typeof window !== 'undefined' &&
     });
 
 function App({ Component, pageProps }) {
+    const { withoutSidebar } = pageProps;
+
     return (
         <ThemeProvider theme={theme}>
-            <AppLayout>
+            <AppLayout withSidebar={!withoutSidebar}>
                 <Component {...pageProps} />
             </AppLayout>
         </ThemeProvider>

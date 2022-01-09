@@ -1,6 +1,5 @@
 import create from 'zustand';
 import { fetchCompanies } from '../api/companyAPI';
-import { toQueryObject } from '../utils/queryString';
 
 const useCompaniesStore = create((set) => ({
     companies: {},
@@ -13,9 +12,14 @@ const useCompaniesStore = create((set) => ({
         try {
             set({ loading: true });
 
-            const companies = await fetchCompanies(
-                toQueryObject({ name, category, from, to, page, limit }),
-            );
+            const companies = await fetchCompanies({
+                name,
+                category,
+                from,
+                to,
+                page,
+                limit,
+            });
 
             if (loadMore) {
                 set((state) => ({

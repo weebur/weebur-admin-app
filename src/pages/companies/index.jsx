@@ -84,7 +84,7 @@ function Companies({ name, category, from, to }) {
 }
 
 export const getServerSideProps = (ctx) => {
-    const { name = '', category = '', from = null, to = null } = ctx.query;
+    const { name = '', category = '', from = '', to = '' } = ctx.query;
 
     return {
         props: {
