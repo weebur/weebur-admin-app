@@ -1,8 +1,8 @@
 import 'antd/dist/antd.variable.min.css';
 import '../styles/globals.css';
 
+import React from 'react';
 import { ConfigProvider } from 'antd';
-import AppLayout from '../component/Layout';
 import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
 import { setTwoToneColor } from '@ant-design/icons';
@@ -17,14 +17,14 @@ typeof window !== 'undefined' &&
         },
     });
 
-function App({ Component, pageProps }) {
-    const { withoutSidebar } = pageProps;
+if (typeof document === 'undefined') {
+    React.useLayoutEffect = React.useEffect;
+}
 
+function App({ Component, pageProps }) {
     return (
         <ThemeProvider theme={theme}>
-            <AppLayout withSidebar={!withoutSidebar}>
-                <Component {...pageProps} />
-            </AppLayout>
+            <Component {...pageProps} />
         </ThemeProvider>
     );
 }

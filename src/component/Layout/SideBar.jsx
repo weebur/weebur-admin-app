@@ -1,8 +1,8 @@
+import { useEffect } from 'react';
 import { Image, Menu } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useEffect } from 'react/cjs/react.development';
 import styled from 'styled-components';
 import { menu } from '../../constants/menu';
 

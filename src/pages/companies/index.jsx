@@ -7,6 +7,7 @@ import { SEARCH_LIMIT } from '../../constants';
 import CompaniesSearchForm from '../../component/SearchForms/Companies';
 import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
+import AppLayout from '../../component/Layout';
 
 const headers = [
     { key: 'name', label: '회사명', span: 8 },
@@ -55,31 +56,38 @@ function Companies({ name, category, from, to }) {
     }, [name, category, from, to]);
 
     return (
-        <ContentLayout>
-            <SearchList
-                title="회사 검색"
-                headers={headers}
-                items={companyList}
-                totalLength={totalResults || 0}
-                hasNext={hasNext}
-                searchQueries={searchQueries}
-                fetchData={fetchNext}
-                initialPage={page}
-                loading={loading}
-                nextPage={next}
-            >
-                <CompaniesSearchForm
-                    initialValues={{ name, category, from, to }}
-                    onSubmit={({ name, category, from, to }) => {
-                        resetCompanies();
-                        router.push({
-                            pathname: '/companies',
-                            query: toQueryObject({ name, category, from, to }),
-                        });
-                    }}
-                />
-            </SearchList>
-        </ContentLayout>
+        <AppLayout>
+            <ContentLayout>
+                <SearchList
+                    title="회사 검색"
+                    headers={headers}
+                    items={companyList}
+                    totalLength={totalResults || 0}
+                    hasNext={hasNext}
+                    searchQueries={searchQueries}
+                    fetchData={fetchNext}
+                    initialPage={page}
+                    loading={loading}
+                    nextPage={next}
+                >
+                    <CompaniesSearchForm
+                        initialValues={{ name, category, from, to }}
+                        onSubmit={({ name, category, from, to }) => {
+                            resetCompanies();
+                            router.push({
+                                pathname: '/companies',
+                                query: toQueryObject({
+                                    name,
+                                    category,
+                                    from,
+                                    to,
+                                }),
+                            });
+                        }}
+                    />
+                </SearchList>
+            </ContentLayout>
+        </AppLayout>
     );
 }
 

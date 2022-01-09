@@ -9,6 +9,7 @@ import useClientStore from '../../stores/clients';
 import SearchList from '../../component/page-components/SearchList';
 import { clientsTypes } from '../../constants/client';
 import { COMMON_FORMAT } from '../../constants/date';
+import AppLayout from '../../component/Layout';
 
 const headers = [
     {
@@ -78,31 +79,33 @@ function Client({ name, company, mobile, email, from, to }) {
     }, [searchQueries]);
 
     return (
-        <ContentLayout>
-            <SearchList
-                title="회원 검색"
-                headers={headers}
-                items={clientList}
-                totalLength={totalResults || 0}
-                hasNext={hasNext}
-                searchQueries={searchQueries}
-                fetchData={fetchNext}
-                initialPage={page}
-                loading={loading}
-                nextPage={next}
-            >
-                <ClientSearchForm
-                    initialValues={searchQueries}
-                    onSubmit={(values) => {
-                        resetClients();
-                        router.push({
-                            pathname: '/clients',
-                            query: toQueryObject(values),
-                        });
-                    }}
-                />
-            </SearchList>
-        </ContentLayout>
+        <AppLayout>
+            <ContentLayout>
+                <SearchList
+                    title="회원 검색"
+                    headers={headers}
+                    items={clientList}
+                    totalLength={totalResults || 0}
+                    hasNext={hasNext}
+                    searchQueries={searchQueries}
+                    fetchData={fetchNext}
+                    initialPage={page}
+                    loading={loading}
+                    nextPage={next}
+                >
+                    <ClientSearchForm
+                        initialValues={searchQueries}
+                        onSubmit={(values) => {
+                            resetClients();
+                            router.push({
+                                pathname: '/clients',
+                                query: toQueryObject(values),
+                            });
+                        }}
+                    />
+                </SearchList>
+            </ContentLayout>
+        </AppLayout>
     );
 }
 

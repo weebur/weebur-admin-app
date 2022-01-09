@@ -22,10 +22,10 @@ const LayoutBackground = styled.div`
     flex-direction: column;
 `;
 
-function AppLayout({ withSidebar, children }) {
+function AppLayout({ children }) {
     return (
         <StyledLayout>
-            {withSidebar && <SideBar />}
+            <SideBar />
             <StyledContentLayout>
                 <StyledContent>
                     <LayoutBackground>{children}</LayoutBackground>
