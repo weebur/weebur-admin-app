@@ -51,6 +51,7 @@ const Ellipsis = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: break-word;
+    word-break: keep-all;
 `;
 
 function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
