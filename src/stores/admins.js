@@ -34,6 +34,9 @@ const useAdminsStore = create((set) => ({
             set({ loading: false });
         }
     },
+    resetAdmins: () => {
+        set({ admins: {} });
+    },
 }));
 
 export default useAdminsStore;

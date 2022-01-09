@@ -32,3 +32,10 @@ a {
 .ant-layout {
     background: var(--weebur-background-color);
 }
+
+.ant-select-single.ant-select-customize-input
+    .ant-select-selector
+    .ant-select-selection-search {
+    position: absolute;
+    left: 0;
+}

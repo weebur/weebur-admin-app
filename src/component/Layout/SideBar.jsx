@@ -2,6 +2,7 @@ import { Image, Menu } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import { useEffect } from 'react/cjs/react.development';
 import styled from 'styled-components';
 import { menu } from '../../constants/menu';
 
@@ -52,6 +53,10 @@ function SideBar() {
     const router = useRouter();
     const [selectedKeys, setSelectedKeys] = useState([]);
 
+    useEffect(() => {
+        setSelectedKeys([router.pathname]);
+    }, [router.pathname]);
+
     return (
         <StyledSider>
             <Logo className="logo">
@@ -68,19 +73,19 @@ function SideBar() {
                 selectedKeys={selectedKeys}
                 defaultSelectedKeys={[menu[2].path]}
             >
-                {menu.map(({ key, name, Icon, path }) => {
+                {menu.map(({ name, Icon, path }) => {
                     return (
                         <Menu.Item
-                            key={key}
+                            key={path}
                             icon={
                                 <IconWrapper
-                                    primary={selectedKeys.includes(key)}
+                                    primary={selectedKeys.includes(path)}
                                 >
                                     <Icon />
                                 </IconWrapper>
                             }
                             onClick={() => {
-                                setSelectedKeys([key]);
+                                setSelectedKeys([path]);
                                 router.push(path);
                             }}
                         >

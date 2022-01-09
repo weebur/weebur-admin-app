@@ -1,31 +1,12 @@
-import { Typography } from 'antd';
-import styled from 'styled-components';
-import ContentLayout from '../../component/Layout/ContentLayout';
-import ContentSpace from '../../component/Layout/ContentSpace';
-import AdminsSearchForm from '../../component/SearchForms/Admins';
-
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+
+import { SEARCH_LIMIT } from '../../constants';
+import ContentLayout from '../../component/Layout/ContentLayout';
+import AdminsSearchForm from '../../component/SearchForms/Admins';
 import { toQueryObject } from '../../utils/queryString';
-import { useEffect, useRef, useState } from 'react';
 import useAdminsStore from '../../stores/admins';
-import useInfiniteScroll from '../../hooks/useInfiniteScroll';
-import List from '../../component/List';
-import Summary from '../../component/List/Summary';
-import Loader from '../../component/Loader';
-
-const limit = 15;
-
-const SearchFormWrapper = styled.div`
-    padding: 50px 0;
-`;
-
-const SummaryWrapper = styled.div`
-    margin: 55px 0 30px;
-`;
-
-const SearchFormTitle = styled.div`
-    margin-bottom: 18px;
-`;
+import SearchList from '../../component/page-components/SearchList';
 
 const headers = [
     { key: 'name', label: '이름', span: 7 },
@@ -36,16 +17,13 @@ const headers = [
 function Admins({ name, email }) {
     const router = useRouter();
 
-    const ref = useRef();
-
-    const [page, setPage] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
-
+    const searchQueries = { name, email };
     const fetchAdmins = useAdminsStore((state) => state.fetchAdmins);
+    const resetAdmins = useAdminsStore((state) => state.resetAdmins);
     const admins = useAdminsStore((state) => state.admins);
-    const { hasNext } = admins;
+    const { hasNext, totalResults, result, page, loading, next } = admins;
 
-    const adminList = admins?.result?.map((result) => {
+    const adminList = result?.map((result) => {
         return {
             id: result._id,
             rows: headers.map(({ key, span }) => {
@@ -58,72 +36,51 @@ function Admins({ name, email }) {
         };
     });
 
-    const loadAdmins = async (more) => {
-        setIsLoading(true);
-
-        await fetchAdmins({ page: more ? page : 0, limit, name, email }, more);
-
-        setIsLoading(false);
+    const fetchNext = () => {
+        console.log('fetch');
+        fetchAdmins(
+            { ...searchQueries, page: next, limit: SEARCH_LIMIT },
+            true,
+        );
     };
 
-    useInfiniteScroll(
-        () => {
-            setPage((page) => page + 1);
-        },
-        ref.current,
-        !hasNext,
-    );
-
     useEffect(() => {
-        loadAdmins();
-        setPage(0);
+        if (admins.result) return;
+
+        fetchAdmins({ ...searchQueries, page: 1, limit: SEARCH_LIMIT });
     }, [name, email]);
-
-    useEffect(() => {
-        if (isLoading || !page) return;
-        loadAdmins(true);
-    }, [page]);
 
     return (
         <ContentLayout>
-            <SearchFormTitle>
-                <Typography.Title level={4}>어드민 검색</Typography.Title>
-            </SearchFormTitle>
-
-            <ContentSpace align="center">
-                <SearchFormWrapper>
-                    <AdminsSearchForm
-                        defaultValues={{ name, email }}
-                        onSubmit={({ name, email }) => {
-                            router.push({
-                                pathname: '/admins',
-                                query: toQueryObject({ name, email }),
-                            });
-                        }}
-                    />
-                </SearchFormWrapper>
-            </ContentSpace>
-
-            <SummaryWrapper>
-                <Summary total={admins.totalResults} />
-            </SummaryWrapper>
-
-            <ContentSpace>
-                <List
-                    withCheckBox
-                    ref={ref}
-                    headers={headers}
-                    data={adminList}
+            <SearchList
+                title="어드민 검색"
+                headers={headers}
+                items={adminList}
+                totalLength={totalResults || 0}
+                hasNext={hasNext}
+                searchQueries={searchQueries}
+                fetchData={fetchNext}
+                initialPage={page}
+                loading={loading}
+                nextPage={next}
+            >
+                <AdminsSearchForm
+                    initialValues={{ name, email }}
+                    onSubmit={({ name, email }) => {
+                        resetAdmins();
+                        router.push({
+                            pathname: '/admins',
+                            query: toQueryObject({ name, email }),
+                        });
+                    }}
                 />
-                {isLoading && <Loader />}
-            </ContentSpace>
+            </SearchList>
         </ContentLayout>
     );
 }
 
 export const getServerSideProps = (ctx) => {
     const { email = '', name = '' } = ctx.query;
-
     return {
         props: {
             email,

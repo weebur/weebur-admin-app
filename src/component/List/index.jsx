@@ -1,7 +1,8 @@
-import { Checkbox, Col, Row } from 'antd';
-import { forwardRef, useState } from 'react';
-
+import { Alert, Checkbox, Col, Row } from 'antd';
+import { useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
+import Loader from '../Loader';
 
 const ListWrapper = styled.div`
     display: flex;
@@ -10,11 +11,12 @@ const ListWrapper = styled.div`
     padding: 20px;
 `;
 
-const StyledRow = styled(Row)`
+const StyledRow = styled.div`
+    display: flex;
     width: 100%;
     align-items: center;
-    height: 80px;
-    padding: 0 10px;
+    height: 102px;
+    padding: 25px 10px;
     border-bottom: 1px solid ${({ theme }) => theme.color.lightBorder};
     font-size: ${({ theme }) => theme.fontSize.large};
     transition: background 0.3s;
@@ -47,12 +49,9 @@ const Ellipsis = styled.div`
     word-wrap: break-word;
 `;
 
-const List = forwardRef(function NestedList(
-    { data = [], headers, withCheckBox },
-    ref,
-) {
+function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
     const [checkedList, setCheckedList] = useState([]);
-    const [indeterminate, setIndeterminate] = useState(true);
+    const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
 
     const handleCheckBoxChange = (item) => {
@@ -98,30 +97,50 @@ const List = forwardRef(function NestedList(
                     </Col>
                 ))}
             </StyledHeader>
-            {data.map(({ id, rows }, i) => {
-                const isLast = i === data.length - 1;
-                return (
-                    <StyledRow ref={isLast ? ref : null} key={id} gutter={10}>
-                        <Col span={1}>
-                            <Checkbox
-                                onChange={(e) => {
-                                    handleCheckBoxChange(id, e.target.checked);
-                                }}
-                                checked={checkedList.includes(id)}
-                            />
-                        </Col>
-                        {rows.map(({ key, span, Component }) => (
-                            <Col key={key} span={span}>
-                                <Ellipsis ellipsis={{ rows: 2 }}>
-                                    {Component}
-                                </Ellipsis>
-                            </Col>
-                        ))}
-                    </StyledRow>
-                );
-            })}
+            <InfiniteScroll
+                dataLength={data.length}
+                next={fetchData}
+                hasMore={hasNext}
+                loader={<Loader />}
+                scrollThreshold="200px"
+                endMessage={
+                    <ListWrapper>
+                        <Alert
+                            message="검색이 완료되었습니다."
+                            type="success"
+                        />
+                    </ListWrapper>
+                }
+            >
+                {data.map(({ id, rows }) => {
+                    return (
+                        <StyledRow key={id} gutter={10}>
+                            {withCheckBox && (
+                                <Col span={1}>
+                                    <Checkbox
+                                        onChange={(e) => {
+                                            handleCheckBoxChange(
+                                                id,
+                                                e.target.checked,
+                                            );
+                                        }}
+                                        checked={checkedList.includes(id)}
+                                    />
+                                </Col>
+                            )}
+                            {rows.map(({ key, span, Component }) => (
+                                <Col key={key} span={span}>
+                                    <Ellipsis ellipsis={{ rows: 2 }}>
+                                        {Component}
+                                    </Ellipsis>
+                                </Col>
+                            ))}
+                        </StyledRow>
+                    );
+                })}
+            </InfiniteScroll>
         </ListWrapper>
     );
-});
+}
 
 export default List;

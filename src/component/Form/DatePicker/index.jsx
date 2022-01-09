@@ -1,22 +1,24 @@
-import { forwardRef, useState } from 'react';
+import dynamic from 'next/dynamic';
 import styled from 'styled-components';
-import Label from './Label';
+import dayjs from 'dayjs';
+import Label from '../Label';
+import { useState } from 'react';
+
+const DayjsPicker = dynamic(() => import('./DayjsPicker'), { ssr: false });
 
 const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
 `;
 
-const StyledInput = styled.input`
+const StyledDatePicker = styled(DayjsPicker)`
     display: flex;
     align-items: center;
     outline: none;
-    box-sizing: border-box;
 
     color: ${({ theme }) => theme.color.light};
     border: 1px solid ${({ theme }) => theme.color.light};
     border-radius: 4px;
-
     padding: 10px 12px;
     height: 44px;
     width: 100%;
@@ -29,27 +31,31 @@ const StyledInput = styled.input`
     }
 `;
 
-const Input = forwardRef((props, ref) => {
+function DatePicker({ label, value, name, onChange, ...props }) {
     const [focused, setFocused] = useState(false);
-    const { label, ...rest } = props;
 
     return (
         <InputWrapper>
             <Label focused={focused}>{label}</Label>
-            <StyledInput
-                ref={ref}
-                autoComplete="off"
+            <StyledDatePicker
+                name={name}
+                format="YY-MM-DD"
+                picker="date"
+                placeholder="날짜를 선택해주세요"
+                value={value ? dayjs(value) : null}
+                onChange={(date) => {
+                    onChange(name, date?.toISOString() || null);
+                }}
                 onFocus={() => {
                     setFocused(true);
                 }}
                 onBlurCapture={() => {
                     setFocused(false);
                 }}
-                {...rest}
+                {...props}
             />
         </InputWrapper>
     );
-});
+}
 
-Input.displayName = 'StyledInput';
-export default Input;
+export default DatePicker;

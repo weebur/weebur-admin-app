@@ -4,6 +4,9 @@ import SubmitButton from '../Form/SubmitButton';
 
 import styled from 'styled-components';
 import CommonButton from '../Button';
+import { companyCategories } from '../../constants/company';
+import SelectBox from '../Form/SelectBox';
+import RangePicker from '../Form/DatePicker/RangePicker';
 
 const Form = styled.form`
     display: flex;
@@ -14,10 +17,10 @@ const Form = styled.form`
 
 const InputWrapper = styled.div`
     display: flex;
-    gap: 10px;
+    gap: 15px;
 `;
 
-function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
+function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
@@ -33,11 +36,22 @@ function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     onChange={formik.handleChange}
                     value={formik.values.name}
                 />
-                <Input
-                    name="email"
-                    label="이메일"
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
+                <SelectBox
+                    allowClear
+                    name="category"
+                    label="분류"
+                    onChange={formik.setFieldValue}
+                    value={formik.values.category}
+                    options={Object.values(companyCategories)}
+                />
+            </InputWrapper>
+
+            <InputWrapper>
+                <RangePicker
+                    label="등록일"
+                    onChange={formik.setFieldValue}
+                    from={formik.values.from}
+                    to={formik.values.to}
                 />
             </InputWrapper>
 
@@ -56,4 +70,4 @@ function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
     );
 }
 
-export default AdminsSearchForm;
+export default CompaniesSearchForm;
