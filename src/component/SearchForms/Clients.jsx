@@ -1,32 +1,12 @@
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
-
-import styled from 'styled-components';
 import CommonButton from '../Button';
 import RangePicker from '../Form/DatePicker/RangePicker';
 import AsyncSelectBox from '../Form/AsyncSelectBox';
 import { fetchCompanies, fetchCompany } from '../../api/companyAPI';
 import { useEffect, useState } from 'react';
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 30px;
-`;
-
-const InputWrapper = styled.div`
-    display: flex;
-    gap: 15px;
-
-    ${({ centered }) =>
-        centered &&
-        `
-        width: 100%;
-        justify-content: center
-    `}
-`;
+import { Form, InputWrapper } from './styles';
 
 function ClientsSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const [companyOptions, setCompanyOptions] = useState([]);
@@ -110,7 +90,14 @@ function ClientsSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     primary
                     text="검색"
                 />
-                <CommonButton small light onClick={onReset}>
+                <CommonButton
+                    small
+                    light
+                    onClick={() => {
+                        formik.setValues(initialValues);
+                        onReset && onReset();
+                    }}
+                >
                     초기화
                 </CommonButton>
             </InputWrapper>

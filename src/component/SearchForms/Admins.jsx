@@ -1,21 +1,8 @@
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
-
-import styled from 'styled-components';
 import CommonButton from '../Button';
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-`;
-
-const InputWrapper = styled.div`
-    display: flex;
-    gap: 10px;
-`;
+import { Form, InputWrapper } from './styles';
 
 function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const formik = useFormik({
@@ -48,7 +35,14 @@ function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     primary
                     text="검색"
                 />
-                <CommonButton small light onClick={onReset}>
+                <CommonButton
+                    small
+                    light
+                    onClick={() => {
+                        formik.setValues(initialValues);
+                        onReset && onReset();
+                    }}
+                >
                     초기화
                 </CommonButton>
             </InputWrapper>

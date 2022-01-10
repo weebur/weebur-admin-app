@@ -1,42 +1,50 @@
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
-
-import styled from 'styled-components';
 import CommonButton from '../Button';
 import SelectBox from '../Form/SelectBox';
 import { supplierTypes } from '../../constants/supplier';
 import AsyncSelectBox from '../Form/AsyncSelectBox';
 import { useEffect, useState } from 'react';
 import { fetchProduct, fetchProducts } from '../../api/ProductAPI';
-
-const Form = styled.form`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 30px;
-`;
-
-const InputWrapper = styled.div`
-    display: flex;
-    gap: 15px;
-`;
+import { Form, InputWrapper } from './styles';
+import { fetchTeacher, fetchTeachers } from '../../api/TeacherAPI';
 
 function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const [productOptions, setProductOptions] = useState([]);
+    const [teacherOptions, setTeacherOptions] = useState([]);
+
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit,
     });
-    const fetchOptions = (name) =>
-        fetchProducts({ page: 0, limit: 10, name }).then((companies) => {
-            return companies.result.map((product) => ({
+
+    const fetchProductOptions = async (name) => {
+        try {
+            const products = await fetchProducts({ page: 0, limit: 10, name });
+            return products.result.map((product) => ({
                 label: product.name,
                 value: product._id,
                 key: product._id,
             }));
-        });
+        } catch (err) {
+            return [];
+        }
+    };
+
+    const fetchTeacherOptions = async (name) => {
+        try {
+            const teachers = await fetchTeachers({ page: 0, limit: 10, name });
+            return teachers.result.map((teacher) => ({
+                label: teacher.name,
+                value: teacher._id,
+                key: teacher._id,
+            }));
+        } catch (err) {
+            return [];
+        }
+    };
 
     useEffect(() => {
         if (formik.values.product) {
@@ -51,6 +59,19 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     ]),
                 )
                 .catch(() => setProductOptions([]));
+        }
+        if (formik.values.teacher) {
+            fetchTeacher(formik.values.teacher)
+                .then((teacher) =>
+                    setTeacherOptions([
+                        {
+                            label: teacher.name,
+                            value: teacher._id,
+                            key: teacher._id,
+                        },
+                    ]),
+                )
+                .catch(() => setTeacherOptions([]));
         }
     }, []);
 
@@ -80,11 +101,12 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
 
             <InputWrapper>
                 <AsyncSelectBox
+                    allowClear
                     name="product"
                     label="상품명"
                     onChange={formik.setFieldValue}
                     value={formik.values.product}
-                    fetchOptions={fetchOptions}
+                    fetchOptions={fetchProductOptions}
                     initialOptions={productOptions}
                 />
                 <Input
@@ -92,17 +114,49 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     label="업체명"
                     onChange={formik.handleChange}
                     value={formik.values.name}
+                    autoComplete="new-password"
                 />
             </InputWrapper>
 
             <InputWrapper>
+                <AsyncSelectBox
+                    allowClear
+                    name="teacher"
+                    label="강사명"
+                    onChange={formik.setFieldValue}
+                    value={formik.values.teacher}
+                    fetchOptions={fetchTeacherOptions}
+                    initialOptions={teacherOptions}
+                />
+                <Input
+                    name="teacherMobile"
+                    label="강사모바일"
+                    onChange={formik.handleChange}
+                    value={formik.values.teacherMobile}
+                />
+                <Input
+                    name="teacherEmail"
+                    label="강사이메일"
+                    onChange={formik.handleChange}
+                    value={formik.values.teacherEmail}
+                />
+            </InputWrapper>
+
+            <InputWrapper centered>
                 <SubmitButton
                     disabled={!formik.dirty}
                     small
                     primary
                     text="검색"
                 />
-                <CommonButton small light onClick={onReset}>
+                <CommonButton
+                    small
+                    light
+                    onClick={() => {
+                        formik.setValues(initialValues);
+                        onReset && onReset();
+                    }}
+                >
                     초기화
                 </CommonButton>
             </InputWrapper>

@@ -100,7 +100,7 @@ function Suppliers({
         <AppLayout>
             <ContentLayout>
                 <SearchList
-                    title="회사 검색"
+                    title="업체 검색"
                     headers={headers}
                     items={supplierList}
                     totalLength={totalResults || 0}
