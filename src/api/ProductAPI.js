@@ -1,10 +1,30 @@
 import { toQueryObject } from '../utils/queryString';
 import api from '.';
 
-export const fetchProducts = ({ page, limit, name, category, from, to }) => {
+export const fetchProducts = ({
+    active,
+    name,
+    supplier,
+    teacher,
+    teacherMobile,
+    teacherEmail,
+    type,
+    page,
+    limit,
+}) => {
     return api
         .get('/products', {
-            params: toQueryObject({ page, limit, name, category, from, to }),
+            params: toQueryObject({
+                active,
+                name,
+                supplier,
+                teacher,
+                teacherMobile,
+                teacherEmail,
+                type,
+                page,
+                limit,
+            }),
         })
         .then((res) => res.data);
 };

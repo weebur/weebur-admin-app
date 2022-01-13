@@ -38,7 +38,7 @@ export const menu = [
     },
     {
         key: 'products',
-        name: '상품 관리',
+        name: '상품 관리(ok)',
         path: '/products',
         Icon: SkinOutlined,
     },

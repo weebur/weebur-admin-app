@@ -1,4 +1,4 @@
-import { Spin } from 'antd';
+import{ Spin } from 'antd';
 
 import styled from 'styled-components';
 
@@ -11,10 +11,9 @@ const StyledLoader = styled.div`
 
 function Loader() {
     return (
-        <StyledLoader>
-            <Spin tip="Loading..."></Spin>
-        </StyledLoader>
-    );
+    <StyledLoader>
+      <Spin tip="Loading..."></Spin>
+    </StyledLoader>
+  )
 }
-
 export default Loader;
