@@ -22,7 +22,7 @@ function Admins({ name, email }) {
     const fetchAdmins = useAdminsStore((state) => state.fetchAdmins);
     const resetAdmins = useAdminsStore((state) => state.resetAdmins);
     const admins = useAdminsStore((state) => state.admins);
-    const { hasNext, totalResults, result, page, loading, next } = admins;
+    const { hasNext, totalResults, result, page, next } = admins;
 
     const adminList = result?.map((result) => {
         return {
@@ -62,7 +62,6 @@ function Admins({ name, email }) {
                     searchQueries={searchQueries}
                     fetchData={fetchNext}
                     initialPage={page}
-                    loading={loading}
                     nextPage={next}
                 >
                     <AdminsSearchForm

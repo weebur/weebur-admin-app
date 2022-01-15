@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Loader from '../Loader';
 
 const StyledInput = styled.input`
     display: flex;

@@ -4,6 +4,7 @@ import ContentSpace from '../../component/Layout/ContentSpace';
 import List from '../../component/List';
 import Summary from '../../component/List/Summary';
 import Loader from '../../component/Loader';
+import CreateButton from '../Button/CreateButton';
 
 const SearchFormWrapper = styled.div`
     padding: 50px 0;
@@ -14,7 +15,9 @@ const SummaryWrapper = styled.div`
 `;
 
 const SearchFormTitle = styled.div`
-    margin-bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
 `;
 
 function SearchList({
@@ -26,12 +29,18 @@ function SearchList({
     fetchData,
     children,
     withCheckBox,
-    loading,
+    createButtonText,
+    onCreateButtonClick,
 }) {
     return (
         <>
             <SearchFormTitle>
                 <Typography.Title level={4}>{title}</Typography.Title>
+                {createButtonText && (
+                    <CreateButton onClick={onCreateButtonClick}>
+                        {createButtonText}
+                    </CreateButton>
+                )}
             </SearchFormTitle>
 
             <ContentSpace align="center">
@@ -50,7 +59,6 @@ function SearchList({
                     hasNext={hasNext}
                     fetchData={fetchData}
                 />
-                {loading && <Loader />}
             </ContentSpace>
         </>
     );

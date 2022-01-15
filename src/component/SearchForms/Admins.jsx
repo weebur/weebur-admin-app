@@ -28,7 +28,7 @@ function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
                 />
             </InputWrapper>
 
-            <InputWrapper>
+            <InputWrapper centered>
                 <SubmitButton
                     disabled={!formik.dirty}
                     small

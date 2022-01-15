@@ -51,7 +51,7 @@ function Client({ name, company, mobile, email, from, to }) {
     const fetchClients = useClientStore((state) => state.fetchClients);
     const resetClients = useClientStore((state) => state.resetClients);
     const clients = useClientStore((state) => state.clients);
-    const { hasNext, totalResults, result, page, loading, next } = clients;
+    const { hasNext, totalResults, result, page, next } = clients;
 
     const clientList = result?.map((result) => {
         return {
@@ -90,8 +90,8 @@ function Client({ name, company, mobile, email, from, to }) {
                     searchQueries={searchQueries}
                     fetchData={fetchNext}
                     initialPage={page}
-                    loading={loading}
                     nextPage={next}
+                    createButtonText="회원생성"
                 >
                     <ClientSearchForm
                         initialValues={searchQueries}

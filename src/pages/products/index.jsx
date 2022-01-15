@@ -9,7 +9,7 @@ import ProductsSearchForm from '../../component/SearchForms/Products';
 import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
 import AppLayout from '../../component/Layout';
-import { activeTypes, supplierTypes } from '../../constants/supplier';
+import { activeTypes } from '../../constants/supplier';
 import { COMMON_FORMAT } from '../../constants/date';
 import { productTypes } from '../../constants/product';
 
@@ -72,7 +72,7 @@ function Products({
     const fetchProducts = useProductsStore((state) => state.fetchProducts);
     const resetProducts = useProductsStore((state) => state.resetProducts);
     const products = useProductsStore((state) => state.products);
-    const { hasNext, totalResults, result, page, loading, next } = products;
+    const { hasNext, totalResults, result, page, next } = products;
 
     const supplierList = result?.map((result) => {
         return {
@@ -104,7 +104,7 @@ function Products({
         <AppLayout>
             <ContentLayout>
                 <SearchList
-                    title="업체 검색"
+                    title="상품 검색"
                     headers={headers}
                     items={supplierList}
                     totalLength={totalResults || 0}
@@ -112,8 +112,8 @@ function Products({
                     searchQueries={searchQueries}
                     fetchData={fetchNext}
                     initialPage={page}
-                    loading={loading}
                     nextPage={next}
+                    createButtonText="상품생성"
                 >
                     <ProductsSearchForm
                         initialValues={searchQueries}

@@ -68,7 +68,7 @@ function Suppliers({
     const fetchSuppliers = useSuppliersStore((state) => state.fetchSuppliers);
     const resetSuppliers = useSuppliersStore((state) => state.resetSuppliers);
     const suppliers = useSuppliersStore((state) => state.suppliers);
-    const { hasNext, totalResults, result, page, loading, next } = suppliers;
+    const { hasNext, totalResults, result, page, next } = suppliers;
 
     const supplierList = result?.map((result) => {
         return {
@@ -108,8 +108,8 @@ function Suppliers({
                     searchQueries={searchQueries}
                     fetchData={fetchNext}
                     initialPage={page}
-                    loading={loading}
                     nextPage={next}
+                    createButtonText="업체생성"
                 >
                     <SuppliersSearchForm
                         initialValues={searchQueries}
