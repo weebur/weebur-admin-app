@@ -19,6 +19,7 @@ export const StyledSelect = styled(Select)`
         height: 44px;
 
         font-size: ${({ theme }) => theme.fontSize.large};
+        color: ${({ theme }) => theme.color.light};
         border-radius: 3px;
         border: solid 1px
             ${({ focused, theme }) =>

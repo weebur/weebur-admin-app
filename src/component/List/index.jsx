@@ -54,7 +54,14 @@ const Ellipsis = styled.div`
     word-break: keep-all;
 `;
 
-function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
+function List({
+    data = [],
+    headers,
+    withCheckBox,
+    hasNext,
+    fetchData,
+    onItemClick,
+}) {
     const [checkedList, setCheckedList] = useState([]);
     const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
@@ -119,7 +126,11 @@ function List({ data = [], headers, withCheckBox, hasNext, fetchData }) {
             >
                 {data.map(({ id, rows }) => {
                     return (
-                        <StyledRow key={id} gutter={10}>
+                        <StyledRow
+                            key={id}
+                            gutter={10}
+                            onClick={() => onItemClick(id)}
+                        >
                             {withCheckBox && (
                                 <StyledCol span={1}>
                                     <Checkbox

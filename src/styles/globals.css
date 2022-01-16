@@ -48,3 +48,7 @@ a {
     width: 100%;
     border: none;
 }
+
+.ant-select-focused .ant-select-selection-item {
+    color: var(--weebur-text-color);
+}

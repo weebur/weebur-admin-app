@@ -1,5 +1,6 @@
-import { forwardRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { Input } from 'antd';
 import Label from './Label';
 
 const InputWrapper = styled.div`
@@ -9,7 +10,7 @@ const InputWrapper = styled.div`
     width: 100%;
 `;
 
-const StyledInput = styled.input`
+const StyledTextArea = styled(Input.TextArea)`
     display: flex;
     align-items: center;
     outline: none;
@@ -30,27 +31,23 @@ const StyledInput = styled.input`
     }
 `;
 
-const Input = forwardRef((props, ref) => {
+function TextArea({ label, ...props }) {
     const [focused, setFocused] = useState(false);
-    const { label, ...rest } = props;
 
     return (
         <InputWrapper>
             <Label focused={focused}>{label}</Label>
-            <StyledInput
-                ref={ref}
-                autoComplete="off"
+            <StyledTextArea
                 onFocus={() => {
                     setFocused(true);
                 }}
                 onBlurCapture={() => {
                     setFocused(false);
                 }}
-                {...rest}
+                {...props}
             />
         </InputWrapper>
     );
-});
+}
 
-Input.displayName = 'StyledInput';
-export default Input;
+export default TextArea;

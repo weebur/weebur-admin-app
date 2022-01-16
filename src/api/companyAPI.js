@@ -12,3 +12,18 @@ export const fetchCompanies = ({ page, limit, name, category, from, to }) => {
 export const fetchCompany = (id) => {
     return api.get(`/companies/${id}`).then((res) => res.data);
 };
+
+export const createCompany = ({ name, category, details, partner }) => {
+    return api
+        .post('/companies', { name, category, details, partner })
+        .then((res) => res.data);
+};
+
+export const updateCompany = (
+    companyId,
+    { name, category, details, partner },
+) => {
+    return api
+        .put(`/companies/${companyId}`, { name, category, details, partner })
+        .then((res) => res.data);
+};

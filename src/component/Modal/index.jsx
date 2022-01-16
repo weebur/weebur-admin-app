@@ -11,19 +11,15 @@ const StyledModal = styled(Modal)`
     min-height: 400px;
 `;
 
-function BasicModal({
-    isOpen,
-    onClose,
-    children,
-    title,
-    confirmButtonProps,
-    cancelButtonProps,
-}) {
+const Content = styled.div`
+    padding: 20px 0 0;
+`;
+
+function BasicModal({ isOpen, onClose, children, title }) {
     return (
         <StyledModal
             ariaHideApp={false}
             isOpen={isOpen}
-            // onAfterOpen={afterOpenModal}
             onRequestClose={onClose}
             style={{
                 overlay: {
@@ -36,7 +32,7 @@ function BasicModal({
             contentLabel="Example Modal"
         >
             <Title level={4}>{title}</Title>
-            {children}
+            <Content>{children}</Content>
         </StyledModal>
     );
 }

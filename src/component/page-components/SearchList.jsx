@@ -31,6 +31,7 @@ function SearchList({
     withCheckBox,
     createButtonText,
     onCreateButtonClick,
+    onItemClick,
 }) {
     return (
         <>
@@ -58,6 +59,7 @@ function SearchList({
                     data={items}
                     hasNext={hasNext}
                     fetchData={fetchData}
+                    onItemClick={onItemClick}
                 />
             </ContentSpace>
         </>

@@ -9,6 +9,7 @@ import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
 import AppLayout from '../../component/Layout';
 import BasicModal from '../../component/Modal';
+import ModifyCompanyForm from '../../component/ModifyForms/Company';
 
 const headers = [
     { key: 'name', label: '회사명', span: 8 },
@@ -26,10 +27,17 @@ function Companies({ name, category, from, to }) {
 
     const searchQueries = { name, category, from, to };
     const [openCreateForm, setOpenCreateForm] = useState(false);
+    const [selectedCompany, setSelectedCompany] = useState('');
+
     const fetchCompanies = useCompaniesStore((state) => state.fetchCompanies);
     const resetCompanies = useCompaniesStore((state) => state.resetCompanies);
+    const createCompany = useCompaniesStore((state) => state.createCompany);
+    const updateCompany = useCompaniesStore((state) => state.updateCompany);
     const companies = useCompaniesStore((state) => state.companies);
     const { hasNext, totalResults, result, page, next } = companies;
+    const initialValues = result?.find(
+        (company) => company._id === selectedCompany,
+    );
 
     const companyList = result?.map((result) => {
         return {
@@ -44,12 +52,33 @@ function Companies({ name, category, from, to }) {
         };
     });
 
+    const handleSubmit = async (values) => {
+        if (initialValues) {
+            await updateCompany(initialValues._id, values);
+        } else {
+            await createCompany(values);
+            await fetchCompanies({
+                page: 1,
+                limit: SEARCH_LIMIT,
+            });
+        }
+
+        setSelectedCompany('');
+        setOpenCreateForm(false);
+    };
+
     const fetchNext = () => {
         fetchCompanies(
             { ...searchQueries, page: next, limit: SEARCH_LIMIT },
             true,
         );
     };
+
+    useEffect(() => {
+        if (selectedCompany) {
+            setOpenCreateForm(true);
+        }
+    }, [selectedCompany]);
 
     useEffect(() => {
         if (companies.result) return;
@@ -72,6 +101,7 @@ function Companies({ name, category, from, to }) {
                     nextPage={next}
                     createButtonText="회사생성"
                     onCreateButtonClick={() => setOpenCreateForm(true)}
+                    onItemClick={(id) => setSelectedCompany(id)}
                 >
                     <CompaniesSearchForm
                         initialValues={{ name, category, from, to }}
@@ -91,11 +121,21 @@ function Companies({ name, category, from, to }) {
                 </SearchList>
             </ContentLayout>
             <BasicModal
-                title="회사 생성"
+                title={initialValues ? '회사 수정' : '회사 생성'}
                 isOpen={openCreateForm}
-                onClose={() => setOpenCreateForm(false)}
+                onClose={() => {
+                    setOpenCreateForm(false);
+                    setSelectedCompany('');
+                }}
             >
-                tttttt
+                <ModifyCompanyForm
+                    initialValues={
+                        result?.find(
+                            (company) => company._id === selectedCompany,
+                        ) || {}
+                    }
+                    onSubmit={handleSubmit}
+                />
             </BasicModal>
         </AppLayout>
     );
