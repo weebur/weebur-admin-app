@@ -54,6 +54,7 @@ function ClientsSearchForm({ initialValues = {}, onSubmit, onReset }) {
 
             <InputWrapper>
                 <AsyncSelectBox
+                    allowClear
                     name="company"
                     label="회사명"
                     onChange={formik.setFieldValue}

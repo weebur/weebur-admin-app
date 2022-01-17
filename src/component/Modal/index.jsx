@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Modal from 'react-modal';
 import styled from 'styled-components';
 import Title from '../Text/Title';
@@ -16,6 +16,16 @@ const Content = styled.div`
 `;
 
 function BasicModal({ isOpen, onClose, children, title }) {
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isOpen]);
+
     return (
         <StyledModal
             ariaHideApp={false}

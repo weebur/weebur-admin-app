@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import AppLayout from '../../component/Layout';
 import BasicModal from '../../component/Modal';
 import ModifyCompanyForm from '../../component/ModifyForms/Company';
+import { message } from 'antd';
 
 const headers = [
     { key: 'name', label: '회사명', span: 8 },
@@ -26,18 +27,21 @@ function Companies({ name, category, from, to }) {
     const router = useRouter();
 
     const searchQueries = { name, category, from, to };
-    const [openCreateForm, setOpenCreateForm] = useState(false);
-    const [selectedCompany, setSelectedCompany] = useState('');
+    const [createMode, setCreateMode] = useState(true);
 
     const fetchCompanies = useCompaniesStore((state) => state.fetchCompanies);
     const resetCompanies = useCompaniesStore((state) => state.resetCompanies);
+    const resetCompany = useCompaniesStore((state) => state.resetCompany);
     const createCompany = useCompaniesStore((state) => state.createCompany);
     const updateCompany = useCompaniesStore((state) => state.updateCompany);
-    const companies = useCompaniesStore((state) => state.companies);
-    const { hasNext, totalResults, result, page, next } = companies;
-    const initialValues = result?.find(
-        (company) => company._id === selectedCompany,
+    const fetchCompany = useCompaniesStore((state) => state.fetchCompany);
+    const initializeCompany = useCompaniesStore(
+        (state) => state.initializeCompany,
     );
+    const company = useCompaniesStore((state) => state.company);
+    const companies = useCompaniesStore((state) => state.companies);
+
+    const { hasNext, totalResults, result, page, next } = companies;
 
     const companyList = result?.map((result) => {
         return {
@@ -53,37 +57,58 @@ function Companies({ name, category, from, to }) {
     });
 
     const handleSubmit = async (values) => {
-        if (initialValues) {
-            await updateCompany(initialValues._id, values);
-        } else {
-            await createCompany(values);
-            await fetchCompanies({
-                page: 1,
-                limit: SEARCH_LIMIT,
-            });
-        }
+        try {
+            if (createMode) {
+                await createCompany(values);
+                await fetchCompanies({
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+            } else {
+                await updateCompany(company._id, values);
+            }
 
-        setSelectedCompany('');
-        setOpenCreateForm(false);
+            resetCompany();
+            message.success('저장을 완료하였습니다.');
+        } catch (e) {
+            message.error('저장에 실패하였습니다.');
+            message.error(e.response.data.message);
+        }
     };
 
-    const fetchNext = () => {
-        fetchCompanies(
-            { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-            true,
-        );
+    const handleCompanyClick = async (id) => {
+        try {
+            await fetchCompany(id);
+            setCreateMode(false);
+        } catch (e) {
+            message.error('회원 정보를 불러올 수 없습니다.');
+            message.error(e.response.data.message);
+        }
     };
 
-    useEffect(() => {
-        if (selectedCompany) {
-            setOpenCreateForm(true);
+    const fetchMore = async (init = false) => {
+        try {
+            if (init) {
+                await fetchCompanies({
+                    ...searchQueries,
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+                return;
+            }
+
+            await fetchCompanies(
+                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
+                true,
+            );
+        } catch (e) {
+            message.error('리스트를 불러오는 데 실피하였습니다.');
         }
-    }, [selectedCompany]);
+    };
 
     useEffect(() => {
         if (companies.result) return;
-
-        fetchCompanies({ ...searchQueries, page: 1, limit: SEARCH_LIMIT });
+        fetchMore(true);
     }, [name, category, from, to]);
 
     return (
@@ -96,12 +121,15 @@ function Companies({ name, category, from, to }) {
                     totalLength={totalResults || 0}
                     hasNext={hasNext}
                     searchQueries={searchQueries}
-                    fetchData={fetchNext}
+                    fetchData={fetchMore}
                     initialPage={page}
                     nextPage={next}
                     createButtonText="회사생성"
-                    onCreateButtonClick={() => setOpenCreateForm(true)}
-                    onItemClick={(id) => setSelectedCompany(id)}
+                    onCreateButtonClick={() => {
+                        initializeCompany();
+                        setCreateMode(true);
+                    }}
+                    onItemClick={(id) => handleCompanyClick(id)}
                 >
                     <CompaniesSearchForm
                         initialValues={{ name, category, from, to }}
@@ -121,19 +149,15 @@ function Companies({ name, category, from, to }) {
                 </SearchList>
             </ContentLayout>
             <BasicModal
-                title={initialValues ? '회사 수정' : '회사 생성'}
-                isOpen={openCreateForm}
+                title={createMode ? '회사 생성' : '회사 수정'}
+                isOpen={!!company}
                 onClose={() => {
-                    setOpenCreateForm(false);
-                    setSelectedCompany('');
+                    resetCompany();
                 }}
             >
                 <ModifyCompanyForm
-                    initialValues={
-                        result?.find(
-                            (company) => company._id === selectedCompany,
-                        ) || {}
-                    }
+                    submitButtonLabel={createMode ? '생성하기' : '수정하기'}
+                    initialValues={company}
                     onSubmit={handleSubmit}
                 />
             </BasicModal>

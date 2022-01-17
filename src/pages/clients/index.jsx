@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { SEARCH_LIMIT } from '../../constants';
 import ContentLayout from '../../component/Layout/ContentLayout';
@@ -10,6 +10,9 @@ import SearchList from '../../component/page-components/SearchList';
 import { clientsTypes } from '../../constants/client';
 import { COMMON_FORMAT } from '../../constants/date';
 import AppLayout from '../../component/Layout';
+import BasicModal from '../../component/Modal';
+import ModifyClientForm from '../../component/ModifyForms/Client';
+import { message } from 'antd';
 
 const headers = [
     {
@@ -48,8 +51,16 @@ function Client({ name, company, mobile, email, from, to }) {
         from,
         to,
     };
+    const [createMode, setCreateMode] = useState(true);
+
+    const createClient = useClientStore((state) => state.createClient);
+    const updateClient = useClientStore((state) => state.updateClient);
     const fetchClients = useClientStore((state) => state.fetchClients);
+    const fetchClient = useClientStore((state) => state.fetchClient);
     const resetClients = useClientStore((state) => state.resetClients);
+    const resetClient = useClientStore((state) => state.resetClient);
+    const initializeClient = useClientStore((state) => state.initializeClient);
+    const client = useClientStore((state) => state.client);
     const clients = useClientStore((state) => state.clients);
     const { hasNext, totalResults, result, page, next } = clients;
 
@@ -66,16 +77,58 @@ function Client({ name, company, mobile, email, from, to }) {
         };
     });
 
-    const fetchNext = () => {
-        fetchClients(
-            { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-            true,
-        );
+    const handleSubmit = async (values) => {
+        try {
+            if (createMode) {
+                await createClient(values);
+                await fetchClients({
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+            } else {
+                await updateClient(client._id, values);
+            }
+
+            resetClient();
+            message.success('저장을 완료하였습니다.');
+        } catch (e) {
+            message.error('저장에 실패하였습니다.');
+            message.error(e.response.data.message);
+        }
+    };
+
+    const handleClientClick = async (id) => {
+        try {
+            await fetchClient(id);
+            setCreateMode(false);
+        } catch (e) {
+            message.error('회원 정보를 불러올 수 없습니다.');
+            message.error(e.response.data.message);
+        }
+    };
+
+    const fetchMore = async (init = false) => {
+        try {
+            if (init) {
+                await fetchClients({
+                    ...searchQueries,
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+                return;
+            }
+            await fetchClients(
+                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
+                true,
+            );
+        } catch (e) {
+            message.error('리스트를 불러오는 데 실피하였습니다.');
+        }
     };
 
     useEffect(() => {
         if (clients.result) return;
-        fetchClients({ ...searchQueries, page: 1, limit: SEARCH_LIMIT });
+        fetchMore(true);
     }, [searchQueries]);
 
     return (
@@ -88,10 +141,15 @@ function Client({ name, company, mobile, email, from, to }) {
                     totalLength={totalResults || 0}
                     hasNext={hasNext}
                     searchQueries={searchQueries}
-                    fetchData={fetchNext}
+                    fetchData={fetchMore}
                     initialPage={page}
                     nextPage={next}
                     createButtonText="회원생성"
+                    onCreateButtonClick={() => {
+                        initializeClient();
+                        setCreateMode(true);
+                    }}
+                    onItemClick={handleClientClick}
                 >
                     <ClientSearchForm
                         initialValues={searchQueries}
@@ -105,6 +163,19 @@ function Client({ name, company, mobile, email, from, to }) {
                     />
                 </SearchList>
             </ContentLayout>
+            <BasicModal
+                title={createMode ? '회원 생성' : '회원 수정'}
+                isOpen={!!client}
+                onClose={() => {
+                    resetClient();
+                }}
+            >
+                <ModifyClientForm
+                    submitButtonLabel={createMode ? '생성하기' : '수정하기'}
+                    initialValues={client}
+                    onSubmit={handleSubmit}
+                />
+            </BasicModal>
         </AppLayout>
     );
 }

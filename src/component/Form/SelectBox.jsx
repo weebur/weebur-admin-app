@@ -6,6 +6,8 @@ import Label from './Label';
 const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    width: 100%;
+    min-width: 210px;
 `;
 
 export const StyledSelect = styled(Select)`
@@ -15,7 +17,7 @@ export const StyledSelect = styled(Select)`
         padding: 9px 5px 10px 10px;
 
         position: relative;
-        width: 210px;
+        width: 100%;
         height: 44px;
 
         font-size: ${({ theme }) => theme.fontSize.large};
@@ -42,7 +44,9 @@ function SelectBox({ options, label, onChange, ...props }) {
 
     return (
         <InputWrapper>
-            <Label focused={focused}>{label}</Label>
+            <Label required={props.required} focused={focused}>
+                {label}
+            </Label>
             <StyledSelect
                 className="ant-select-customize-input"
                 onFocus={() => {
@@ -52,6 +56,7 @@ function SelectBox({ options, label, onChange, ...props }) {
                     setFocused(false);
                 }}
                 onChange={(v) => {
+                    console.log(v);
                     onChange(props.name, v);
                 }}
                 {...props}

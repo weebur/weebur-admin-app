@@ -6,19 +6,19 @@ import { companyCategories } from '../../constants/company';
 import SelectBox from '../Form/SelectBox';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
-import { isEmpty } from 'lodash-es';
 import TextArea from '../Form/TextArea';
+import dayjs from 'dayjs';
+import { COMMON_FORMAT } from '../../constants/date';
 
-function ModifyCompanyForm({ initialValues, onSubmit, onReset }) {
+function ModifyCompanyForm({
+    initialValues,
+    onSubmit,
+    onReset,
+    submitButtonLabel,
+}) {
     const formik = useFormik({
         enableReinitialize: true,
-        initialValues: {
-            name: '',
-            category: '',
-            partner: false,
-            details: '',
-            ...initialValues,
-        },
+        initialValues,
         onSubmit,
     });
 
@@ -26,9 +26,17 @@ function ModifyCompanyForm({ initialValues, onSubmit, onReset }) {
         <Form onSubmit={formik.handleSubmit}>
             <InputWrapper>
                 <Input
+                    required
                     label="회사명"
                     name="name"
                     value={formik.values.name}
+                    onChange={formik.handleChange}
+                />
+                <Input
+                    disabled
+                    label="등록일"
+                    name="createdAt"
+                    value={dayjs(formik.values.createdAt).format(COMMON_FORMAT)}
                     onChange={formik.handleChange}
                 />
             </InputWrapper>
@@ -77,7 +85,7 @@ function ModifyCompanyForm({ initialValues, onSubmit, onReset }) {
                     disabled={!formik.dirty || formik.isSubmitting}
                     small
                     primary
-                    text={isEmpty(initialValues) ? '생성하기' : '수정하기'}
+                    text={submitButtonLabel}
                 />
             </ButtonsWrapper>
         </Form>

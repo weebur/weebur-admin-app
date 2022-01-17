@@ -26,3 +26,49 @@ export const fetchClients = ({
         })
         .then((res) => res.data);
 };
+
+export const fetchClient = (id) => {
+    return api.get(`/clients/${id}`).then((res) => res.data);
+};
+
+export const createClient = ({
+    name,
+    company,
+    mobile,
+    phoneNumber,
+    email,
+    inflowPath,
+    type,
+    details,
+}) => {
+    return api
+        .post('/clients', {
+            name,
+            company,
+            mobile,
+            phoneNumber,
+            email,
+            inflowPath,
+            type,
+            details,
+        })
+        .then((res) => res.data);
+};
+
+export const updateClient = (
+    id,
+    { name, company, mobile, phoneNumber, email, inflowPath, type, details },
+) => {
+    return api
+        .put(`/clients/${id}`, {
+            name,
+            company,
+            mobile,
+            phoneNumber,
+            email,
+            inflowPath,
+            type,
+            details,
+        })
+        .then((res) => res.data);
+};

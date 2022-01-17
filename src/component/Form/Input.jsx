@@ -36,7 +36,9 @@ const Input = forwardRef((props, ref) => {
 
     return (
         <InputWrapper>
-            <Label focused={focused}>{label}</Label>
+            <Label required={props.required} focused={focused}>
+                {label}
+            </Label>
             <StyledInput
                 ref={ref}
                 autoComplete="off"

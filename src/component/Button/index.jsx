@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import Loader from '../Loader';
 
 const StyledButton = styled.button`
     display: flex;
@@ -55,12 +54,8 @@ const StyledButton = styled.button`
     }
 `;
 
-function CommonButton({ children, loading, ...props }) {
-    return (
-        <StyledButton {...props}>
-            {loading ? <Loader outlined /> : children}
-        </StyledButton>
-    );
+function CommonButton({ children, ...props }) {
+    return <StyledButton {...props}>{children}</StyledButton>;
 }
 
 export default CommonButton;

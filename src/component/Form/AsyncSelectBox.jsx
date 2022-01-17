@@ -41,7 +41,6 @@ function AsyncSelectBox({
     return (
         <SelectBox
             showSearch
-            // labelInValue
             filterOption={false}
             onSearch={debounceFetcher}
             notFoundContent={fetching ? <Spin size="small" /> : null}
