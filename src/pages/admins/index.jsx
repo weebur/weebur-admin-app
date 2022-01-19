@@ -63,6 +63,7 @@ function Admins({ name, email }) {
                     fetchData={fetchNext}
                     initialPage={page}
                     nextPage={next}
+                    onItemClick={() => {}}
                 >
                     <AdminsSearchForm
                         initialValues={{ name, email }}

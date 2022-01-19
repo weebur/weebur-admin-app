@@ -4,80 +4,14 @@ import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import SelectBox from '../Form/SelectBox';
 import { productTypes } from '../../constants/product';
-import AsyncSelectBox from '../Form/AsyncSelectBox';
-import { useEffect, useState } from 'react';
 import { Form, InputWrapper } from './styles';
-import { fetchTeacher, fetchTeachers } from '../../api/TeacherAPI';
-import { fetchSupplier, fetchSuppliers } from '../../api/SupplierAPI';
 
-function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
-    const [supplierOptions, setSupplierOptions] = useState([]);
-    const [teacherOptions, setTeacherOptions] = useState([]);
-
+function ProductSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: initialValues,
         onSubmit,
     });
-
-    const fetchProductOptions = async (name) => {
-        try {
-            const suppliers = await fetchSuppliers({
-                page: 0,
-                limit: 10,
-                name,
-            });
-            return suppliers.result.map((supplier) => ({
-                label: supplier.name,
-                value: supplier._id,
-                key: supplier._id,
-            }));
-        } catch (err) {
-            return [];
-        }
-    };
-
-    const fetchTeacherOptions = async (name) => {
-        try {
-            const teachers = await fetchTeachers({ page: 0, limit: 10, name });
-            return teachers.result.map((teacher) => ({
-                label: teacher.name,
-                value: teacher._id,
-                key: teacher._id,
-            }));
-        } catch (err) {
-            return [];
-        }
-    };
-
-    useEffect(() => {
-        if (formik.values.supplier) {
-            fetchSupplier(formik.values.supplier)
-                .then((supplier) =>
-                    setSupplierOptions([
-                        {
-                            label: supplier.name,
-                            value: supplier._id,
-                            key: supplier._id,
-                        },
-                    ]),
-                )
-                .catch(() => setSupplierOptions([]));
-        }
-        if (formik.values.teacher) {
-            fetchTeacher(formik.values.teacher)
-                .then((teacher) =>
-                    setTeacherOptions([
-                        {
-                            label: teacher.name,
-                            value: teacher._id,
-                            key: teacher._id,
-                        },
-                    ]),
-                )
-                .catch(() => setTeacherOptions([]));
-        }
-    }, []);
 
     return (
         <Form onSubmit={formik.handleSubmit}>
@@ -104,14 +38,12 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper>
-                <AsyncSelectBox
+                <Input
                     allowClear
-                    name="supplier"
+                    name="supplierName"
                     label="업체명"
-                    onChange={formik.setFieldValue}
-                    value={formik.values.supplier}
-                    fetchOptions={fetchProductOptions}
-                    initialOptions={supplierOptions}
+                    onChange={formik.handleChange}
+                    value={formik.values.supplierName}
                 />
                 <Input
                     name="name"
@@ -119,30 +51,6 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     onChange={formik.handleChange}
                     value={formik.values.name}
                     autoComplete="new-password"
-                />
-            </InputWrapper>
-
-            <InputWrapper>
-                <AsyncSelectBox
-                    allowClear
-                    name="teacher"
-                    label="강사명"
-                    onChange={formik.setFieldValue}
-                    value={formik.values.teacher}
-                    fetchOptions={fetchTeacherOptions}
-                    initialOptions={teacherOptions}
-                />
-                <Input
-                    name="teacherMobile"
-                    label="강사모바일"
-                    onChange={formik.handleChange}
-                    value={formik.values.teacherMobile}
-                />
-                <Input
-                    name="teacherEmail"
-                    label="강사이메일"
-                    onChange={formik.handleChange}
-                    value={formik.values.teacherEmail}
                 />
             </InputWrapper>
 
@@ -168,4 +76,4 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
     );
 }
 
-export default SuppliersSearchForm;
+export default ProductSearchForm;

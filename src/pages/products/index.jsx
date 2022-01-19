@@ -1,9 +1,9 @@
-import { get } from 'lodash-es';
+import { get, omit } from 'lodash-es';
 import dayjs from 'dayjs';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import useProductsStore from '../../stores/products';
 import SearchList from '../../component/page-components/SearchList';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SEARCH_LIMIT } from '../../constants';
 import ProductsSearchForm from '../../component/SearchForms/Products';
 import { toQueryObject } from '../../utils/queryString';
@@ -12,6 +12,9 @@ import AppLayout from '../../component/Layout';
 import { activeTypes } from '../../constants/supplier';
 import { COMMON_FORMAT } from '../../constants/date';
 import { productTypes } from '../../constants/product';
+import { message } from 'antd';
+import BasicModal from '../../component/Modal';
+import ModifyProductForm from '../../component/ModifyForms/Product';
 
 const headers = [
     {
@@ -49,28 +52,27 @@ const headers = [
     },
 ];
 
-function Products({
-    active,
-    name,
-    supplier,
-    teacher,
-    teacherMobile,
-    teacherEmail,
-    type,
-}) {
+function Products({ active, name, supplierName, type }) {
     const router = useRouter();
 
     const searchQueries = {
         active,
         name,
-        supplier,
-        teacher,
-        teacherMobile,
-        teacherEmail,
+        supplierName,
         type,
     };
+    const [createMode, setCreateMode] = useState(true);
+
     const fetchProducts = useProductsStore((state) => state.fetchProducts);
     const resetProducts = useProductsStore((state) => state.resetProducts);
+    const resetProduct = useProductsStore((state) => state.resetProduct);
+    const createProduct = useProductsStore((state) => state.createProduct);
+    const updateProduct = useProductsStore((state) => state.updateProduct);
+    const fetchProduct = useProductsStore((state) => state.fetchProduct);
+    const initializeProduct = useProductsStore(
+        (state) => state.initializeProduct,
+    );
+    const product = useProductsStore((state) => state.product);
     const products = useProductsStore((state) => state.products);
     const { hasNext, totalResults, result, page, next } = products;
 
@@ -87,17 +89,67 @@ function Products({
         };
     });
 
-    const fetchNext = () => {
-        fetchProducts(
-            { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-            true,
-        );
+    const handleSubmit = async (values) => {
+        const suppliers = get(values, 'suppliers');
+        console.log(suppliers);
+        const payload = {
+            ...omit(values, 'suppliers'),
+            supplierIds: suppliers.map((supplier) => supplier._id),
+        };
+
+        try {
+            if (createMode) {
+                await createProduct(payload);
+                await fetchProducts({
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+            } else {
+                await updateProduct(product._id, payload);
+            }
+
+            resetProduct();
+            message.success('저장을 완료하였습니다.');
+        } catch (e) {
+            console.log(e);
+            message.error('저장에 실패하였습니다.');
+            message.error(e.response.data.message);
+        }
+    };
+
+    const handleProductClick = async (id) => {
+        try {
+            await fetchProduct(id);
+            setCreateMode(false);
+        } catch (e) {
+            message.error('상품 정보를 불러올 수 없습니다.');
+            message.error(e.response.data.message);
+        }
+    };
+
+    const fetchMore = async (init = false) => {
+        try {
+            if (init) {
+                await fetchProducts({
+                    ...searchQueries,
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+                return;
+            }
+            await fetchProducts(
+                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
+                true,
+            );
+        } catch (e) {
+            message.error('리스트를 불러오는 데 실피하였습니다.');
+        }
     };
 
     useEffect(() => {
         if (products.result) return;
 
-        fetchProducts({ ...searchQueries, page: 1, limit: SEARCH_LIMIT });
+        fetchMore(true);
     }, [searchQueries]);
 
     return (
@@ -110,10 +162,15 @@ function Products({
                     totalLength={totalResults || 0}
                     hasNext={hasNext}
                     searchQueries={searchQueries}
-                    fetchData={fetchNext}
+                    fetchData={fetchMore}
                     initialPage={page}
                     nextPage={next}
+                    onItemClick={handleProductClick}
                     createButtonText="상품생성"
+                    onCreateButtonClick={() => {
+                        initializeProduct();
+                        setCreateMode(true);
+                    }}
                 >
                     <ProductsSearchForm
                         initialValues={searchQueries}
@@ -127,30 +184,32 @@ function Products({
                     />
                 </SearchList>
             </ContentLayout>
+            <BasicModal
+                title={createMode ? '회사 생성' : '회사 수정'}
+                isOpen={!!product}
+                onClose={() => {
+                    resetProduct();
+                }}
+            >
+                <ModifyProductForm
+                    submitButtonLabel={createMode ? '생성하기' : '수정하기'}
+                    initialValues={product}
+                    onSubmit={handleSubmit}
+                />
+            </BasicModal>
         </AppLayout>
     );
 }
 
 export const getServerSideProps = (ctx) => {
-    const {
-        active = '',
-        name = '',
-        teacher = '',
-        type = '',
-        supplier = '',
-        teacherMobile = '',
-        teacherEmail = '',
-    } = ctx.query;
+    const { active = '', name = '', type = '', supplierName = '' } = ctx.query;
 
     return {
         props: {
             active,
             name,
-            teacher,
             type,
-            supplier,
-            teacherMobile,
-            teacherEmail,
+            supplierName,
         },
     };
 };

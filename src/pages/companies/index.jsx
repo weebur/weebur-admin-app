@@ -129,7 +129,7 @@ function Companies({ name, category, from, to }) {
                         initializeCompany();
                         setCreateMode(true);
                     }}
-                    onItemClick={(id) => handleCompanyClick(id)}
+                    onItemClick={handleCompanyClick}
                 >
                     <CompaniesSearchForm
                         initialValues={{ name, category, from, to }}

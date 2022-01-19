@@ -4,10 +4,7 @@ import api from '.';
 export const fetchProducts = ({
     active,
     name,
-    supplier,
-    teacher,
-    teacherMobile,
-    teacherEmail,
+    supplierName,
     type,
     page,
     limit,
@@ -17,10 +14,7 @@ export const fetchProducts = ({
             params: toQueryObject({
                 active,
                 name,
-                supplier,
-                teacher,
-                teacherMobile,
-                teacherEmail,
+                supplierName,
                 type,
                 page,
                 limit,
@@ -31,4 +25,46 @@ export const fetchProducts = ({
 
 export const fetchProduct = (id) => {
     return api.get(`/products/${id}`).then((res) => res.data);
+};
+
+export const createProduct = ({
+    name,
+    type,
+    fee,
+    active,
+    url,
+    details,
+    prices,
+    supplierIds,
+}) => {
+    return api
+        .post('/products', {
+            name,
+            type,
+            fee,
+            active,
+            url,
+            details,
+            prices,
+            supplierIds,
+        })
+        .then((res) => res.data);
+};
+
+export const updateProduct = (
+    productId,
+    { name, type, fee, active, url, details, prices, supplierIds },
+) => {
+    return api
+        .put(`/products/${productId}`, {
+            name,
+            type,
+            fee,
+            active,
+            url,
+            details,
+            prices,
+            supplierIds,
+        })
+        .then((res) => res.data);
 };

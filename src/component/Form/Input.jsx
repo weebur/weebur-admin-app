@@ -1,6 +1,7 @@
 import { forwardRef, useState } from 'react';
 import styled from 'styled-components';
 import Label from './Label';
+import { Input } from 'antd';
 
 const InputWrapper = styled.div`
     display: flex;
@@ -9,7 +10,7 @@ const InputWrapper = styled.div`
     width: 100%;
 `;
 
-const StyledInput = styled.input`
+const StyledInput = styled(Input)`
     display: flex;
     align-items: center;
     outline: none;
@@ -30,7 +31,7 @@ const StyledInput = styled.input`
     }
 `;
 
-const Input = forwardRef((props, ref) => {
+const TextInput = forwardRef((props, ref) => {
     const [focused, setFocused] = useState(false);
     const { label, ...rest } = props;
 
@@ -54,5 +55,5 @@ const Input = forwardRef((props, ref) => {
     );
 });
 
-Input.displayName = 'StyledInput';
-export default Input;
+TextInput.displayName = 'StyledInput';
+export default TextInput;
