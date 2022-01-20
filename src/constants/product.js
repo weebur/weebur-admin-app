@@ -4,3 +4,8 @@ export const productTypes = {
     KIT: { key: 'KIT', label: '키트' },
     ETC: { key: 'ETC', label: '기타' },
 };
+
+export const productPriceTypes = {
+    SESSION: { key: 'SESSION', label: '회당' },
+    PERSON: { key: 'PERSON', label: '인당' },
+};
