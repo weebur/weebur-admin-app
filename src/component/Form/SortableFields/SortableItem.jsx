@@ -3,9 +3,15 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { PauseOutlined } from '@ant-design/icons';
 
-function SortableItem({ id, item }) {
-    const { attributes, listeners, setNodeRef, transform, transition } =
-        useSortable({ id });
+function SortableItem({ id, children }) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -20,12 +26,13 @@ function SortableItem({ id, item }) {
         cursor: 'grab',
         boxSizing: 'border-box',
         gap: '10px',
+        zIndex: isDragging ? 1 : 0,
     };
 
     return (
         <li style={style} ref={setNodeRef} {...attributes} {...listeners}>
             <PauseOutlined />
-            {item}
+            {children}
         </li>
     );
 }

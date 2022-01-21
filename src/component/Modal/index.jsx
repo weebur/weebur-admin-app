@@ -9,13 +9,21 @@ const StyledModal = styled(Modal)`
     background: #ffffff;
     min-width: 700px;
     min-height: 400px;
+    max-height: 1000px;
+    overflow: scroll;
+
+    ${({ defaultBackground, theme }) =>
+        defaultBackground &&
+        `
+        background: ${theme.color.defaultBackground};
+    `}
 `;
 
 const Content = styled.div`
     padding: 20px 0 0;
 `;
 
-function BasicModal({ isOpen, onClose, children, title }) {
+function BasicModal({ isOpen, onClose, children, title, defaultBackground }) {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -28,6 +36,7 @@ function BasicModal({ isOpen, onClose, children, title }) {
 
     return (
         <StyledModal
+            defaultBackground={defaultBackground}
             ariaHideApp={false}
             isOpen={isOpen}
             onRequestClose={onClose}

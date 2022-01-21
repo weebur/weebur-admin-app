@@ -52,3 +52,21 @@ a {
 .ant-select-focused .ant-select-selection-item {
     color: var(--weebur-text-color);
 }
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.ant-input {
+    color: #a5a5a5;
+    border: 1px solid #a5a5a5;
+    width: 100%;
+    font-size: 16px;
+}
+
+.ant-input:focus {
+    border: 1px solid #1152f2;
+    color: #313131;
+}

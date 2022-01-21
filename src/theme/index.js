@@ -9,6 +9,7 @@ const theme = {
         background: '#f9fafb',
         lightText: '#888',
         lightBackground: '#f7f7f8',
+        defaultBackground: '#f9fafb',
     },
     fontSize: {
         small: '12px',

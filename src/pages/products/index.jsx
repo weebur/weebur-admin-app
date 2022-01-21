@@ -185,6 +185,7 @@ function Products({ active, name, supplierName, type }) {
                 </SearchList>
             </ContentLayout>
             <BasicModal
+                defaultBackground
                 title={createMode ? '회사 생성' : '회사 수정'}
                 isOpen={!!product}
                 onClose={() => {
