@@ -6,7 +6,7 @@ import { Input } from 'antd';
 const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
-    min-width: 210px;
+    //min-width: 210px;
     width: 100%;
 `;
 

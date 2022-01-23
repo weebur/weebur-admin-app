@@ -14,7 +14,12 @@ const defaultValues = {
     details: '',
     fee: 0.3,
     name: '',
-    prices: null,
+    prices: {
+        product: [],
+        option: [],
+        delivery: [],
+        excursion: [],
+    },
     suppliers: [],
     type: 'OFFLINE',
     url: '',

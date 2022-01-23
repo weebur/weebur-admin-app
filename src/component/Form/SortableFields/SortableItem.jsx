@@ -1,9 +1,9 @@
 import React from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { PauseOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PauseOutlined } from '@ant-design/icons';
 
-function SortableItem({ id, children }) {
+function SortableItem({ id, onRemove, children }) {
     const {
         attributes,
         listeners,
@@ -33,6 +33,9 @@ function SortableItem({ id, children }) {
         <li style={style} ref={setNodeRef} {...attributes} {...listeners}>
             <PauseOutlined />
             {children}
+            {onRemove && (
+                <DeleteOutlined style={{ fontSize: 16 }} onClick={onRemove} />
+            )}
         </li>
     );
 }

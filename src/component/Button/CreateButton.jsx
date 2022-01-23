@@ -21,6 +21,12 @@ const StyledButton = styled(Button)`
     padding: 7px;
     border-radius: 8px;
     border: solid 1px ${({ theme }) => theme.color.light};
+
+    ${({ full }) =>
+        full &&
+        `
+      width: 100%;
+  `}
 `;
 
 function CreateButton({ children, ...props }) {

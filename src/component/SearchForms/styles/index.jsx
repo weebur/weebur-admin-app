@@ -10,6 +10,7 @@ export const Form = styled.form`
 export const InputWrapper = styled.div`
     display: flex;
     gap: 15px;
+    width: 100%;
 
     ${({ centered }) =>
         centered &&

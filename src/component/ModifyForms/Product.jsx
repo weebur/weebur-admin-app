@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonsWrapper, Form, InputWrapper } from './styles';
+import { AddButtonWrapper, ButtonsWrapper, Form, InputWrapper } from './styles';
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
 import {
@@ -14,12 +14,14 @@ import TextArea from '../Form/TextArea';
 import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../constants/date';
 import NumberInput from '../Form/NumberInput';
-import { Typography } from 'antd';
+import { Divider, Typography } from 'antd';
 import DraggableFields from '../Form/SortableFields';
 import SortableItem from '../Form/SortableFields/SortableItem';
 import Label from '../Form/Label';
 
 import styled from 'styled-components';
+import CreateButton from '../Button/CreateButton';
+import ProductService from '../../services/ProductService';
 
 const PriceHead = styled.div`
     padding-left: 30px;
@@ -38,6 +40,12 @@ const FieldSection = styled.div`
     background: #ffffff;
     padding: 33px 42px 44px 38px;
     border-radius: 20px;
+    gap: 10px;
+    ${({ half }) =>
+        half &&
+        `
+        width: 50%;
+    `}
 `;
 
 function ModifyProductForm({
@@ -52,7 +60,15 @@ function ModifyProductForm({
         onSubmit,
     });
     const { prices } = formik.values;
-    console.log(prices);
+
+    const addPriceItem = (type) => {
+        const targetPrices = prices[type];
+        formik.setFieldValue(`prices.${type}`, [
+            ...targetPrices,
+            ProductService.getDefaultPriceSet(type),
+        ]);
+    };
+
     return (
         <Form
             onSubmit={(e) => {
@@ -146,7 +162,18 @@ function ModifyProductForm({
                     </PriceHead>
                     {prices?.product.map(({ type, range, price }, i) => {
                         return (
-                            <SortableItem key={i} id={i.toString()}>
+                            <SortableItem
+                                key={i}
+                                id={i.toString()}
+                                onRemove={() => {
+                                    formik.setFieldValue(
+                                        'prices.product',
+                                        prices.product.filter(
+                                            (_, index) => i !== index,
+                                        ),
+                                    );
+                                }}
+                            >
                                 <InputWrapper>
                                     <SelectBox
                                         name={`prices.product.${i}.type`}
@@ -176,6 +203,12 @@ function ModifyProductForm({
                             </SortableItem>
                         );
                     })}
+                    <AddButtonWrapper>
+                        <CreateButton
+                            full
+                            onClick={() => addPriceItem('product')}
+                        />
+                    </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
             <FieldSection>
@@ -198,7 +231,18 @@ function ModifyProductForm({
                     </PriceHead>
                     {prices?.option.map(({ name, price }, i) => {
                         return (
-                            <SortableItem key={i} id={i.toString()}>
+                            <SortableItem
+                                key={i}
+                                id={i.toString()}
+                                onRemove={() => {
+                                    formik.setFieldValue(
+                                        'prices.option',
+                                        prices.option.filter(
+                                            (_, index) => i !== index,
+                                        ),
+                                    );
+                                }}
+                            >
                                 <InputWrapper>
                                     <Input
                                         name={`prices.option.${i}.name`}
@@ -215,8 +259,14 @@ function ModifyProductForm({
                             </SortableItem>
                         );
                     })}
+                    <AddButtonWrapper>
+                        <CreateButton
+                            full
+                            onClick={() => addPriceItem('option')}
+                        />
+                    </AddButtonWrapper>
                 </DraggableFields>
-
+                <Divider type="vertical" style={{ height: 'inherit' }} />
                 <DraggableFields
                     id={'excursion-price'}
                     ids={prices?.excursion.map((_, i) => i.toString())}
@@ -237,7 +287,18 @@ function ModifyProductForm({
                     </PriceHead>
                     {prices?.excursion.map(({ region, price }, i) => {
                         return (
-                            <SortableItem key={i} id={i.toString()}>
+                            <SortableItem
+                                key={i}
+                                id={i.toString()}
+                                onRemove={() => {
+                                    formik.setFieldValue(
+                                        'prices.excursion',
+                                        prices.excursion.filter(
+                                            (_, index) => i !== index,
+                                        ),
+                                    );
+                                }}
+                            >
                                 <InputWrapper>
                                     <SelectBox
                                         name={`prices.excursion.${i}.region`}
@@ -257,9 +318,15 @@ function ModifyProductForm({
                             </SortableItem>
                         );
                     })}
+                    <AddButtonWrapper>
+                        <CreateButton
+                            full
+                            onClick={() => addPriceItem('excursion')}
+                        />
+                    </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
-            <FieldSection>
+            <FieldSection half>
                 <DraggableFields
                     id={'delivery-price'}
                     ids={prices?.delivery.map((_, i) => i.toString())}
@@ -279,7 +346,18 @@ function ModifyProductForm({
                     </PriceHead>
                     {prices?.delivery.map(({ type, price }, i) => {
                         return (
-                            <SortableItem key={i} id={i.toString()}>
+                            <SortableItem
+                                key={i}
+                                id={i.toString()}
+                                onRemove={() => {
+                                    formik.setFieldValue(
+                                        'prices.delivery',
+                                        prices.delivery.filter(
+                                            (_, index) => i !== index,
+                                        ),
+                                    );
+                                }}
+                            >
                                 <InputWrapper>
                                     <SelectBox
                                         name={`prices.delivery.${i}.type`}
@@ -299,6 +377,12 @@ function ModifyProductForm({
                             </SortableItem>
                         );
                     })}
+                    <AddButtonWrapper>
+                        <CreateButton
+                            full
+                            onClick={() => addPriceItem('delivery')}
+                        />
+                    </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
             <ButtonsWrapper>

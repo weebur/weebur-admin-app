@@ -4,7 +4,9 @@ export const Form = styled.form`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    justify-content: center;
     gap: 30px;
+    min-width: 900px;
 `;
 
 export const InputWrapper = styled.div`
@@ -20,9 +22,17 @@ export const InputWrapper = styled.div`
 `;
 
 export const ButtonsWrapper = styled.div`
+    position: sticky;
+    bottom: -55px;
     display: flex;
     justify-content: flex-end;
-    width: 100%;
+    width: calc(100% + 80px);
     gap: 10px;
-    margin-top: 20px;
+    margin: 20px -40px -55px;
+    background: #ffffff;
+    padding: 20px 40px;
+`;
+
+export const AddButtonWrapper = styled.div`
+    padding: 10px 0;
 `;

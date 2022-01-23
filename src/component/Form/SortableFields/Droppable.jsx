@@ -8,6 +8,7 @@ const SortableContainer = styled.div`
     border: none;
     border-radius: 20px;
     min-width: 110px;
+    width: 100%;
 `;
 
 const Droppable = ({ id, ids, children }) => {

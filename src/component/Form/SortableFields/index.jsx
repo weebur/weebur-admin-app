@@ -41,7 +41,7 @@ function DraggableFields({ id, ids, onChange, children }) {
                 onChange(cloned);
             }}
         >
-            <div style={{ display: 'flex' }}>
+            <div style={{ display: 'flex', width: '100%' }}>
                 <Droppable id={id} ids={ids}>
                     {children}
                 </Droppable>
