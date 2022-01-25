@@ -93,8 +93,6 @@ function ModifyProductForm({
         }
     };
 
-    console.log(formik.values);
-
     return (
         <Form
             onSubmit={(e) => {

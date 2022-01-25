@@ -1,5 +1,21 @@
 import create from 'zustand';
-import { fetchSuppliers } from '../api/SupplierAPI';
+import { fetchSupplier, fetchSuppliers } from '../api/SupplierAPI';
+import { supplierTypes } from '../constants/supplier';
+import dayjs from 'dayjs';
+
+const defaultValues = {
+    name: '',
+    type: supplierTypes.CORPORATION.key,
+    representative: '',
+    mainTeacher: null,
+    teachers: [],
+    accountBank: '',
+    accountNumber: '',
+    registrationNumber: '',
+    active: true,
+    details: '',
+    contractDate: dayjs().toISOString(),
+};
 
 const useSuppliersStore = create((set) => ({
     suppliers: {},
@@ -60,6 +76,65 @@ const useSuppliersStore = create((set) => ({
     },
     resetSuppliers: () => {
         set({ suppliers: {} });
+    },
+    resetSupplier: () => {
+        set({ supplier: null });
+    },
+    initializeSupplier: () => {
+        set({ supplier: defaultValues });
+    },
+    fetchSupplier: async (supplierId) => {
+        const supplier = await fetchSupplier(supplierId);
+
+        set({ supplier });
+    },
+    createSupplier: async ({
+        name,
+        type,
+        fee,
+        active,
+        url,
+        details,
+        prices,
+        supplierIds,
+    }) => {
+        const product = await create({
+            name,
+            type,
+            fee,
+            active,
+            url,
+            details,
+            prices,
+            supplierIds,
+        });
+
+        set({ product });
+    },
+    updateSupplier: async (
+        productId,
+        { name, type, fee, active, url, details, prices, supplierIds },
+    ) => {
+        const product = await updateSupplier(productId, {
+            name,
+            type,
+            fee,
+            active,
+            url,
+            details,
+            prices,
+            supplierIds,
+        });
+
+        set({ product });
+        set(
+            produce((state) => {
+                const index = state.products.result.findIndex(
+                    (item) => item._id === product._id,
+                );
+                state.products.result[index] = product;
+            }),
+        );
     },
 }));
 
