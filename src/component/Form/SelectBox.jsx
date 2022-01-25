@@ -60,12 +60,8 @@ function SelectBox({ options, label, onChange, ...props }) {
                 }}
                 {...props}
             >
-                {options.map(({ key, label }) => (
-                    <StyledSelect.Option
-                        className="dkdkdk"
-                        key={key}
-                        value={key}
-                    >
+                {options.map(({ key, value, label }) => (
+                    <StyledSelect.Option key={key} value={value || key}>
                         {label}
                     </StyledSelect.Option>
                 ))}

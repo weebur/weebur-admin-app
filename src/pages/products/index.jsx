@@ -1,4 +1,4 @@
-import { get, omit } from 'lodash-es';
+import { compact, get, omit } from 'lodash-es';
 import dayjs from 'dayjs';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import useProductsStore from '../../stores/products';
@@ -91,10 +91,9 @@ function Products({ active, name, supplierName, type }) {
 
     const handleSubmit = async (values) => {
         const suppliers = get(values, 'suppliers');
-        console.log(suppliers);
         const payload = {
             ...omit(values, 'suppliers'),
-            supplierIds: suppliers.map((supplier) => supplier._id),
+            supplierIds: compact(suppliers.map((supplier) => supplier._id)),
         };
 
         try {

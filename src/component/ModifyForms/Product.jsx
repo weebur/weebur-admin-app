@@ -6,6 +6,7 @@ import {
     productTypes,
     productPriceTypes,
     productDeliveryTypes,
+    defaultRegions,
 } from '../../constants/product';
 import SelectBox from '../Form/SelectBox';
 import SubmitButton from '../Form/SubmitButton';
@@ -22,6 +23,9 @@ import Label from '../Form/Label';
 import styled from 'styled-components';
 import CreateButton from '../Button/CreateButton';
 import ProductService from '../../services/ProductService';
+import AsyncSelectBox from '../Form/AsyncSelectBox';
+import { fetchSuppliers } from '../../api/SupplierAPI';
+import TextInput from '../Form/Input';
 
 const PriceHead = styled.div`
     padding-left: 30px;
@@ -59,7 +63,7 @@ function ModifyProductForm({
         initialValues,
         onSubmit,
     });
-    const { prices } = formik.values;
+    const { prices, suppliers } = formik.values;
 
     const addPriceItem = (type) => {
         const targetPrices = prices[type];
@@ -68,6 +72,28 @@ function ModifyProductForm({
             ProductService.getDefaultPriceSet(type),
         ]);
     };
+
+    const fetchSupplierOptions = async (name) => {
+        try {
+            const suppliers = await fetchSuppliers({
+                page: 0,
+                limit: 10,
+                name,
+            });
+            return suppliers.result.map(({ _id, name }) => ({
+                label: name,
+                value: JSON.stringify({
+                    _id,
+                    name,
+                }),
+                key: _id,
+            }));
+        } catch (err) {
+            return [];
+        }
+    };
+
+    console.log(formik.values);
 
     return (
         <Form
@@ -129,6 +155,14 @@ function ModifyProductForm({
                             { key: true, label: '운영' },
                             { key: false, label: '미운영' },
                         ]}
+                    />
+                </InputWrapper>
+                <InputWrapper>
+                    <TextInput
+                        label="상품 URL"
+                        name="url"
+                        value={formik.values.url}
+                        onChange={formik.handleChange}
                     />
                 </InputWrapper>
                 <InputWrapper>
@@ -304,8 +338,11 @@ function ModifyProductForm({
                                         name={`prices.excursion.${i}.region`}
                                         onChange={formik.setFieldValue}
                                         value={region}
-                                        options={Object.values(
-                                            productDeliveryTypes,
+                                        options={defaultRegions.map(
+                                            (region) => ({
+                                                key: region,
+                                                label: region,
+                                            }),
                                         )}
                                     />
                                     <NumberInput
@@ -385,6 +422,73 @@ function ModifyProductForm({
                     </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
+            <FieldSection half>
+                <DraggableFields
+                    id={'supplier'}
+                    ids={suppliers?.map((_, i) => i.toString())}
+                    onChange={(v) => {
+                        formik.setFieldValue(
+                            'suppliers',
+                            v.map((index) => suppliers[index]),
+                        );
+                    }}
+                >
+                    <Typography.Title level={5}>담당 업체</Typography.Title>
+                    {suppliers.map(({ _id, name }, i) => {
+                        return (
+                            <SortableItem
+                                key={i}
+                                id={i.toString()}
+                                onRemove={() => {
+                                    formik.setFieldValue(
+                                        'suppliers',
+                                        suppliers.filter(
+                                            (_, index) => i !== index,
+                                        ),
+                                    );
+                                }}
+                            >
+                                <AsyncSelectBox
+                                    name={`suppliers.${i}`}
+                                    onChange={(name, v) => {
+                                        formik.setFieldValue(
+                                            name,
+                                            JSON.parse(v),
+                                        );
+                                    }}
+                                    fetchOptions={fetchSupplierOptions}
+                                    value={JSON.stringify({
+                                        _id,
+                                        name,
+                                    })}
+                                    initialOptions={[
+                                        {
+                                            label: name,
+                                            value: JSON.stringify({
+                                                _id,
+                                                name,
+                                            }),
+                                            key: _id,
+                                        },
+                                    ]}
+                                />
+                            </SortableItem>
+                        );
+                    })}
+                    <AddButtonWrapper>
+                        <CreateButton
+                            full
+                            onClick={() =>
+                                formik.setFieldValue('suppliers', [
+                                    ...suppliers,
+                                    { _id: '', name: '' },
+                                ])
+                            }
+                        />
+                    </AddButtonWrapper>
+                </DraggableFields>
+            </FieldSection>
+
             <ButtonsWrapper>
                 <CommonButton
                     small

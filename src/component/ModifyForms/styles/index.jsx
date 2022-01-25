@@ -6,7 +6,7 @@ export const Form = styled.form`
     align-items: flex-start;
     justify-content: center;
     gap: 30px;
-    min-width: 900px;
+    width: 1000px;
 `;
 
 export const InputWrapper = styled.div`
