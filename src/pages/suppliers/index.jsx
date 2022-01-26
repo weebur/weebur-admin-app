@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import useSuppliersStore from '../../stores/suppliers';
 import SearchList from '../../component/page-components/SearchList';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SEARCH_LIMIT } from '../../constants';
 import SuppliersSearchForm from '../../component/SearchForms/Suppliers';
 import { toQueryObject } from '../../utils/queryString';
@@ -11,6 +11,9 @@ import { useRouter } from 'next/router';
 import AppLayout from '../../component/Layout';
 import { activeTypes, supplierTypes } from '../../constants/supplier';
 import { COMMON_FORMAT } from '../../constants/date';
+import { message } from 'antd';
+import BasicModal from '../../component/Modal';
+import ModifySupplierForm from '../../component/ModifyForms/Supplier';
 
 const headers = [
     {
@@ -65,8 +68,22 @@ function Suppliers({
         teacherMobile,
         teacherEmail,
     };
+    const [createMode, setCreateMode] = useState(true);
+
     const fetchSuppliers = useSuppliersStore((state) => state.fetchSuppliers);
     const resetSuppliers = useSuppliersStore((state) => state.resetSuppliers);
+    const fetchSupplier = useSuppliersStore((state) => state.fetchSupplier);
+    const createSupplier = useSuppliersStore((state) => state.createSupplier);
+    const updateSupplier = useSuppliersStore((state) => state.updateSupplier);
+    const resetSupplier = useSuppliersStore((state) => state.resetSupplier);
+    const fetchProductsBySupplier = useSuppliersStore(
+        (state) => state.fetchProductsBySupplier,
+    );
+    const supplier = useSuppliersStore((state) => state.supplier);
+    const products = useSuppliersStore((state) => state.products);
+    const initializeSupplier = useSuppliersStore(
+        (state) => state.initializeSupplier,
+    );
     const suppliers = useSuppliersStore((state) => state.suppliers);
     const { hasNext, totalResults, result, page, next } = suppliers;
 
@@ -83,17 +100,74 @@ function Suppliers({
         };
     });
 
-    const fetchNext = () => {
-        fetchSuppliers(
-            { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-            true,
-        );
+    const handleSupplierClick = async (id) => {
+        try {
+            await fetchSupplier(id);
+            setCreateMode(false);
+        } catch (e) {
+            message.error('업체 정보를 불러올 수 없습니다.');
+            message.error(e.response.data.message);
+        }
     };
+
+    const handleSubmit = async (values) => {
+        try {
+            if (createMode) {
+                await createSupplier(values);
+                await fetchSuppliers({
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+            } else {
+                await updateSupplier(supplier._id, values);
+            }
+
+            resetSupplier();
+            message.success('저장을 완료하였습니다.');
+        } catch (e) {
+            console.log(e);
+            message.error('저장에 실패하였습니다.');
+            message.error(e.response.data.message);
+        }
+    };
+
+    const fetchMore = async (init = false) => {
+        try {
+            if (init) {
+                await fetchSuppliers({
+                    ...searchQueries,
+                    page: 1,
+                    limit: SEARCH_LIMIT,
+                });
+                return;
+            }
+            await fetchSuppliers(
+                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
+                true,
+            );
+        } catch (e) {
+            message.error('리스트를 불러오는 데 실피하였습니다.');
+        }
+    };
+
+    const fetchSupplierProducts = async (supplierId) => {
+        try {
+            await fetchProductsBySupplier(supplierId);
+        } catch (e) {
+            message.error('업체가 등록한 상품을 불러오는 데 실피하였습니다.');
+        }
+    };
+
+    useEffect(() => {
+        if (supplier?._id) {
+            fetchSupplierProducts(supplier._id);
+        }
+    }, [supplier]);
 
     useEffect(() => {
         if (suppliers.result) return;
 
-        fetchSuppliers({ ...searchQueries, page: 1, limit: SEARCH_LIMIT });
+        fetchMore(true);
     }, [searchQueries]);
 
     return (
@@ -106,10 +180,15 @@ function Suppliers({
                     totalLength={totalResults || 0}
                     hasNext={hasNext}
                     searchQueries={searchQueries}
-                    fetchData={fetchNext}
+                    fetchData={fetchMore}
                     initialPage={page}
                     nextPage={next}
+                    onItemClick={handleSupplierClick}
                     createButtonText="업체생성"
+                    onCreateButtonClick={() => {
+                        initializeSupplier();
+                        setCreateMode(true);
+                    }}
                 >
                     <SuppliersSearchForm
                         initialValues={searchQueries}
@@ -123,6 +202,21 @@ function Suppliers({
                     />
                 </SearchList>
             </ContentLayout>
+            <BasicModal
+                defaultBackground
+                title={createMode ? '업체 생성' : '업체 수정'}
+                isOpen={!!supplier}
+                onClose={() => {
+                    resetSupplier();
+                }}
+            >
+                <ModifySupplierForm
+                    submitButtonLabel={createMode ? '생성하기' : '수정하기'}
+                    initialValues={supplier}
+                    products={products}
+                    onSubmit={handleSubmit}
+                />
+            </BasicModal>
         </AppLayout>
     );
 }

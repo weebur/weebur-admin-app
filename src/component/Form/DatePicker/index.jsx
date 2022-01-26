@@ -10,6 +10,8 @@ const DayjsPicker = dynamic(() => import('./DayjsPicker'), { ssr: false });
 const InputWrapper = styled.div`
     display: flex;
     flex-direction: column;
+    width: 100%;
+    min-width: 210px;
 `;
 
 const StyledDatePicker = styled(DayjsPicker)`
@@ -23,7 +25,6 @@ const StyledDatePicker = styled(DayjsPicker)`
     padding: 10px 12px;
     height: 44px;
     width: 100%;
-    min-width: 210px;
     font-size: ${({ theme }) => theme.fontSize.large};
 
     :focus {

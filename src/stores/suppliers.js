@@ -1,7 +1,14 @@
 import create from 'zustand';
-import { fetchSupplier, fetchSuppliers } from '../api/SupplierAPI';
+import {
+    createSupplier,
+    fetchProductsBySupplier,
+    fetchSupplier,
+    fetchSuppliers,
+    updateSupplier,
+} from '../api/SupplierAPI';
 import { supplierTypes } from '../constants/supplier';
 import dayjs from 'dayjs';
+import produce from 'immer';
 
 const defaultValues = {
     name: '',
@@ -19,6 +26,8 @@ const defaultValues = {
 
 const useSuppliersStore = create((set) => ({
     suppliers: {},
+    supplier: null,
+    products: [],
     loading: false,
     error: null,
     fetchSuppliers: async (
@@ -88,51 +97,76 @@ const useSuppliersStore = create((set) => ({
 
         set({ supplier });
     },
+    fetchProductsBySupplier: async (supplierId) => {
+        const products = await fetchProductsBySupplier(supplierId);
+        set({ products });
+    },
     createSupplier: async ({
         name,
         type,
-        fee,
+        representative,
+        mainTeacher,
+        teachers,
+        accountBank,
+        accountNumber,
+        registrationNumber,
         active,
-        url,
         details,
-        prices,
-        supplierIds,
+        contractDate,
     }) => {
-        const product = await create({
+        const product = await createSupplier({
             name,
             type,
-            fee,
+            representative,
+            mainTeacher,
+            teachers,
+            accountBank,
+            accountNumber,
+            registrationNumber,
             active,
-            url,
             details,
-            prices,
-            supplierIds,
+            contractDate,
         });
 
         set({ product });
     },
     updateSupplier: async (
-        productId,
-        { name, type, fee, active, url, details, prices, supplierIds },
-    ) => {
-        const product = await updateSupplier(productId, {
+        supplierId,
+        {
             name,
             type,
-            fee,
+            representative,
+            mainTeacher,
+            teachers,
+            accountBank,
+            accountNumber,
+            registrationNumber,
             active,
-            url,
             details,
-            prices,
-            supplierIds,
+            contractDate,
+        },
+    ) => {
+        const supplier = await updateSupplier(supplierId, {
+            name,
+            type,
+            representative,
+            mainTeacher,
+            teachers,
+            accountBank,
+            accountNumber,
+            registrationNumber,
+            active,
+            details,
+            contractDate,
         });
 
-        set({ product });
+        set({ supplier });
         set(
             produce((state) => {
-                const index = state.products.result.findIndex(
-                    (item) => item._id === product._id,
+                const index = state.suppliers.result.findIndex(
+                    (item) => item._id === supplier._id,
                 );
-                state.products.result[index] = product;
+                state.suppliers.result[index] = supplier;
             }),
         );
     },

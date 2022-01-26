@@ -37,6 +37,10 @@ export const fetchSupplier = (id) => {
     return api.get(`/suppliers/${id}`).then((res) => res.data);
 };
 
+export const fetchProductsBySupplier = (id) => {
+    return api.get(`/suppliers/${id}/products`).then((res) => res.data);
+};
+
 export const createSupplier = ({
     name,
     type,
@@ -84,7 +88,7 @@ export const updateSupplier = (
     },
 ) => {
     return api
-        .post(`/suppliers/${supplierId}`, {
+        .put(`/suppliers/${supplierId}`, {
             name,
             type,
             representative,
