@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import { menu } from '../../constants/menu';
 import useAdminsStore from '../../stores/admins';
 import { adminRoles } from '../../constants/admin';
+import Loader from '../Loader';
 
 const Logo = styled.div`
     margin-top: 40px;
@@ -67,27 +68,35 @@ function SideBar({ user }) {
                 <Image alt="logo" src="/logo.png" />
             </Logo>
             <AdminUser>
-                <div>
-                    <b>{user?.name}</b> {`[${adminRoles[user?.role]?.label}]`}
-                </div>
-                <div>{user?.email}</div>
-                <div>
-                    <Button
-                        danger
-                        size="small"
-                        type="text"
-                        onClick={async () => {
-                            try {
-                                await logout();
-                                router.push('/login');
-                            } catch (e) {
-                                message.warn('알 수 없는 문제가 발생하였습니다.');
-                            }
-                        }}
-                    >
-                        로그아웃
-                    </Button>
-                </div>
+                {user ? (
+                    <>
+                        <div>
+                            <b>{user.name}</b> {`[${adminRoles[user.role]?.label}]`}
+                        </div>
+                        <div>{user.email}</div>
+                        <div>
+                            <Button
+                                danger
+                                size="small"
+                                type="text"
+                                onClick={async () => {
+                                    try {
+                                        await logout();
+                                        router.push('/login');
+                                    } catch (e) {
+                                        message.warn('알 수 없는 문제가 발생하였습니다.');
+                                    }
+                                }}
+                            >
+                                로그아웃
+                            </Button>
+                        </div>
+                    </>
+                ) : (
+                    <div>
+                        <Loader />
+                    </div>
+                )}
             </AdminUser>
             <StyledMenu mode="inline" selectedKeys={selectedKeys} defaultSelectedKeys={[menu[2].path]}>
                 {menu.map(({ name, Icon, path }) => {

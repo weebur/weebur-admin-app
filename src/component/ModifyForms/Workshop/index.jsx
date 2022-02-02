@@ -4,6 +4,10 @@ import Tab from '../../Tab';
 import styled from 'styled-components';
 import { useFormik } from 'formik';
 import ClientInfo from './ClientInfo';
+import dayjs from 'dayjs';
+import useAdminsStore from '../../../stores/admins';
+import WorkshopInfo from './WorkshopInfo';
+import Payment from './Payment';
 
 const tabs = [
     { key: 'workshop', label: '워크샵' },
@@ -18,6 +22,7 @@ const FormContainer = styled.div`
 `;
 
 function WorkshopForm(props) {
+    const me = useAdminsStore((state) => state.me);
     const formik = useFormik({
         initialValues: {
             clientId: '',
@@ -26,8 +31,16 @@ function WorkshopForm(props) {
             companyName: '',
             clientMobile: '',
             clientEmail: '',
-            adminId: '',
-            adminName: '',
+            adminId: me?._id || '',
+            adminName: me?.name || '',
+            createdAt: dayjs().toISOString(),
+            requirements: '',
+            subject: '',
+            participantsInfo: '',
+            place: '',
+            paymentMethod: '',
+            paymentRequirements: '',
+            certificatedRegistration: false,
         },
     });
 
@@ -37,7 +50,9 @@ function WorkshopForm(props) {
         <FormContainer>
             <Typography.Title level={4}>워크샵생성</Typography.Title>
             <Tab tabs={tabs} active={active} onChange={setActive} />
-            <ClientInfo onValueChange={formik.setFieldValue} />
+            <ClientInfo onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
+            <WorkshopInfo onChange={formik.handleChange} values={formik.values} />
+            <Payment onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
         </FormContainer>
     );
 }

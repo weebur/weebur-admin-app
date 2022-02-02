@@ -1,18 +1,13 @@
 import React from 'react';
-import { FieldSection } from '../styles';
 import { Typography } from 'antd';
-import styled from 'styled-components';
 import AsyncSelectBox from '../../Form/AsyncSelectBox';
 import { fetchClients } from '../../../api/ClientAPI';
+import TextInput from '../../Form/Input';
+import DatePicker from '../../Form/DatePicker';
+import TextArea from '../../Form/TextArea';
+import { ClientSelectBox, Fields, FieldSection, SubTitle } from './styles';
 
-const SubTitle = styled.div`
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-`;
-
-function ClientInfo({ onValueChange }) {
+function ClientInfo({ onValueChange, values, onChange }) {
     const fetchClientOptions = async (name) => {
         try {
             const clients = await fetchClients({
@@ -23,11 +18,12 @@ function ClientInfo({ onValueChange }) {
             return clients.result.map(({ _id, name, company, mobile, email }) => ({
                 label: name,
                 value: JSON.stringify({
-                    _id,
-                    name,
-                    company,
-                    mobile,
-                    email,
+                    clientId: _id,
+                    clientName: name,
+                    clientEmail: email,
+                    clientMobile: mobile,
+                    companyId: company._id,
+                    companyName: company.name,
                 }),
                 key: _id,
             }));
@@ -39,24 +35,53 @@ function ClientInfo({ onValueChange }) {
     return (
         <>
             <SubTitle>
-                <Typography.Title level={5}>회원정보</Typography.Title>
-                <AsyncSelectBox
-                    name={'clientId'}
-                    onChange={(name, v) => {
-                        const client = JSON.parse(v);
-                        onValueChange('clientId', client._id);
-                        onValueChange('clientName', client.name);
-                        onValueChange('clientEmail', client.email);
-                        onValueChange('clientMobile', client.mobile);
-                        onValueChange('companyId', client.company._id);
-                        onValueChange('companyName', client.company.name);
-                    }}
-                    fetchOptions={fetchClientOptions}
-                    initialOptions={[]}
-                />
+                <Typography.Title level={5}>회원 정보</Typography.Title>
+                <ClientSelectBox>
+                    <AsyncSelectBox
+                        placeholder="회원명을 입력해주세요"
+                        name={'clientId'}
+                        onChange={(name, v) => {
+                            const value = JSON.parse(v);
+                            onValueChange('clientId', value.clientId);
+                            onValueChange('clientName', value.clientName);
+                            onValueChange('clientEmail', value.clientEmail);
+                            onValueChange('clientMobile', value.clientMobile);
+                            onValueChange('companyId', value.companyId);
+                            onValueChange('companyName', value.companyName);
+                        }}
+                        fetchOptions={fetchClientOptions}
+                        initialOptions={[
+                            {
+                                key: values.clientId,
+                                value: values.clientId
+                                    ? JSON.stringify({
+                                          clientId: values.clientId,
+                                          clientName: values.clientName,
+                                          clientEmail: values.clientEmail,
+                                          clientMobile: values.clientMobile,
+                                          companyId: values.companyId,
+                                          companyName: values.companyName,
+                                      })
+                                    : null,
+                                label: values.clientName,
+                            },
+                        ]}
+                    />
+                </ClientSelectBox>
             </SubTitle>
 
-            <FieldSection></FieldSection>
+            <FieldSection>
+                <Fields>
+                    <TextInput disabled name="companyName" label="회사명" value={values.companyName} />
+                    <DatePicker label="문의일" name="createdAt" value={values.createdAt} />
+                    <TextInput disabled label="모바일" name="clientMobile" value={values.clientMobile} />
+                    <TextInput disabled label="이메일" name="clientEmail" value={values.clientEmail} />
+                    <TextInput disabled label="담당자" name="adminName" value={values.adminName} />
+                </Fields>
+                <Fields>
+                    <TextArea label="요청사항" name="requirements" value={values.requirements} onChange={onChange} />
+                </Fields>
+            </FieldSection>
         </>
     );
 }
