@@ -26,3 +26,62 @@ export const fetchOrders = ({
         })
         .then((res) => res.data);
 };
+
+export const createOrder = ({
+    reservationStatus,
+    paymentStatus,
+    statusDetails,
+    product,
+    supplier,
+    reservationDate,
+    participants,
+    onlineInfo,
+    payment,
+    workshop,
+}) => {
+    return api
+        .post('/orders', {
+            reservationStatus,
+            paymentStatus,
+            statusDetails,
+            product,
+            supplier,
+            reservationDate,
+            participants,
+            onlineInfo,
+            payment,
+            workshop,
+        })
+        .then((res) => res.data);
+};
+
+export const updateOrder = (
+    orderId,
+    {
+        reservationStatus,
+        paymentStatus,
+        statusDetails,
+        product,
+        supplier,
+        reservationDate,
+        participants,
+        onlineInfo,
+        payment,
+        workshop,
+    },
+) => {
+    return api
+        .put(`/orders/${orderId}`, {
+            reservationStatus,
+            paymentStatus,
+            statusDetails,
+            product,
+            supplier,
+            reservationDate,
+            participants,
+            onlineInfo,
+            payment,
+            workshop,
+        })
+        .then((res) => res.data);
+};

@@ -70,3 +70,7 @@ input::-webkit-inner-spin-button {
     border: 1px solid #1152f2;
     color: #313131;
 }
+
+.ant-select-selection-search {
+    background: #FFFFFF;
+}

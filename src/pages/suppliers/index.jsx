@@ -8,7 +8,6 @@ import { SEARCH_LIMIT } from '../../constants';
 import SuppliersSearchForm from '../../component/SearchForms/Suppliers';
 import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
-import AppLayout from '../../component/Layout';
 import { activeTypes, supplierTypes } from '../../constants/supplier';
 import { COMMON_FORMAT } from '../../constants/date';
 import { message } from 'antd';
@@ -171,7 +170,7 @@ function Suppliers({
     }, [searchQueries]);
 
     return (
-        <AppLayout>
+        <>
             <ContentLayout>
                 <SearchList
                     title="업체 검색"
@@ -217,7 +216,7 @@ function Suppliers({
                     onSubmit={handleSubmit}
                 />
             </BasicModal>
-        </AppLayout>
+        </>
     );
 }
 

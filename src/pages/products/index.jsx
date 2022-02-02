@@ -8,7 +8,6 @@ import { SEARCH_LIMIT } from '../../constants';
 import ProductsSearchForm from '../../component/SearchForms/Products';
 import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
-import AppLayout from '../../component/Layout';
 import { activeTypes } from '../../constants/supplier';
 import { COMMON_FORMAT } from '../../constants/date';
 import { productTypes } from '../../constants/product';
@@ -152,7 +151,7 @@ function Products({ active, name, supplierName, type }) {
     }, [searchQueries]);
 
     return (
-        <AppLayout>
+        <>
             <ContentLayout>
                 <SearchList
                     title="상품 검색"
@@ -197,7 +196,7 @@ function Products({ active, name, supplierName, type }) {
                     onSubmit={handleSubmit}
                 />
             </BasicModal>
-        </AppLayout>
+        </>
     );
 }
 

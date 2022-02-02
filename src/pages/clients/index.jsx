@@ -9,7 +9,6 @@ import useClientStore from '../../stores/clients';
 import SearchList from '../../component/page-components/SearchList';
 import { clientsTypes } from '../../constants/client';
 import { COMMON_FORMAT } from '../../constants/date';
-import AppLayout from '../../component/Layout';
 import BasicModal from '../../component/Modal';
 import ModifyClientForm from '../../component/ModifyForms/Client';
 import { message } from 'antd';
@@ -132,7 +131,7 @@ function Client({ name, company, mobile, email, from, to }) {
     }, [searchQueries]);
 
     return (
-        <AppLayout>
+        <>
             <ContentLayout>
                 <SearchList
                     title="회원 검색"
@@ -176,7 +175,7 @@ function Client({ name, company, mobile, email, from, to }) {
                     onSubmit={handleSubmit}
                 />
             </BasicModal>
-        </AppLayout>
+        </>
     );
 }
 

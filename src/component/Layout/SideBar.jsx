@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { Image, Menu } from 'antd';
+import { Button, Menu, Image, message } from 'antd';
 import Sider from 'antd/lib/layout/Sider';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { menu } from '../../constants/menu';
+import useAdminsStore from '../../stores/admins';
 
 const Logo = styled.div`
     margin-top: 40px;
@@ -53,6 +54,8 @@ function SideBar() {
     const router = useRouter();
     const [selectedKeys, setSelectedKeys] = useState([]);
 
+    const logout = useAdminsStore((state) => state.logout);
+
     useEffect(() => {
         setSelectedKeys([router.pathname]);
     }, [router.pathname]);
@@ -67,20 +70,30 @@ function SideBar() {
                     <b>테스트 유저</b>
                 </div>
                 <div>dev@weebur.com</div>
+                <div>
+                    <Button
+                        size="small"
+                        type="text"
+                        onClick={async () => {
+                            try {
+                                await logout();
+                                router.push('/login');
+                            } catch (e) {
+                                message.warn('알 수 없는 문제가 발생하였습니다.');
+                            }
+                        }}
+                    >
+                        로그아웃
+                    </Button>
+                </div>
             </AdminUser>
-            <StyledMenu
-                mode="inline"
-                selectedKeys={selectedKeys}
-                defaultSelectedKeys={[menu[2].path]}
-            >
+            <StyledMenu mode="inline" selectedKeys={selectedKeys} defaultSelectedKeys={[menu[2].path]}>
                 {menu.map(({ name, Icon, path }) => {
                     return (
                         <Menu.Item
                             key={path}
                             icon={
-                                <IconWrapper
-                                    primary={selectedKeys.includes(path)}
-                                >
+                                <IconWrapper primary={selectedKeys.includes(path)}>
                                     <Icon />
                                 </IconWrapper>
                             }

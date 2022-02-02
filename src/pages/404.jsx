@@ -19,4 +19,10 @@ function NotFound() {
     );
 }
 
+export const getStaticProps = () => {
+    return {
+        props: { withoutSidebar: true },
+    };
+};
+
 export default NotFound;

@@ -10,6 +10,15 @@ const StyledContentLayout = styled(Layout)`
     margin-left: 200px;
 `;
 
+const CenteredLayout = styled(Layout)`
+    min-height: 100vh;
+
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+`;
+
 const StyledContent = styled(Content)`
     margin: 24px auto 0;
     width: 100%;
@@ -22,7 +31,15 @@ const LayoutBackground = styled.div`
     flex-direction: column;
 `;
 
-function AppLayout({ children }) {
+function AppLayout({ children, withoutSidebar }) {
+    if (withoutSidebar) {
+        return (
+            <StyledLayout>
+                <CenteredLayout>{children}</CenteredLayout>
+            </StyledLayout>
+        );
+    }
+
     return (
         <StyledLayout>
             <SideBar />

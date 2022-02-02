@@ -6,6 +6,7 @@ import { ConfigProvider } from 'antd';
 import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
 import { setTwoToneColor } from '@ant-design/icons';
+import AppLayout from '../component/Layout';
 
 setTwoToneColor(theme.color.primary);
 
@@ -22,9 +23,12 @@ if (typeof document === 'undefined') {
 }
 
 function App({ Component, pageProps }) {
+    const { withoutSidebar, ...props } = pageProps;
     return (
         <ThemeProvider theme={theme}>
-            <Component {...pageProps} />
+            <AppLayout withoutSidebar={withoutSidebar}>
+                <Component {...props} />
+            </AppLayout>
         </ThemeProvider>
     );
 }

@@ -19,4 +19,10 @@ function InternalServerError() {
     );
 }
 
+export const getStaticProps = () => {
+    return {
+        props: { withoutSidebar: true },
+    };
+};
+
 export default InternalServerError;

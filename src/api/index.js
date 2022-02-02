@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { message } from 'antd';
+import Router from 'next/router';
 
 const isServer = typeof window === 'undefined';
 
@@ -16,6 +18,17 @@ const serverSideApi = axios.create({
 
 const api = isServer ? serverSideApi : clientSideApi;
 
-export const fetcher = (...args) => api.get(...args).then((res) => res.data);
+api.interceptors.response.use(
+    function (response) {
+        return response;
+    },
+    function (error) {
+        if (error.response.status === 401) {
+            message.warn('로그인이 필요합니다.');
+            Router.push('/login');
+        }
+        return Promise.reject(error);
+    },
+);
 
 export default api;

@@ -7,7 +7,6 @@ import AdminsSearchForm from '../../component/SearchForms/Admins';
 import { toQueryObject } from '../../utils/queryString';
 import useAdminsStore from '../../stores/admins';
 import SearchList from '../../component/page-components/SearchList';
-import AppLayout from '../../component/Layout';
 
 const headers = [
     { key: 'name', label: '이름', span: 7 },
@@ -51,7 +50,7 @@ function Admins({ name, email }) {
     }, [name, email]);
 
     return (
-        <AppLayout>
+        <>
             <ContentLayout>
                 <SearchList
                     title="어드민 검색"
@@ -77,7 +76,7 @@ function Admins({ name, email }) {
                     />
                 </SearchList>
             </ContentLayout>
-        </AppLayout>
+        </>
     );
 }
 

@@ -7,7 +7,6 @@ import { SEARCH_LIMIT } from '../../constants';
 import CompaniesSearchForm from '../../component/SearchForms/Companies';
 import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
-import AppLayout from '../../component/Layout';
 import BasicModal from '../../component/Modal';
 import ModifyCompanyForm from '../../component/ModifyForms/Company';
 import { message } from 'antd';
@@ -112,7 +111,7 @@ function Companies({ name, category, from, to }) {
     }, [name, category, from, to]);
 
     return (
-        <AppLayout>
+        <>
             <ContentLayout>
                 <SearchList
                     title="회사 검색"
@@ -161,7 +160,7 @@ function Companies({ name, category, from, to }) {
                     onSubmit={handleSubmit}
                 />
             </BasicModal>
-        </AppLayout>
+        </>
     );
 }
 
