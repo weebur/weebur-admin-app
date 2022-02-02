@@ -1,6 +1,6 @@
 import create from 'zustand';
-import { fetchAdmins, fetchMe, login, logout, signup } from '../api/AdminAPI';
-import { removeItem, setItem } from '../services/LocalStorageService';
+import { approveAdmin, fetchAdmins, fetchMe, login, logout, signup } from '../api/AdminAPI';
+import produce from 'immer';
 
 const useAdminsStore = create((set) => ({
     admins: {},
@@ -36,7 +36,6 @@ const useAdminsStore = create((set) => ({
     login: async ({ email, password }) => {
         const admin = await login({ email, password });
 
-        setItem('admin-me', admin);
         set({ me: admin });
 
         return admin;
@@ -49,15 +48,24 @@ const useAdminsStore = create((set) => ({
     logout: async () => {
         const { success } = await logout();
 
-        removeItem('admin-me');
         set({ me: null });
 
         return success;
     },
     fetchMe: async () => {
         const me = await fetchMe();
-        setItem('admin-me', me);
+
         set({ me });
+    },
+    approveAdmin: async (adminId) => {
+        const admin = await approveAdmin(adminId);
+
+        set(
+            produce((state) => {
+                const index = state.admins.result.findIndex((item) => item._id === adminId);
+                state.admins.result[index] = admin;
+            }),
+        );
     },
 }));
 

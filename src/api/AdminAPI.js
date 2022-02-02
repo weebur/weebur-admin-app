@@ -20,3 +20,7 @@ export const logout = () => {
 export const fetchMe = () => {
     return api.get('/admins/me').then((res) => res.data);
 };
+
+export const approveAdmin = (adminId) => {
+    return api.put(`/admins/approve/${adminId}`).then((res) => res.data);
+};

@@ -31,7 +31,7 @@ const LayoutBackground = styled.div`
     flex-direction: column;
 `;
 
-function AppLayout({ children, withoutSidebar }) {
+function AppLayout({ children, withoutSidebar, me }) {
     if (withoutSidebar) {
         return (
             <StyledLayout>
@@ -42,7 +42,7 @@ function AppLayout({ children, withoutSidebar }) {
 
     return (
         <StyledLayout>
-            <SideBar />
+            <SideBar user={me} />
             <StyledContentLayout>
                 <StyledContent>
                     <LayoutBackground>{children}</LayoutBackground>

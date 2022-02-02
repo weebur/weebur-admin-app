@@ -35,8 +35,8 @@ function Login() {
         },
         onSubmit: async (values) => {
             try {
-                const { authenticated } = await login(values);
-                if (!authenticated) {
+                const { approved } = await login(values);
+                if (!approved) {
                     message.warn('관리자의 승인이 필요합니다.');
                 } else {
                     router.push('/');

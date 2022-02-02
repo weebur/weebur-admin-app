@@ -6,6 +6,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { menu } from '../../constants/menu';
 import useAdminsStore from '../../stores/admins';
+import { adminRoles } from '../../constants/admin';
 
 const Logo = styled.div`
     margin-top: 40px;
@@ -50,7 +51,7 @@ const IconWrapper = styled.div`
     }
 `;
 
-function SideBar() {
+function SideBar({ user }) {
     const router = useRouter();
     const [selectedKeys, setSelectedKeys] = useState([]);
 
@@ -67,11 +68,12 @@ function SideBar() {
             </Logo>
             <AdminUser>
                 <div>
-                    <b>테스트 유저</b>
+                    <b>{user?.name}</b> {`[${adminRoles[user?.role]?.label}]`}
                 </div>
-                <div>dev@weebur.com</div>
+                <div>{user?.email}</div>
                 <div>
                     <Button
+                        danger
                         size="small"
                         type="text"
                         onClick={async () => {

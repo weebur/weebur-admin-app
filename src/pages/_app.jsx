@@ -7,6 +7,7 @@ import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
 import { setTwoToneColor } from '@ant-design/icons';
 import AppLayout from '../component/Layout';
+import useAdminUser from '../hooks/useAdminUser';
 
 setTwoToneColor(theme.color.primary);
 
@@ -23,10 +24,11 @@ if (typeof document === 'undefined') {
 }
 
 function App({ Component, pageProps }) {
+    const { me } = useAdminUser();
     const { withoutSidebar, ...props } = pageProps;
     return (
         <ThemeProvider theme={theme}>
-            <AppLayout withoutSidebar={withoutSidebar}>
+            <AppLayout me={me} withoutSidebar={withoutSidebar}>
                 <Component {...props} />
             </AppLayout>
         </ThemeProvider>

@@ -38,6 +38,7 @@ function SignUp() {
         onSubmit: async (values) => {
             try {
                 await signup(values);
+                message.success('가입 요청이 완료되었습니다.');
                 router.push('/login');
             } catch (e) {
                 message.error('알 수 없는 문제가 발생하였습니다.');

@@ -1,10 +1,5 @@
 import create from 'zustand';
-import {
-    createClient,
-    fetchClient,
-    fetchClients,
-    updateClient,
-} from '../api/ClientAPI';
+import { createClient, fetchClient, fetchClients, updateClient } from '../api/ClientAPI';
 import produce from 'immer';
 import { fetchCompany } from '../api/companyAPI';
 
@@ -22,10 +17,7 @@ const defaultValues = {
 const useClientsStore = create((set) => ({
     clients: {},
     client: null,
-    fetchClients: async (
-        { page, limit, name, company, mobile, email, from, to },
-        loadMore,
-    ) => {
+    fetchClients: async ({ page, limit, name, company, mobile, email, from, to }, loadMore) => {
         const clients = await fetchClients({
             page,
             limit,
@@ -41,10 +33,7 @@ const useClientsStore = create((set) => ({
             set((state) => ({
                 clients: {
                     ...clients,
-                    result: [
-                        ...(state.clients?.result || []),
-                        ...clients.result,
-                    ],
+                    result: [...(state.clients?.result || []), ...clients.result],
                 },
             }));
             return;
@@ -66,16 +55,7 @@ const useClientsStore = create((set) => ({
 
         set({ client });
     },
-    createClient: async ({
-        name,
-        company,
-        mobile,
-        phoneNumber,
-        email,
-        inflowPath,
-        type,
-        details,
-    }) => {
+    createClient: async ({ name, company, mobile, phoneNumber, email, inflowPath, type, details }) => {
         const client = await createClient({
             name,
             company,
@@ -89,19 +69,7 @@ const useClientsStore = create((set) => ({
 
         set({ client });
     },
-    updateClient: async (
-        clientId,
-        {
-            name,
-            company,
-            mobile,
-            phoneNumber,
-            email,
-            inflowPath,
-            type,
-            details,
-        },
-    ) => {
+    updateClient: async (clientId, { name, company, mobile, phoneNumber, email, inflowPath, type, details }) => {
         const client = await updateClient(clientId, {
             name,
             company,
@@ -113,16 +81,12 @@ const useClientsStore = create((set) => ({
             details,
         });
 
-        const { _id: companyId, name: companyName } = await fetchCompany(
-            client.company,
-        );
+        const { _id: companyId, name: companyName } = await fetchCompany(client.company);
 
         set({ client });
         set(
             produce((state) => {
-                const index = state.clients.result.findIndex(
-                    (item) => item._id === client._id,
-                );
+                const index = state.clients.result.findIndex((item) => item._id === client._id);
 
                 state.clients.result[index] = {
                     ...client,
