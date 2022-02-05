@@ -16,7 +16,7 @@ function ClientInfo({ onValueChange, values, onChange }) {
                 name,
             });
             return clients.result.map(({ _id, name, company, mobile, email }) => ({
-                label: name,
+                label: `${name}(${company.name})`,
                 value: JSON.stringify({
                     clientId: _id,
                     clientName: name,

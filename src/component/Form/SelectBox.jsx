@@ -22,9 +22,7 @@ export const StyledSelect = styled(Select)`
         font-size: ${({ theme }) => theme.fontSize.large};
         color: ${({ theme }) => theme.color.light};
         border-radius: 3px;
-        border: solid 1px
-            ${({ focused, theme }) =>
-                focused ? theme.color.primary : theme.color.light};
+        border: solid 1px ${({ focused, theme }) => (focused ? theme.color.primary : theme.color.light)};
 
         .ant-select-selection-search {
             display: flex;

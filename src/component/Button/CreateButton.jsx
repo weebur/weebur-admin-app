@@ -10,6 +10,13 @@ const ButtonWrapper = styled.div`
     gap: 11px;
     font-weight: 500;
     font-size: ${({ theme }) => theme.fontSize.xLarge};
+    & > button {
+        ${({ full }) =>
+            full &&
+            `
+              width: 100%;
+          `}
+    }
 `;
 
 const StyledButton = styled(Button)`
@@ -21,22 +28,16 @@ const StyledButton = styled(Button)`
     padding: 7px;
     border-radius: 8px;
     border: solid 1px ${({ theme }) => theme.color.light};
-
-    ${({ full }) =>
-        full &&
-        `
-      width: 100%;
-  `}
 `;
 
-function CreateButton({ children, ...props }) {
+function CreateButton({ children, full, color, ...props }) {
     return (
-        <ButtonWrapper>
+        <ButtonWrapper full={full}>
             {children}
             <StyledButton {...props}>
                 <PlusOutlined
                     style={{
-                        color: theme.color.primary,
+                        color: color || theme.color.primary,
                         fontSize: theme.fontSize.xLarge,
                     }}
                 />

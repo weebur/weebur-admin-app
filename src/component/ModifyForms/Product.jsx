@@ -2,12 +2,7 @@ import React from 'react';
 import { AddButtonWrapper, ButtonsWrapper, Form, InputWrapper } from './styles';
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
-import {
-    productTypes,
-    productPriceTypes,
-    productDeliveryTypes,
-    defaultRegions,
-} from '../../constants/product';
+import { productTypes, productPriceTypes, productDeliveryTypes, defaultRegions } from '../../constants/product';
 import SelectBox from '../Form/SelectBox';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
@@ -52,12 +47,7 @@ const FieldSection = styled.div`
     `}
 `;
 
-function ModifyProductForm({
-    initialValues,
-    onSubmit,
-    onReset,
-    submitButtonLabel,
-}) {
+function ModifyProductForm({ initialValues, onSubmit, onReset, submitButtonLabel }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
@@ -67,10 +57,7 @@ function ModifyProductForm({
 
     const addPriceItem = (type) => {
         const targetPrices = prices[type];
-        formik.setFieldValue(`prices.${type}`, [
-            ...targetPrices,
-            ProductService.getDefaultPriceSet(type),
-        ]);
+        formik.setFieldValue(`prices.${type}`, [...targetPrices, ProductService.getDefaultPriceSet(type)]);
     };
 
     const fetchSupplierOptions = async (name) => {
@@ -113,9 +100,7 @@ function ModifyProductForm({
                         disabled
                         label="등록일"
                         name="createdAt"
-                        value={dayjs(formik.values.createdAt).format(
-                            COMMON_FORMAT,
-                        )}
+                        value={dayjs(formik.values.createdAt).format(COMMON_FORMAT)}
                         onChange={formik.handleChange}
                     />
                 </InputWrapper>
@@ -156,12 +141,7 @@ function ModifyProductForm({
                     />
                 </InputWrapper>
                 <InputWrapper>
-                    <TextInput
-                        label="상품 URL"
-                        name="url"
-                        value={formik.values.url}
-                        onChange={formik.handleChange}
-                    />
+                    <TextInput label="상품 URL" name="url" value={formik.values.url} onChange={formik.handleChange} />
                 </InputWrapper>
                 <InputWrapper>
                     <TextArea
@@ -179,9 +159,7 @@ function ModifyProductForm({
                     onChange={(v) => {
                         formik.setFieldValue(
                             'prices.product',
-                            v.map(
-                                (index) => formik.values.prices.product[index],
-                            ),
+                            v.map((index) => formik.values.prices.product[index]),
                         );
                     }}
                 >
@@ -200,9 +178,7 @@ function ModifyProductForm({
                                 onRemove={() => {
                                     formik.setFieldValue(
                                         'prices.product',
-                                        prices.product.filter(
-                                            (_, index) => i !== index,
-                                        ),
+                                        prices.product.filter((_, index) => i !== index),
                                     );
                                 }}
                             >
@@ -211,9 +187,7 @@ function ModifyProductForm({
                                         name={`prices.product.${i}.type`}
                                         onChange={formik.setFieldValue}
                                         value={type}
-                                        options={Object.values(
-                                            productPriceTypes,
-                                        )}
+                                        options={Object.values(productPriceTypes)}
                                     />
                                     <NumberInput
                                         name={`prices.product.${i}.range.from`}
@@ -236,10 +210,7 @@ function ModifyProductForm({
                         );
                     })}
                     <AddButtonWrapper>
-                        <CreateButton
-                            full
-                            onClick={() => addPriceItem('product')}
-                        />
+                        <CreateButton full onClick={() => addPriceItem('product')} />
                     </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
@@ -250,9 +221,7 @@ function ModifyProductForm({
                     onChange={(v) => {
                         formik.setFieldValue(
                             'prices.option',
-                            v.map(
-                                (index) => formik.values.prices.option[index],
-                            ),
+                            v.map((index) => formik.values.prices.option[index]),
                         );
                     }}
                 >
@@ -269,9 +238,7 @@ function ModifyProductForm({
                                 onRemove={() => {
                                     formik.setFieldValue(
                                         'prices.option',
-                                        prices.option.filter(
-                                            (_, index) => i !== index,
-                                        ),
+                                        prices.option.filter((_, index) => i !== index),
                                     );
                                 }}
                             >
@@ -292,10 +259,7 @@ function ModifyProductForm({
                         );
                     })}
                     <AddButtonWrapper>
-                        <CreateButton
-                            full
-                            onClick={() => addPriceItem('option')}
-                        />
+                        <CreateButton full onClick={() => addPriceItem('option')} />
                     </AddButtonWrapper>
                 </DraggableFields>
                 <Divider type="vertical" style={{ height: 'inherit' }} />
@@ -305,10 +269,7 @@ function ModifyProductForm({
                     onChange={(v) => {
                         formik.setFieldValue(
                             'prices.excursion',
-                            v.map(
-                                (index) =>
-                                    formik.values.prices.excursion[index],
-                            ),
+                            v.map((index) => formik.values.prices.excursion[index]),
                         );
                     }}
                 >
@@ -325,9 +286,7 @@ function ModifyProductForm({
                                 onRemove={() => {
                                     formik.setFieldValue(
                                         'prices.excursion',
-                                        prices.excursion.filter(
-                                            (_, index) => i !== index,
-                                        ),
+                                        prices.excursion.filter((_, index) => i !== index),
                                     );
                                 }}
                             >
@@ -336,12 +295,10 @@ function ModifyProductForm({
                                         name={`prices.excursion.${i}.region`}
                                         onChange={formik.setFieldValue}
                                         value={region}
-                                        options={defaultRegions.map(
-                                            (region) => ({
-                                                key: region,
-                                                label: region,
-                                            }),
-                                        )}
+                                        options={defaultRegions.map((region) => ({
+                                            key: region,
+                                            label: region,
+                                        }))}
                                     />
                                     <NumberInput
                                         name={`prices.excursion.${i}.price`}
@@ -354,10 +311,7 @@ function ModifyProductForm({
                         );
                     })}
                     <AddButtonWrapper>
-                        <CreateButton
-                            full
-                            onClick={() => addPriceItem('excursion')}
-                        />
+                        <CreateButton full onClick={() => addPriceItem('excursion')} />
                     </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
@@ -368,9 +322,7 @@ function ModifyProductForm({
                     onChange={(v) => {
                         formik.setFieldValue(
                             'prices.delivery',
-                            v.map(
-                                (index) => formik.values.prices.delivery[index],
-                            ),
+                            v.map((index) => formik.values.prices.delivery[index]),
                         );
                     }}
                 >
@@ -387,9 +339,7 @@ function ModifyProductForm({
                                 onRemove={() => {
                                     formik.setFieldValue(
                                         'prices.delivery',
-                                        prices.delivery.filter(
-                                            (_, index) => i !== index,
-                                        ),
+                                        prices.delivery.filter((_, index) => i !== index),
                                     );
                                 }}
                             >
@@ -398,9 +348,7 @@ function ModifyProductForm({
                                         name={`prices.delivery.${i}.type`}
                                         onChange={formik.setFieldValue}
                                         value={type}
-                                        options={Object.values(
-                                            productDeliveryTypes,
-                                        )}
+                                        options={Object.values(productDeliveryTypes)}
                                     />
                                     <NumberInput
                                         name={`prices.delivery.${i}.price`}
@@ -413,10 +361,7 @@ function ModifyProductForm({
                         );
                     })}
                     <AddButtonWrapper>
-                        <CreateButton
-                            full
-                            onClick={() => addPriceItem('delivery')}
-                        />
+                        <CreateButton full onClick={() => addPriceItem('delivery')} />
                     </AddButtonWrapper>
                 </DraggableFields>
             </FieldSection>
@@ -440,19 +385,14 @@ function ModifyProductForm({
                                 onRemove={() => {
                                     formik.setFieldValue(
                                         'suppliers',
-                                        suppliers.filter(
-                                            (_, index) => i !== index,
-                                        ),
+                                        suppliers.filter((_, index) => i !== index),
                                     );
                                 }}
                             >
                                 <AsyncSelectBox
                                     name={`suppliers.${i}`}
                                     onChange={(name, v) => {
-                                        formik.setFieldValue(
-                                            name,
-                                            JSON.parse(v),
-                                        );
+                                        formik.setFieldValue(name, JSON.parse(v));
                                     }}
                                     fetchOptions={fetchSupplierOptions}
                                     value={JSON.stringify({
@@ -476,12 +416,7 @@ function ModifyProductForm({
                     <AddButtonWrapper>
                         <CreateButton
                             full
-                            onClick={() =>
-                                formik.setFieldValue('suppliers', [
-                                    ...suppliers,
-                                    { _id: '', name: '' },
-                                ])
-                            }
+                            onClick={() => formik.setFieldValue('suppliers', [...suppliers, { _id: '', name: '' }])}
                         />
                     </AddButtonWrapper>
                 </DraggableFields>
@@ -499,12 +434,7 @@ function ModifyProductForm({
                 >
                     초기화
                 </CommonButton>
-                <SubmitButton
-                    disabled={!formik.dirty || formik.isSubmitting}
-                    small
-                    primary
-                    text={submitButtonLabel}
-                />
+                <SubmitButton disabled={!formik.dirty || formik.isSubmitting} small primary text={submitButtonLabel} />
             </ButtonsWrapper>
         </Form>
     );

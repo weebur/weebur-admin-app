@@ -13,12 +13,7 @@ import AsyncSelectBox from '../Form/AsyncSelectBox';
 import dayjs from 'dayjs';
 import useFetchInitialOptions from '../../hooks/useFetchInitialOptions';
 
-function ModifyClientForm({
-    initialValues,
-    onSubmit,
-    onReset,
-    submitButtonLabel,
-}) {
+function ModifyClientForm({ initialValues, onSubmit, onReset, submitButtonLabel }) {
     const [inflowOptions, setInflowOptions] = useState(clientInflowPath);
     const formik = useFormik({
         enableReinitialize: true,
@@ -26,21 +21,16 @@ function ModifyClientForm({
         onSubmit,
     });
 
-    const { options: companyOptions } = useFetchInitialOptions(
-        fetchCompany,
-        initialValues?.company,
-    );
+    const { options: companyOptions } = useFetchInitialOptions(fetchCompany, initialValues?.company);
 
     const fetchOptions = (name) => {
-        return fetchCompanies({ page: 0, limit: 10, name }).then(
-            (companies) => {
-                return companies.result.map((company) => ({
-                    label: company.name,
-                    value: company._id,
-                    key: company._id,
-                }));
-            },
-        );
+        return fetchCompanies({ page: 0, limit: 10, name }).then((companies) => {
+            return companies.result.map((company) => ({
+                label: company.name,
+                value: company._id,
+                key: company._id,
+            }));
+        });
     };
 
     return (
@@ -86,12 +76,7 @@ function ModifyClientForm({
                     value={formik.values.phoneNumber}
                     autoComplete="new-password"
                 />
-                <Input
-                    name="email"
-                    label="이메일"
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
-                />
+                <Input name="email" label="이메일" onChange={formik.handleChange} value={formik.values.email} />
             </InputWrapper>
             <InputWrapper>
                 <SelectBox
@@ -142,12 +127,7 @@ function ModifyClientForm({
                 >
                     초기화
                 </CommonButton>
-                <SubmitButton
-                    disabled={!formik.dirty || formik.isSubmitting}
-                    small
-                    primary
-                    text={submitButtonLabel}
-                />
+                <SubmitButton disabled={!formik.dirty || formik.isSubmitting} small primary text={submitButtonLabel} />
             </ButtonsWrapper>
         </Form>
     );

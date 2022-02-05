@@ -25,7 +25,7 @@ const StyledDatePicker = styled(DayjsPicker)`
     padding: 10px 12px;
     height: 44px;
     width: 100%;
-    font-size: ${({ theme }) => theme.fontSize.large};
+    font-size: ${({ theme }) => theme.fontSize.large} !important;
 
     :focus {
         border: 1px solid ${({ theme }) => theme.color.primary};

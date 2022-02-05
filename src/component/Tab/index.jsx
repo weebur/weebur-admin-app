@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const TabsWrapper = styled.div`
@@ -8,13 +7,16 @@ const TabsWrapper = styled.div`
 `;
 
 const StyledTab = styled.div`
-    flex: 0 0 240px;
+    flex: 1;
     height: 60px;
-    padding: 18px 98px 18px 99px;
+    padding: 18px 0;
     border-radius: 20px;
     font-weight: bold;
     cursor: pointer;
     color: ${({ theme }) => theme.color.light};
+    font-size: ${({ theme }) => theme.fontSize.large};
+    text-align: center;
+    max-width: 240px;
 
     ${({ active, theme }) =>
         active &&
@@ -32,11 +34,7 @@ function Tab({ tabs = [], active, onChange }) {
         <TabsWrapper>
             {tabs.map(({ key, label }) => {
                 return (
-                    <StyledTab
-                        key={key}
-                        active={active === key}
-                        onClick={() => onChange(key)}
-                    >
+                    <StyledTab key={key} active={active === key} onClick={() => onChange(key)}>
                         {label}
                     </StyledTab>
                 );

@@ -3,14 +3,9 @@ import debounce from 'lodash/debounce';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import SelectBox from './SelectBox';
 
-function AsyncSelectBox({
-    initialOptions = [],
-    fetchOptions,
-    debounceTimeout = 300,
-    ...props
-}) {
+function AsyncSelectBox({ initialOptions = [], fetchOptions, debounceTimeout = 300, ...props }) {
     const [fetching, setFetching] = useState(false);
-    const [options, setOptions] = useState([]);
+    const [options, setOptions] = useState(initialOptions);
     const fetchRef = useRef(0);
 
     const debounceFetcher = useMemo(() => {
@@ -25,7 +20,6 @@ function AsyncSelectBox({
                     // for fetch callback order
                     return;
                 }
-
                 setOptions(newOptions);
                 setFetching(false);
             });
@@ -34,9 +28,10 @@ function AsyncSelectBox({
         return debounce(loadOptions, debounceTimeout);
     }, [fetchOptions, debounceTimeout]);
 
-    useEffect(() => {
-        setOptions(initialOptions);
-    }, [initialOptions]);
+    // useEffect(() => {
+    //     console.log(initialOptions);
+    //     setOptions(initialOptions);
+    // }, [initialOptions]);
 
     return (
         <SelectBox

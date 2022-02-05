@@ -4,6 +4,9 @@ import { paymentStatus, reservationStatus } from '../constants/order';
 import { productTypes } from '../constants/product';
 import { supplierTypes } from '../constants/supplier';
 import dayjs from 'dayjs';
+import { fetchProduct, fetchProducts } from '../api/ProductAPI';
+import produce from 'immer';
+import { fetchSuppliers } from '../api/SupplierAPI';
 
 const defaultValues = {
     reservationStatus: reservationStatus.CONFIRM_SCHEDULE.key,
@@ -31,6 +34,11 @@ const defaultValues = {
 
 const useOrdersStore = create((set) => ({
     order: null,
+    formData: {
+        products: [],
+        suppliers: [],
+        product: {},
+    },
     createOrder: async ({
         reservationStatus,
         paymentStatus,
@@ -87,6 +95,35 @@ const useOrdersStore = create((set) => ({
         });
 
         set({ order });
+    },
+    fetchProducts: async (name) => {
+        const products = await fetchProducts({ page: 1, limit: 10, name });
+
+        set(
+            produce((state) => {
+                state.formData.products = products.result;
+            }),
+        );
+        return products.result;
+    },
+    fetchSuppliersByProduct: async (productId) => {
+        const suppliers = await fetchSuppliers({ page: 1, limit: 10, product: productId });
+
+        set(
+            produce((state) => {
+                state.formData.suppliers = suppliers.result;
+            }),
+        );
+        return suppliers.result;
+    },
+    fetchProduct: async (id) => {
+        const product = await fetchProduct(id);
+
+        set(
+            produce((state) => {
+                state.formData.product = product;
+            }),
+        );
     },
 }));
 

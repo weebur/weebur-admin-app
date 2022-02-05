@@ -8,6 +8,7 @@ import dayjs from 'dayjs';
 import useAdminsStore from '../../../stores/admins';
 import WorkshopInfo from './WorkshopInfo';
 import Payment from './Payment';
+import Orders from './Orders';
 
 const tabs = [
     { key: 'workshop', label: '워크샵' },
@@ -19,7 +20,31 @@ const FormContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
+    padding-bottom: 300px;
 `;
+
+/**
+ * {
+        reservationStatus,
+        paymentStatus,
+        statusDetails,
+        productId,
+        productName,
+        productType,
+        supplierId,
+        supplierName,
+        supplierType,
+        productFee,
+        mainTeacherId,
+        mainTeacherName,
+        mainTeacherMobile,
+        reservationDate,
+        participants,
+        onlineInfo,
+        payment,
+        workshop,
+    }
+ */
 
 function WorkshopForm(props) {
     const me = useAdminsStore((state) => state.me);
@@ -41,6 +66,7 @@ function WorkshopForm(props) {
             paymentMethod: '',
             paymentRequirements: '',
             certificatedRegistration: false,
+            orders: [],
         },
     });
 
@@ -53,6 +79,7 @@ function WorkshopForm(props) {
             <ClientInfo onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
             <WorkshopInfo onChange={formik.handleChange} values={formik.values} />
             <Payment onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
+            <Orders onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
         </FormContainer>
     );
 }
