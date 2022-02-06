@@ -15,11 +15,6 @@ class ProductService {
                     name: '',
                     price: 0,
                 };
-            case 'excursion':
-                return {
-                    region: '',
-                    price: 9,
-                };
             case 'delivery':
                 return {
                     type: 'PERSONAL',

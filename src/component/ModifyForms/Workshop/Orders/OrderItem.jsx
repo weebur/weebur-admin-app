@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../../constants/date';
 import { getTotalPayment } from '../../../../services/OrderService';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
-import { Col, Row } from 'antd';
+import { Col, Divider, Row, Statistic } from 'antd';
 import Ellipsis from '../../../Text/Ellipsis';
 import SelectBox from '../../../Form/SelectBox';
 import TextInput from '../../../Form/Input';
@@ -14,6 +14,7 @@ import ProductFields from './ProductFields';
 import DatePicker from '../../../Form/DatePicker';
 import NumberInput from '../../../Form/NumberInput';
 import PriceGenerator from './PriceGenerator';
+import theme from '../../../../theme';
 
 const Order = styled.div`
     width: 100%;
@@ -30,6 +31,7 @@ const Title = styled(Row)`
 
 const TitleItem = styled(Col)`
     display: flex;
+    gap: 20px;
 `;
 
 const OrderForm = styled.div`
@@ -45,27 +47,46 @@ const StatusDetails = styled.div`
     flex: 1 0 60%;
 `;
 
-function OrderItem({ order, index, onChange, onValueChange }) {
+const PaymentTotal = styled.div`
+    display: flex;
+    gap: 20px;
+    justify-content: flex-end;
+    align-items: center;
+
+    & > .ant-divider {
+        border: 1px solid ${({ theme }) => theme.color.text};
+        height: 40px;
+    }
+    & .ant-statistic-content {
+        font-size: ${({ theme }) => theme.fontSize.large};
+    }
+
+    & .ant-statistic-title:last-child {
+        color: ${({ theme }) => theme.color.primary};
+    }
+`;
+
+function OrderItem({ order, index, onChange, onValueChange, removeItem }) {
     const [open, setOpen] = useState(false);
 
-    const total = getTotalPayment(order.payment);
+    const paymentTotal = getTotalPayment(order.payment, order.supplierType);
 
     return (
         <Order>
             <Title>
                 <TitleItem flex={'50%'}>
-                    <Col flex={'80px'}>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
-                    <Col flex={'50px'}>{dayjs(order.reservationDate).format('HH:mm')}</Col>
-                    <Col flex={'200px'}>
+                    <Col>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
+                    <Col>{dayjs(order.reservationDate).format('HH:mm')}</Col>
+                    <Col>
                         <Ellipsis line={1}>{order.productName}</Ellipsis>
                     </Col>
-                    <Col flex={'100px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
-                    <Col flex={'100px'}>{`${total.toLocaleString()}원`}</Col>
+                    <Col>{`총 ${order.participants.toLocaleString()}명`}</Col>
+                    <Col>{`${paymentTotal.total.toLocaleString()}원`}</Col>
                 </TitleItem>
                 <TitleItem flex={'300px'}>
-                    <Col flex={'70px'}>{reservationStatus[order.reservationStatus].label}</Col>
-                    <Col flex={'70px'}>{paymentStatus[order.paymentStatus].label}</Col>
-                    <Col flex={'160px'}>
+                    <Col>{reservationStatus[order.reservationStatus].label}</Col>
+                    <Col>{paymentStatus[order.paymentStatus].label}</Col>
+                    <Col>
                         <Ellipsis>{order.statusDetails}</Ellipsis>
                     </Col>
                 </TitleItem>
@@ -76,7 +97,11 @@ function OrderItem({ order, index, onChange, onValueChange }) {
                         </OpenToggleButton>
                     </Col>
                     <Col flex={'40px'}>
-                        <OpenToggleButton>
+                        <OpenToggleButton
+                            onClick={() => {
+                                removeItem(index);
+                            }}
+                        >
                             <DeleteOutlined />
                         </OpenToggleButton>
                     </Col>
@@ -135,6 +160,23 @@ function OrderItem({ order, index, onChange, onValueChange }) {
                     </StyledFields>
 
                     <PriceGenerator order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
+
+                    <PaymentTotal>
+                        <Statistic title="판매액" value={paymentTotal.total} suffix="원" />
+                        <Divider type="vertical" />
+                        <Statistic title="수수료" value={paymentTotal.totalIncome} suffix="원" />
+                        <Divider type="vertical" />
+                        <Statistic title="정산액" value={paymentTotal.totalSettlement} suffix="원" />
+                        <Divider type="vertical" />
+                        <Statistic title="세금" value={paymentTotal.tax} suffix="원" />
+                        <Divider type="vertical" />
+                        <Statistic
+                            title="최종 정산액"
+                            value={paymentTotal.finalSettlement}
+                            valueStyle={{ color: theme.color.primary, fontWeight: 'bold' }}
+                            suffix="원"
+                        />
+                    </PaymentTotal>
                 </OrderForm>
             )}
         </Order>

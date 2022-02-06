@@ -264,59 +264,6 @@ function ModifyProductForm({ initialValues, onSubmit, onReset, submitButtonLabel
                 </DraggableFields>
                 <Divider type="vertical" style={{ height: 'inherit' }} />
                 <DraggableFields
-                    id={'excursion-price'}
-                    ids={prices?.excursion.map((_, i) => i.toString())}
-                    onChange={(v) => {
-                        formik.setFieldValue(
-                            'prices.excursion',
-                            v.map((index) => formik.values.prices.excursion[index]),
-                        );
-                    }}
-                >
-                    <Typography.Title level={5}>출장비</Typography.Title>
-                    <PriceHead>
-                        <Label>방식</Label>
-                        <Label>가격</Label>
-                    </PriceHead>
-                    {prices?.excursion.map(({ region, price }, i) => {
-                        return (
-                            <SortableItem
-                                key={i}
-                                id={i.toString()}
-                                onRemove={() => {
-                                    formik.setFieldValue(
-                                        'prices.excursion',
-                                        prices.excursion.filter((_, index) => i !== index),
-                                    );
-                                }}
-                            >
-                                <InputWrapper>
-                                    <SelectBox
-                                        name={`prices.excursion.${i}.region`}
-                                        onChange={formik.setFieldValue}
-                                        value={region}
-                                        options={defaultRegions.map((region) => ({
-                                            key: region,
-                                            label: region,
-                                        }))}
-                                    />
-                                    <NumberInput
-                                        name={`prices.excursion.${i}.price`}
-                                        value={price.toLocaleString()}
-                                        onChange={formik.setFieldValue}
-                                        suffix={'₩'}
-                                    />
-                                </InputWrapper>
-                            </SortableItem>
-                        );
-                    })}
-                    <AddButtonWrapper>
-                        <CreateButton full onClick={() => addPriceItem('excursion')} />
-                    </AddButtonWrapper>
-                </DraggableFields>
-            </FieldSection>
-            <FieldSection half>
-                <DraggableFields
                     id={'delivery-price'}
                     ids={prices?.delivery.map((_, i) => i.toString())}
                     onChange={(v) => {

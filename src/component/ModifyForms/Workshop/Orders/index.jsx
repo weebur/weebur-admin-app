@@ -12,19 +12,18 @@ const initialOrder = {
     paymentStatus: paymentStatus.WAITING.key,
     latestPaymentStatusUpdatedAt: dayjs().startOf('day').toISOString(),
     statusDetails: '',
-    productId: '61f00add2ee7e334e580505a',
-    productName: '상품1',
-    productType: 'OFFLINE',
-    supplierId: '61f171c4ae873b9f708bc031',
-    supplierName: '테스트 업체',
-    supplierType: 'CORPORATION',
+    productId: '',
+    productName: '',
+    productType: '',
+    supplierId: '',
+    supplierName: '',
+    supplierType: '',
     productFee: 0,
     mainTeacherId: '',
     mainTeacherName: '',
     mainTeacherMobile: '',
     reservationDate: dayjs().toISOString(),
-    participants: 100,
-    onlineInfo: '',
+    participants: 0,
     payment: {
         personal: {
             total: 0,
@@ -64,9 +63,19 @@ const initialOrder = {
             note: '',
         },
     },
+    onlineInfo: {
+        details: '',
+        fileUrl: '',
+    },
 };
 
 function Orders({ onValueChange, values, onChange }) {
+    const removeItem = (index) => {
+        onValueChange(
+            'orders',
+            values.orders.filter((order, i) => i !== index),
+        );
+    };
     return (
         <>
             <SubTitle>
@@ -83,6 +92,7 @@ function Orders({ onValueChange, values, onChange }) {
                         index={index}
                         onChange={onChange}
                         onValueChange={onValueChange}
+                        removeItem={removeItem}
                     />
                 );
             })}

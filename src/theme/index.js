@@ -10,6 +10,7 @@ const theme = {
         lightText: '#888',
         lightBackground: '#f7f7f8',
         defaultBackground: '#f9fafb',
+        danger: '#ff0054',
     },
     fontSize: {
         small: '12px',

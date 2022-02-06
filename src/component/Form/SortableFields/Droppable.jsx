@@ -4,10 +4,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 const SortableContainer = styled.div`
-    padding: 20px 10px;
-    border: none;
-    border-radius: 20px;
-    min-width: 110px;
     width: 100%;
 `;
 

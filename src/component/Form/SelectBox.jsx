@@ -53,7 +53,6 @@ function SelectBox({ options, label, onChange, ...props }) {
                     setFocused(false);
                 }}
                 onChange={(v) => {
-                    console.log(v);
                     onChange(props.name, v);
                 }}
                 {...props}

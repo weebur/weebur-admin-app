@@ -3,24 +3,15 @@ import TextInput from '../../../../Form/Input';
 import { PriceItem, PriceRow } from '../styles';
 import DraggableFields from '../../../../Form/SortableFields';
 import SortableItem from '../../../../Form/SortableFields/SortableItem';
-import { calculateProductPriceTotal, calculateProductSettlementPrice } from '../../../../../services/OrderService';
+import { getNextStatements } from '../../../../../services/OrderService';
 import { Tooltip, Typography } from 'antd';
-import produce from 'immer';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 function SessionPrices({ sessionPrices, name, onChange, onValueChange }) {
     const { statements } = sessionPrices;
 
     const updateTotal = (newStatement, index) => {
-        const nextStatements = produce(sessionPrices, (next) => {
-            next.statements[index] = newStatement;
-
-            const priceTotal = calculateProductPriceTotal(next.statements);
-
-            next.total = priceTotal.total;
-            next.totalIncome = priceTotal.totalIncome;
-            next.totalSettlement = priceTotal.totalSettlement;
-        });
+        const nextStatements = getNextStatements(sessionPrices, newStatement, index);
 
         onValueChange(`${name}`, nextStatements);
     };
@@ -51,6 +42,7 @@ function SessionPrices({ sessionPrices, name, onChange, onValueChange }) {
                                 `${name}.statements`,
                                 statements.filter((_, index) => i !== index),
                             );
+                            updateTotal(null, i);
                         }}
                     >
                         <PriceRow key={i}>
@@ -61,15 +53,15 @@ function SessionPrices({ sessionPrices, name, onChange, onValueChange }) {
                                     name={`${name}.statements.${i}.price`}
                                     value={statement.price.toLocaleString()}
                                     onChange={(_, price) => {
-                                        const income = Math.round(price * statement.fee);
+                                        const total = price;
+                                        const income = Math.round(total * statement.fee);
+
                                         const newStatement = {
                                             ...statement,
                                             price,
                                             income,
-                                            settlement: calculateProductSettlementPrice({
-                                                price,
-                                                income: income,
-                                            }),
+                                            settlement: total - income,
+                                            total,
                                         };
                                         updateTotal(newStatement, i);
                                     }}
@@ -96,15 +88,15 @@ function SessionPrices({ sessionPrices, name, onChange, onValueChange }) {
                                     name={`${name}.statements.${i}.income`}
                                     value={statement.income.toLocaleString()}
                                     onChange={(name, income) => {
-                                        const fee = Number((income / statement.price).toFixed(4));
+                                        const total = statement.price;
+                                        const fee = Number((income / total).toFixed(4));
+
                                         const newStatement = {
                                             ...statement,
                                             income,
+                                            total,
                                             fee,
-                                            settlement: calculateProductSettlementPrice({
-                                                price: statement.price,
-                                                income: income,
-                                            }),
+                                            settlement: total - income,
                                         };
                                         updateTotal(newStatement, i);
                                     }}
