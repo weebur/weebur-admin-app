@@ -21,7 +21,7 @@ export const FieldSection = styled.div`
 
 export const Fields = styled.div`
     display: flex;
-    gap: 100px;
+    gap: 30px;
     margin-bottom: 20px;
     &:last-child {
         margin-bottom: 0;

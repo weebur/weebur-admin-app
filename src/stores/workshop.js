@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { createWorkshop, fetchWorkshop } from '../api/WorkshopAPI';
+import { createWorkshop, fetchWorkshop, updateWorkshop } from '../api/WorkshopAPI';
 
 const defaultValues = {};
 
@@ -13,6 +13,10 @@ const useWorkshopsStore = create((set) => ({
     initializeWorkshop: () => set({ workshop: defaultValues }),
     createWorkshop: async (workshop) => {
         const newWorkshop = await createWorkshop(workshop);
+        set({ workshop: newWorkshop });
+    },
+    updateWorkshop: async (workshopId, workshop) => {
+        const newWorkshop = await updateWorkshop(workshopId, workshop);
         set({ workshop: newWorkshop });
     },
 }));

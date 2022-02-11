@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Typography } from 'antd';
 import Tab from '../../Tab';
 import styled from 'styled-components';
@@ -10,6 +10,7 @@ import WorkshopInfo from './WorkshopInfo';
 import Payment from './Payment';
 import Orders from './Orders';
 import SubmitButton from '../../Form/SubmitButton';
+import { getTotalPayment } from '../../../services/OrderService';
 
 const tabs = [
     { key: 'workshop', label: '워크샵' },
@@ -50,11 +51,23 @@ function WorkshopForm({ initialValues, onSubmit }) {
             certificatedRegistration: false,
             orders: [],
         },
-        onSubmit,
+        onSubmit: async (values, { resetForm }) => {
+            await onSubmit(values);
+            resetForm({ values });
+        },
     });
 
     const [active, setActive] = useState(tabs[0].key);
+    const [salesTotals, setSalesTotals] = useState([]);
 
+    const handleTotalChange = (index, total) => {
+        const cloned = [...salesTotals];
+        cloned[index] = total;
+        setSalesTotals(cloned);
+    };
+
+    const salesTotal = useMemo(() => salesTotals.reduce((acc, v) => v + acc, 0), [salesTotals]);
+    console.log(salesTotals);
     useEffect(() => {
         if (me && !formik.values.adminId) {
             formik.setFieldValue('adminId', me._id);
@@ -68,10 +81,20 @@ function WorkshopForm({ initialValues, onSubmit }) {
             <Tab tabs={tabs} active={active} onChange={setActive} />
             <ClientInfo onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
             <WorkshopInfo onChange={formik.handleChange} values={formik.values} />
-            <Payment onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
-            <Orders onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
+            <Payment
+                onChange={formik.handleChange}
+                onValueChange={formik.setFieldValue}
+                values={formik.values}
+                salesTotal={salesTotal}
+            />
+            <Orders
+                onChange={formik.handleChange}
+                onValueChange={formik.setFieldValue}
+                onTotalChange={handleTotalChange}
+                values={formik.values}
+            />
             <SubmitButtonWrapper>
-                <SubmitButton primary text={'저장'} />
+                <SubmitButton disabled={!formik.dirty} primary text={'저장'} />
             </SubmitButtonWrapper>
         </FormContainer>
     );

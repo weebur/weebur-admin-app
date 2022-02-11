@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { Fields, OpenToggleButton } from '../styles';
 import { DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
@@ -66,10 +66,17 @@ const PaymentTotal = styled.div`
     }
 `;
 
-function OrderItem({ order, index, onChange, onValueChange, removeItem }) {
+function OrderItem({ order, index, onChange, onValueChange, removeItem, onTotalChange }) {
     const [open, setOpen] = useState(false);
 
-    const paymentTotal = getTotalPayment(order.payment, order.supplierType);
+    const paymentTotal = useMemo(
+        () => getTotalPayment(order.payment, order.supplierType),
+        [order.payment, order.supplierType],
+    );
+
+    useEffect(() => {
+        onTotalChange(index, paymentTotal.total);
+    }, [paymentTotal]);
 
     return (
         <Order>
@@ -77,10 +84,10 @@ function OrderItem({ order, index, onChange, onValueChange, removeItem }) {
                 <TitleItem flex={'50%'}>
                     <Col>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
                     <Col>{dayjs(order.reservationDate).format('HH:mm')}</Col>
-                    <Col>
+                    <Col flex={'0 0 150px'}>
                         <Ellipsis line={1}>{order.productName}</Ellipsis>
                     </Col>
-                    <Col>{`총 ${order.participants.toLocaleString()}명`}</Col>
+                    <Col flex={'0 0 70px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
                     <Col>{`${paymentTotal.total.toLocaleString()}원`}</Col>
                 </TitleItem>
                 <TitleItem flex={'300px'}>

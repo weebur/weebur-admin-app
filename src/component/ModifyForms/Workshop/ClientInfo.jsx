@@ -17,15 +17,16 @@ function ClientInfo({ onValueChange, values, onChange }) {
             });
             return clients.result.map(({ _id, name, company, mobile, email }) => ({
                 label: `${name}(${company.name})`,
-                value: JSON.stringify({
+                value: _id,
+                key: _id,
+                data: {
                     clientId: _id,
                     clientName: name,
                     clientEmail: email,
                     clientMobile: mobile,
                     companyId: company._id,
                     companyName: company.name,
-                }),
-                key: _id,
+                },
             }));
         } catch (err) {
             return [];
@@ -40,8 +41,8 @@ function ClientInfo({ onValueChange, values, onChange }) {
                     <AsyncSelectBox
                         placeholder="회원명을 입력해주세요"
                         name={'clientId'}
-                        onChange={(name, v) => {
-                            const value = JSON.parse(v);
+                        onChange={(name, v, option) => {
+                            const value = option.data;
                             onValueChange('clientId', value.clientId);
                             onValueChange('clientName', value.clientName);
                             onValueChange('clientEmail', value.clientEmail);
@@ -49,21 +50,21 @@ function ClientInfo({ onValueChange, values, onChange }) {
                             onValueChange('companyId', value.companyId);
                             onValueChange('companyName', value.companyName);
                         }}
+                        value={values.clientId}
                         fetchOptions={fetchClientOptions}
                         initialOptions={[
                             {
                                 key: values.clientId,
-                                value: values.clientId
-                                    ? JSON.stringify({
-                                          clientId: values.clientId,
-                                          clientName: values.clientName,
-                                          clientEmail: values.clientEmail,
-                                          clientMobile: values.clientMobile,
-                                          companyId: values.companyId,
-                                          companyName: values.companyName,
-                                      })
-                                    : null,
-                                label: values.clientName,
+                                value: values.clientId,
+                                label: `${values.clientName}(${values.companyName})`,
+                                data: {
+                                    clientId: values.clientId,
+                                    clientName: values.clientName,
+                                    clientEmail: values.clientEmail,
+                                    clientMobile: values.clientMobile,
+                                    companyId: values.companyId,
+                                    companyName: values.companyName,
+                                },
                             },
                         ]}
                     />

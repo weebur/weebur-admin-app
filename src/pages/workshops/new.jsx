@@ -4,7 +4,7 @@ import WorkshopForm from '../../component/ModifyForms/Workshop';
 import useWorkshopsStore from '../../stores/workshop';
 import { message } from 'antd';
 
-function NewWorkshop(props) {
+function NewWorkshop() {
     const createWorkshop = useWorkshopsStore((state) => state.createWorkshop);
 
     const handleSubmit = async (values) => {

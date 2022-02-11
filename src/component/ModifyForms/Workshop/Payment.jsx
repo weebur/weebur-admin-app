@@ -10,18 +10,22 @@ import styled from 'styled-components';
 import { paymentMethods } from '../../../constants/Workshop';
 
 const PaymentRequirements = styled.div`
-    flex: 0 0 700px;
+    flex: 1;
 `;
 
 const CertificatedRegistration = styled.div`
     flex: 0 0 100px;
 `;
 
+const SalesTotal = styled.div`
+    flex: 0 0 200px;
+`;
+
 const StyledFields = styled(Fields)`
     gap: 20px;
 `;
 
-function Payment({ values, paymentTotal, onChange, onValueChange }) {
+function Payment({ values, onChange, onValueChange, salesTotal }) {
     const [open, setOpen] = useState(true);
     return (
         <>
@@ -35,13 +39,16 @@ function Payment({ values, paymentTotal, onChange, onValueChange }) {
             {open && (
                 <FieldSection>
                     <StyledFields>
-                        <SelectBox
-                            label="결제방식"
-                            name="paymentMethod"
-                            value={values.paymentMethod}
-                            onChange={onValueChange}
-                            options={Object.values(paymentMethods)}
-                        />
+                        <SalesTotal>
+                            <SelectBox
+                                label="결제방식"
+                                name="paymentMethod"
+                                value={values.paymentMethod}
+                                onChange={onValueChange}
+                                options={Object.values(paymentMethods)}
+                            />
+                        </SalesTotal>
+
                         <PaymentRequirements>
                             <TextInput
                                 label="결제 요청사항"
@@ -60,7 +67,14 @@ function Payment({ values, paymentTotal, onChange, onValueChange }) {
                                 onChange={onValueChange}
                             />
                         </CertificatedRegistration>
-                        <NumberInput label="워크샵 총합계" disabled value={paymentTotal || 0} suffix="원" />
+                        <SalesTotal>
+                            <NumberInput
+                                label="워크샵 총합계"
+                                disabled
+                                value={(salesTotal || 0).toLocaleString()}
+                                suffix="원"
+                            />
+                        </SalesTotal>
                     </StyledFields>
                 </FieldSection>
             )}
