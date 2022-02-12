@@ -4,7 +4,7 @@ import { supplierTypes } from '../constants/supplier';
 
 export const getTotalPayment = (payment, supplierType) => {
     const { personal, session, excursion, delivery, options, discount } = payment;
-    console.log(personal);
+
     const {
         total: personalTotal = 0,
         totalIncome: personalTotalIncome = 0,

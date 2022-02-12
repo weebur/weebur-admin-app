@@ -69,7 +69,7 @@ const initialOrder = {
     },
 };
 
-function Orders({ onValueChange, values, onChange, onTotalChange }) {
+function Orders({ onValueChange, values, onChange, onTotalChange, initialValues }) {
     const removeItem = (index) => {
         onValueChange(
             'orders',
@@ -94,6 +94,7 @@ function Orders({ onValueChange, values, onChange, onTotalChange }) {
                         onValueChange={onValueChange}
                         removeItem={removeItem}
                         onTotalChange={onTotalChange}
+                        initialValues={initialValues}
                     />
                 );
             })}

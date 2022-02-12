@@ -1,6 +1,6 @@
 import { Spin } from 'antd';
 import debounce from 'lodash/debounce';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import SelectBox from './SelectBox';
 
 function AsyncSelectBox({ initialOptions = [], fetchOptions, debounceTimeout = 300, ...props }) {
@@ -27,11 +27,6 @@ function AsyncSelectBox({ initialOptions = [], fetchOptions, debounceTimeout = 3
 
         return debounce(loadOptions, debounceTimeout);
     }, [fetchOptions, debounceTimeout]);
-
-    // useEffect(() => {
-    //     console.log(initialOptions);
-    //     setOptions(initialOptions);
-    // }, [initialOptions]);
 
     return (
         <SelectBox

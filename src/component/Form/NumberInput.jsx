@@ -13,7 +13,6 @@ function NumberInput({ suffix, prefix, onChange, name, ...props }) {
                 if (isNaN(value)) {
                     return;
                 }
-                console.log(name);
                 onChange(name, value);
             }}
             {...props}

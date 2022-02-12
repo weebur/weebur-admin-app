@@ -43,17 +43,7 @@ const headers = [
     { key: 'mainTeacher.mobile', label: '대표강사모바일', span: 4 },
 ];
 
-function Suppliers({
-    from,
-    to,
-    active,
-    name,
-    teacher,
-    type,
-    product,
-    teacherMobile,
-    teacherEmail,
-}) {
+function Suppliers({ from, to, active, name, teacher, type, product, teacherMobile, teacherEmail }) {
     const router = useRouter();
 
     const searchQueries = {
@@ -75,14 +65,10 @@ function Suppliers({
     const createSupplier = useSuppliersStore((state) => state.createSupplier);
     const updateSupplier = useSuppliersStore((state) => state.updateSupplier);
     const resetSupplier = useSuppliersStore((state) => state.resetSupplier);
-    const fetchProductsBySupplier = useSuppliersStore(
-        (state) => state.fetchProductsBySupplier,
-    );
+    const fetchProductsBySupplier = useSuppliersStore((state) => state.fetchProductsBySupplier);
     const supplier = useSuppliersStore((state) => state.supplier);
     const products = useSuppliersStore((state) => state.products);
-    const initializeSupplier = useSuppliersStore(
-        (state) => state.initializeSupplier,
-    );
+    const initializeSupplier = useSuppliersStore((state) => state.initializeSupplier);
     const suppliers = useSuppliersStore((state) => state.suppliers);
     const { hasNext, totalResults, result, page, next } = suppliers;
 
@@ -124,7 +110,6 @@ function Suppliers({
             resetSupplier();
             message.success('저장을 완료하였습니다.');
         } catch (e) {
-            console.log(e);
             message.error('저장에 실패하였습니다.');
             message.error(e.response.data.message);
         }
@@ -140,10 +125,7 @@ function Suppliers({
                 });
                 return;
             }
-            await fetchSuppliers(
-                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-                true,
-            );
+            await fetchSuppliers({ ...searchQueries, page: next, limit: SEARCH_LIMIT }, true);
         } catch (e) {
             message.error('리스트를 불러오는 데 실피하였습니다.');
         }

@@ -15,7 +15,7 @@ const IconWrapper = styled(Col)`
     text-align: center;
 `;
 
-function RangePicker({ onChange, from, to, label }) {
+function RangePicker({ onChange, from, to, label, fromName, toName }) {
     const [focused, setFocused] = useState(false);
     return (
         <InputWrapper>
@@ -23,7 +23,7 @@ function RangePicker({ onChange, from, to, label }) {
             <Row gutter={2}>
                 <Col>
                     <DatePicker
-                        name="from"
+                        name={fromName || 'from'}
                         onChange={onChange}
                         value={from}
                         onFocus={() => {
@@ -37,7 +37,7 @@ function RangePicker({ onChange, from, to, label }) {
                 <IconWrapper>~</IconWrapper>
                 <Col>
                     <DatePicker
-                        name="to"
+                        name={toName || 'to'}
                         onChange={onChange}
                         value={to}
                         onFocus={() => {

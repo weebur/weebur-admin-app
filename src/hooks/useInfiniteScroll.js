@@ -13,7 +13,6 @@ function useInfiniteScroll(callback, target, disconnect, deps = []) {
     }, []);
 
     useEffect(() => {
-        console.log(target);
         if (!target || disconnect) return;
 
         const observer = new IntersectionObserver(handleObserver, options);

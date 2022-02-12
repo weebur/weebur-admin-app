@@ -74,7 +74,7 @@ function ClientInfo({ onValueChange, values, onChange }) {
             <FieldSection>
                 <Fields>
                     <TextInput disabled name="companyName" label="회사명" value={values.companyName} />
-                    <DatePicker label="문의일" name="createdAt" value={values.createdAt} />
+                    <DatePicker label="문의일" name="createdAt" value={values.createdAt} onChange={onValueChange} />
                     <TextInput disabled label="모바일" name="clientMobile" value={values.clientMobile} />
                     <TextInput disabled label="이메일" name="clientEmail" value={values.clientEmail} />
                     <TextInput disabled label="담당자" name="adminName" value={values.adminName} />

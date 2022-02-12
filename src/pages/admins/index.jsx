@@ -39,7 +39,6 @@ function Admins({ name, email }) {
                                     await approveAdmin(_id);
                                     message.success('승인이 완료되었습니다.');
                                 } catch (e) {
-                                    console.log(e);
                                     message.error('승인을 실패하였습니다.');
                                 }
                             }}

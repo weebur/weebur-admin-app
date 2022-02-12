@@ -66,17 +66,47 @@ const PaymentTotal = styled.div`
     }
 `;
 
-function OrderItem({ order, index, onChange, onValueChange, removeItem, onTotalChange }) {
+function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem, onTotalChange }) {
     const [open, setOpen] = useState(false);
 
     const paymentTotal = useMemo(
         () => getTotalPayment(order.payment, order.supplierType),
         [order.payment, order.supplierType],
     );
+    const isUpdatedReservationStatus = useMemo(
+        () => initialValues.orders[index]?.reservationStatus !== order.reservationStatus,
+        [initialValues, order.reservationStatus],
+    );
+    const isUpdatedPaymentStatus = useMemo(
+        () => initialValues.orders[index]?.paymentStatus !== order.paymentStatus,
+        [initialValues, order.reservationStatus],
+    );
 
     useEffect(() => {
         onTotalChange(index, paymentTotal.total);
     }, [paymentTotal]);
+
+    useEffect(() => {
+        if (isUpdatedReservationStatus) {
+            onValueChange(`orders.${index}.latestReservationStatusUpdatedAt`, dayjs().startOf('day').toISOString());
+        } else {
+            onValueChange(
+                `orders.${index}.latestReservationStatusUpdatedAt`,
+                initialValues.orders[index].latestReservationStatusUpdatedAt,
+            );
+        }
+    }, [isUpdatedReservationStatus]);
+
+    useEffect(() => {
+        if (isUpdatedPaymentStatus) {
+            onValueChange(`orders.${index}.latestPaymentStatusUpdatedAt`, dayjs().startOf('day').toISOString());
+        } else {
+            onValueChange(
+                `orders.${index}.latestPaymentStatusUpdatedAt`,
+                initialValues.orders[index].latestPaymentStatusUpdatedAt,
+            );
+        }
+    }, [isUpdatedPaymentStatus]);
 
     return (
         <Order>

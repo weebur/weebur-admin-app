@@ -3,15 +3,18 @@ import ContentLayout from '../../component/Layout/ContentLayout';
 import WorkshopForm from '../../component/ModifyForms/Workshop';
 import useWorkshopsStore from '../../stores/workshop';
 import { message } from 'antd';
+import useOrdersStore from '../../stores/order';
 
 function WorkshopDetail({ workshopId }) {
     const workshop = useWorkshopsStore((state) => state.workshop);
     const fetchWorkshop = useWorkshopsStore((state) => state.fetchWorkshop);
     const updateWorkshop = useWorkshopsStore((state) => state.updateWorkshop);
+    const updateOrdersByWorkshop = useOrdersStore((state) => state.updateOrdersByWorkshop);
 
-    const handleSubmit = async (values) => {
+    const handleSubmit = async (values, salesTotal) => {
         try {
             await updateWorkshop(workshopId, values);
+            updateOrdersByWorkshop(values, salesTotal);
             message.success('저장이 완료되었습니다.');
         } catch (e) {
             message.error('저장을 실패하였습니다.');

@@ -34,9 +34,7 @@ function Companies({ name, category, from, to }) {
     const createCompany = useCompaniesStore((state) => state.createCompany);
     const updateCompany = useCompaniesStore((state) => state.updateCompany);
     const fetchCompany = useCompaniesStore((state) => state.fetchCompany);
-    const initializeCompany = useCompaniesStore(
-        (state) => state.initializeCompany,
-    );
+    const initializeCompany = useCompaniesStore((state) => state.initializeCompany);
     const company = useCompaniesStore((state) => state.company);
     const companies = useCompaniesStore((state) => state.companies);
 
@@ -96,10 +94,7 @@ function Companies({ name, category, from, to }) {
                 return;
             }
 
-            await fetchCompanies(
-                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-                true,
-            );
+            await fetchCompanies({ ...searchQueries, page: next, limit: SEARCH_LIMIT }, true);
         } catch (e) {
             message.error('리스트를 불러오는 데 실피하였습니다.');
         }

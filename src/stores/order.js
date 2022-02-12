@@ -1,100 +1,52 @@
 import create from 'zustand';
-import { createOrder, updateOrder } from '../api/OrderAPI';
-import { paymentStatus, reservationStatus } from '../constants/order';
-import { productTypes } from '../constants/product';
-import { supplierTypes } from '../constants/supplier';
-import dayjs from 'dayjs';
 import { fetchProduct, fetchProducts } from '../api/ProductAPI';
 import produce from 'immer';
 import { fetchSuppliers } from '../api/SupplierAPI';
-
-const defaultValues = {
-    reservationStatus: reservationStatus.CONFIRM_SCHEDULE.key,
-    paymentStatus: paymentStatus.WAITING.key,
-    statusDetails: '',
-    productId: '',
-    productName: '',
-    productType: productTypes.OFFLINE.key,
-    productFee: 0,
-    supplierId: '',
-    supplierName: '',
-    supplierType: supplierTypes.CORPORATION.key,
-    mainTeacherId: '',
-    mainTeacherName: '',
-    mainTeacherMobile: '',
-    reservationDate: dayjs().toISOString(),
-    participants: 0,
-    onlineInfo: {
-        details: '',
-        fileUrl: '',
-    },
-    payment: null,
-    workshop: '',
-};
+import { fetchOrders } from '../api/OrderAPI';
 
 const useOrdersStore = create((set) => ({
+    orders: {},
     order: null,
     formData: {
         products: [],
         suppliers: [],
         product: {},
     },
-    createOrder: async ({
+    fetchOrders: async ({
+        createdStartAt,
+        createdEndAt,
+        reservedStartAt,
+        reservedEndAt,
+        adminName,
+        companyName,
+        clientName,
         reservationStatus,
         paymentStatus,
-        statusDetails,
-        product,
-        supplier,
-        reservationDate,
-        participants,
-        onlineInfo,
-        payment,
-        workshop,
+        productName,
+        productType,
+        page,
+        limit,
     }) => {
-        const order = await createOrder({
+        const orders = await fetchOrders({
+            createdStartAt,
+            createdEndAt,
+            reservedStartAt,
+            reservedEndAt,
+            adminName,
+            companyName,
+            clientName,
             reservationStatus,
             paymentStatus,
-            statusDetails,
-            product,
-            supplier,
-            reservationDate,
-            participants,
-            onlineInfo,
-            payment,
-            workshop,
+            productName,
+            productType,
+            page,
+            limit,
         });
 
-        set({ order });
+        set({ orders });
     },
-    updateOrder: async (
-        orderId,
-        {
-            reservationStatus,
-            paymentStatus,
-            statusDetails,
-            product,
-            supplier,
-            reservationDate,
-            participants,
-            onlineInfo,
-            payment,
-            workshop,
-        },
-    ) => {
-        const order = await updateOrder(orderId, {
-            reservationStatus,
-            paymentStatus,
-            statusDetails,
-            product,
-            supplier,
-            reservationDate,
-            participants,
-            onlineInfo,
-            payment,
-            workshop,
-        });
-
-        set({ order });
+    resetOrders: () => {
+        set({ orders: {} });
     },
     fetchProducts: async (name) => {
         const products = await fetchProducts({ page: 1, limit: 10, name });
@@ -122,6 +74,38 @@ const useOrdersStore = create((set) => ({
         set(
             produce((state) => {
                 state.formData.product = product;
+            }),
+        );
+    },
+    updateOrdersByWorkshop: (workshop, salesTotal) => {
+        const { _id, clientName, companyName, adminName, createdAt, paymentMethod, orders } = workshop;
+        set(
+            produce((state) => {
+                orders.forEach((order, i) => {
+                    const target = state.orders.result?.find((item) => item._id === order._id);
+
+                    if (target) {
+                        target._id = order._id;
+                        target.createdAt = order.createdAt;
+                        target.reservationStatus = order.reservationStatus;
+                        target.reservationDate = order.reservationDate;
+                        target.paymentStatus = order.paymentStatus;
+                        target.productName = order.productName;
+                        target.productType = order.productType;
+                        target.latestReservationStatusUpdatedAt = order.latestReservationStatusUpdatedAt;
+                        target.participants = order.participants;
+                        target.statusDetails = order.statusDetails;
+                        target.salesTotal = salesTotal[i];
+                        target.workshop = {
+                            _id,
+                            clientName,
+                            companyName,
+                            adminName,
+                            createdAt,
+                            paymentMethod,
+                        };
+                    }
+                });
             }),
         );
     },

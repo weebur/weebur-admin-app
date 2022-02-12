@@ -52,22 +52,23 @@ function WorkshopForm({ initialValues, onSubmit }) {
             orders: [],
         },
         onSubmit: async (values, { resetForm }) => {
-            await onSubmit(values);
+            await onSubmit(values, salesTotals);
             resetForm({ values });
         },
     });
 
     const [active, setActive] = useState(tabs[0].key);
-    const [salesTotals, setSalesTotals] = useState([]);
+    const [salesTotals, setSalesTotals] = useState({});
 
     const handleTotalChange = (index, total) => {
-        const cloned = [...salesTotals];
-        cloned[index] = total;
-        setSalesTotals(cloned);
+        setSalesTotals((state) => ({
+            ...state,
+            [index]: total,
+        }));
     };
 
-    const salesTotal = useMemo(() => salesTotals.reduce((acc, v) => v + acc, 0), [salesTotals]);
-    console.log(salesTotals);
+    const salesTotal = useMemo(() => Object.values(salesTotals).reduce((acc, v) => v + acc, 0), [salesTotals]);
+
     useEffect(() => {
         if (me && !formik.values.adminId) {
             formik.setFieldValue('adminId', me._id);
@@ -92,6 +93,7 @@ function WorkshopForm({ initialValues, onSubmit }) {
                 onValueChange={formik.setFieldValue}
                 onTotalChange={handleTotalChange}
                 values={formik.values}
+                initialValues={formik.initialValues}
             />
             <SubmitButtonWrapper>
                 <SubmitButton disabled={!formik.dirty} primary text={'저장'} />

@@ -68,9 +68,7 @@ function Products({ active, name, supplierName, type }) {
     const createProduct = useProductsStore((state) => state.createProduct);
     const updateProduct = useProductsStore((state) => state.updateProduct);
     const fetchProduct = useProductsStore((state) => state.fetchProduct);
-    const initializeProduct = useProductsStore(
-        (state) => state.initializeProduct,
-    );
+    const initializeProduct = useProductsStore((state) => state.initializeProduct);
     const product = useProductsStore((state) => state.product);
     const products = useProductsStore((state) => state.products);
     const { hasNext, totalResults, result, page, next } = products;
@@ -109,7 +107,6 @@ function Products({ active, name, supplierName, type }) {
             resetProduct();
             message.success('저장을 완료하였습니다.');
         } catch (e) {
-            console.log(e);
             message.error('저장에 실패하였습니다.');
             message.error(e.response.data.message);
         }
@@ -135,10 +132,7 @@ function Products({ active, name, supplierName, type }) {
                 });
                 return;
             }
-            await fetchProducts(
-                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-                true,
-            );
+            await fetchProducts({ ...searchQueries, page: next, limit: SEARCH_LIMIT }, true);
         } catch (e) {
             message.error('리스트를 불러오는 데 실피하였습니다.');
         }

@@ -2,26 +2,36 @@ import { toQueryObject } from '../utils/queryString';
 import api from './';
 
 export const fetchOrders = ({
+    createdStartAt,
+    createdEndAt,
+    reservedStartAt,
+    reservedEndAt,
+    adminName,
+    companyName,
+    clientName,
+    reservationStatus,
+    paymentStatus,
+    productName,
+    productType,
     page,
     limit,
-    name,
-    company,
-    mobile,
-    email,
-    from,
-    to,
 }) => {
     return api
-        .get('/clients', {
+        .get('/orders', {
             params: toQueryObject({
+                createdStartAt,
+                createdEndAt,
+                reservedStartAt,
+                reservedEndAt,
+                adminName,
+                companyName,
+                clientName,
+                reservationStatus,
+                paymentStatus,
+                productName,
+                productType,
                 page,
                 limit,
-                name,
-                company,
-                mobile,
-                email,
-                from,
-                to,
             }),
         })
         .then((res) => res.data);
