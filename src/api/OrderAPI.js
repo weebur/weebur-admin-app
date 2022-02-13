@@ -37,6 +37,26 @@ export const fetchOrders = ({
         .then((res) => res.data);
 };
 
+export const updateOrderReservationStatus = ({ orderIds, reservationStatus, latestReservationStatusUpdatedAt }) => {
+    return api
+        .put('/orders/status/reservation', {
+            orderIds,
+            reservationStatus,
+            latestReservationStatusUpdatedAt,
+        })
+        .then((res) => res.data);
+};
+
+export const updateOrderPaymentStatus = ({ orderIds, paymentStatus, latestPaymentStatusUpdatedAt }) => {
+    return api
+        .put('/orders/status/payment', {
+            orderIds,
+            paymentStatus,
+            latestPaymentStatusUpdatedAt,
+        })
+        .then((res) => res.data);
+};
+
 export const createOrder = ({
     reservationStatus,
     paymentStatus,

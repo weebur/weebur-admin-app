@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import useOrdersStore from '../../stores/order';
 import { message, Tooltip } from 'antd';
@@ -12,6 +12,8 @@ import { COMMON_FORMAT } from '../../constants/date';
 import { get } from 'lodash-es';
 import { paymentStatus, reservationStatus } from '../../constants/order';
 import { paymentMethods } from '../../constants/Workshop';
+import BasicModal from '../../component/Modal';
+import OrderStatusModifyForm from '../../component/ModifyForms/OrderStatus';
 
 const headers = [
     { key: 'workshop.adminName', label: '담당자', span: 2 },
@@ -40,9 +42,18 @@ const headers = [
         span: 2,
         render: ({ reservationDate }) => dayjs(reservationDate).format(COMMON_FORMAT),
     },
-    { key: 'participants', label: '인원', span: 2, render: ({ participants }) => participants.toLocaleString() },
+    { key: 'participants', label: '인원', span: 1, render: ({ participants }) => participants.toLocaleString() },
     { key: 'salesTotal', label: '총 비용', span: 2, render: ({ salesTotal }) => salesTotal.toLocaleString() },
-    { key: 'paymentStatus', label: '결제', span: 2, render: (order) => paymentStatus[order.paymentStatus].label },
+    {
+        key: 'paymentStatus',
+        label: '결제',
+        span: 2,
+        render: (order) => (
+            <Tooltip title={dayjs(order.latestPaymentStatusUpdatedAt).format(COMMON_FORMAT)}>
+                <u>{paymentStatus[order.paymentStatus].label}</u>
+            </Tooltip>
+        ),
+    },
     {
         key: 'workshop.paymentMethod',
         label: '수단',
@@ -79,8 +90,13 @@ function Orders({
         productType,
     };
     const router = useRouter();
+
+    const [showOrderStatusModal, setShowOrderStatusModal] = useState(false);
+    const [checkedItems, setCheckedItems] = useState([]);
+
     const fetchOrders = useOrdersStore((state) => state.fetchOrders);
     const resetOrders = useOrdersStore((state) => state.resetOrders);
+    const updateOrderStatus = useOrdersStore((state) => state.updateOrderStatus);
     const orders = useOrdersStore((state) => state.orders);
 
     const { hasNext, totalResults, result, page, next } = orders;
@@ -126,37 +142,71 @@ function Orders({
         router.push(`/workshops/${order.workshop._id}`);
     };
 
+    const handleOrderStatusFormSubmit = async (type, values) => {
+        try {
+            await updateOrderStatus({ orderIds: checkedItems, type, ...values });
+            message.success('상태 변경을 완료하였습니다.');
+        } catch (e) {
+            console.log(e);
+            message.error('상태 변경을 실패하였습니다.');
+        }
+    };
+
     useEffect(() => {
         if (orders.result) return;
         fetchMore(true);
     }, [searchQueries]);
 
     return (
-        <ContentLayout>
-            <SearchList
-                title="주문 검색"
-                headers={headers}
-                items={orderList}
-                totalLength={totalResults || 0}
-                hasNext={hasNext}
-                searchQueries={searchQueries}
-                fetchData={fetchMore}
-                initialPage={page}
-                nextPage={next}
-                onItemClick={handleOrderItemClick}
+        <>
+            <ContentLayout>
+                <SearchList
+                    title="주문 검색"
+                    withCheckBox
+                    headers={headers}
+                    items={orderList}
+                    totalLength={totalResults || 0}
+                    hasNext={hasNext}
+                    searchQueries={searchQueries}
+                    fetchData={fetchMore}
+                    initialPage={page}
+                    nextPage={next}
+                    modifyButtonText={checkedItems.length > 0 ? '상태변경' : ''}
+                    onItemClick={handleOrderItemClick}
+                    onCheckedItemChange={(v) => setCheckedItems(v)}
+                    onModifyButtonClick={() => setShowOrderStatusModal(true)}
+                >
+                    <OrdersSearchForm
+                        initialValues={searchQueries}
+                        onSubmit={(values) => {
+                            resetOrders();
+                            router.push({
+                                pathname: '/orders',
+                                query: toQueryObject(values),
+                            });
+                        }}
+                    />
+                </SearchList>
+            </ContentLayout>
+            <BasicModal
+                defaultBackground
+                title={'상태변경'}
+                isOpen={showOrderStatusModal}
+                onClose={() => setShowOrderStatusModal(false)}
             >
-                <OrdersSearchForm
-                    initialValues={searchQueries}
-                    onSubmit={(values) => {
-                        resetOrders();
-                        router.push({
-                            pathname: '/orders',
-                            query: toQueryObject(values),
-                        });
+                <OrderStatusModifyForm
+                    submitButtonLabel={'변경하기'}
+                    initialValues={{
+                        reservationStatus: '',
+                        paymentStatus: '',
+                        latestReservationStatusUpdatedAt: dayjs().startOf('day').toISOString(),
+                        latestPaymentStatusUpdatedAt: dayjs().startOf('day').toISOString(),
                     }}
+                    onSubmit={handleOrderStatusFormSubmit}
+                    onClose={() => setShowOrderStatusModal(false)}
                 />
-            </SearchList>
-        </ContentLayout>
+            </BasicModal>
+        </>
     );
 }
 

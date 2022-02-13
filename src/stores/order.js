@@ -2,7 +2,12 @@ import create from 'zustand';
 import { fetchProduct, fetchProducts } from '../api/ProductAPI';
 import produce from 'immer';
 import { fetchSuppliers } from '../api/SupplierAPI';
-import { fetchOrders } from '../api/OrderAPI';
+import {
+    fetchOrders,
+    updateOrderPaymentStatus,
+    updateOrderReservationStatus,
+    updateOrderStatus,
+} from '../api/OrderAPI';
 
 const useOrdersStore = create((set) => ({
     orders: {},
@@ -93,6 +98,7 @@ const useOrdersStore = create((set) => ({
                         target.productName = order.productName;
                         target.productType = order.productType;
                         target.latestReservationStatusUpdatedAt = order.latestReservationStatusUpdatedAt;
+                        target.latestPaymentStatusUpdatedAt = order.latestPaymentStatusUpdatedAt;
                         target.participants = order.participants;
                         target.statusDetails = order.statusDetails;
                         target.salesTotal = salesTotal[i];
@@ -104,6 +110,50 @@ const useOrdersStore = create((set) => ({
                             createdAt,
                             paymentMethod,
                         };
+                    }
+                });
+            }),
+        );
+    },
+    updateOrderStatus: async ({
+        type,
+        orderIds,
+        reservationStatus,
+        latestPaymentStatusUpdatedAt,
+        paymentStatus,
+        latestReservationStatusUpdatedAt,
+    }) => {
+        if (type === 'reservation') {
+            await updateOrderReservationStatus({
+                orderIds,
+                reservationStatus,
+                latestReservationStatusUpdatedAt,
+            });
+        }
+        if (type === 'payment') {
+            await updateOrderPaymentStatus({
+                orderIds,
+                latestPaymentStatusUpdatedAt,
+                paymentStatus,
+            });
+        }
+
+        set(
+            produce((state) => {
+                orderIds.forEach((id) => {
+                    const target = state.orders.result?.find((item) => item._id === id);
+
+                    if (target) {
+                        if (type === 'reservation') {
+                            target.reservationStatus = reservationStatus;
+                            target.latestReservationStatusUpdatedAt = latestReservationStatusUpdatedAt;
+                        }
+
+                        if (type === 'payment') {
+                            target.paymentStatus = paymentStatus;
+
+                            target.latestPaymentStatusUpdatedAt = latestPaymentStatusUpdatedAt;
+                        }
                     }
                 });
             }),

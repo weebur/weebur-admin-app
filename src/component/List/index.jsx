@@ -1,5 +1,5 @@
 import { Alert, Checkbox, Col, Row } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import styled from 'styled-components';
 import Loader from '../Loader';
@@ -54,14 +54,7 @@ const Ellipsis = styled.div`
     word-break: keep-all;
 `;
 
-function List({
-    data = [],
-    headers,
-    withCheckBox,
-    hasNext,
-    fetchData,
-    onItemClick,
-}) {
+function List({ data = [], headers, withCheckBox, hasNext, fetchData, onItemClick, onCheckedItemChange }) {
     const [checkedList, setCheckedList] = useState([]);
     const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
@@ -71,9 +64,7 @@ function List({
 
         if (checkedList.includes(item)) {
             listLength--;
-            setCheckedList(
-                checkedList.filter((checkedItem) => checkedItem !== item),
-            );
+            setCheckedList(checkedList.filter((checkedItem) => checkedItem !== item));
         } else {
             listLength++;
             setCheckedList([...checkedList, item]);
@@ -91,16 +82,16 @@ function List({
         setCheckAll(checked);
     };
 
+    useEffect(() => {
+        onCheckedItemChange && onCheckedItemChange(checkedList);
+    }, [checkedList]);
+
     return (
         <ListWrapper>
             <StyledHeader>
                 {withCheckBox && (
                     <StyledCol span={1}>
-                        <Checkbox
-                            indeterminate={indeterminate}
-                            onChange={handleCheckAllChange}
-                            checked={checkAll}
-                        />
+                        <Checkbox indeterminate={indeterminate} onChange={handleCheckAllChange} checked={checkAll} />
                     </StyledCol>
                 )}
                 {headers.map(({ key, label, span }) => (
@@ -117,28 +108,18 @@ function List({
                 scrollThreshold="200px"
                 endMessage={
                     <ListWrapper>
-                        <Alert
-                            message="검색이 완료되었습니다."
-                            type="success"
-                        />
+                        <Alert message="검색이 완료되었습니다." type="success" />
                     </ListWrapper>
                 }
             >
                 {data.map(({ id, rows }) => {
                     return (
-                        <StyledRow
-                            key={id}
-                            gutter={10}
-                            onClick={() => onItemClick(id)}
-                        >
+                        <StyledRow key={id} gutter={10} onClick={() => onItemClick(id)}>
                             {withCheckBox && (
-                                <StyledCol span={1}>
+                                <StyledCol span={1} onClick={(e) => e.stopPropagation()}>
                                     <Checkbox
                                         onChange={(e) => {
-                                            handleCheckBoxChange(
-                                                id,
-                                                e.target.checked,
-                                            );
+                                            handleCheckBoxChange(id, e.target.checked);
                                         }}
                                         checked={checkedList.includes(id)}
                                     />
@@ -146,9 +127,7 @@ function List({
                             )}
                             {rows.map(({ key, span, Component }) => (
                                 <StyledCol key={key} span={span}>
-                                    <Ellipsis ellipsis={{ rows: 2 }}>
-                                        {Component}
-                                    </Ellipsis>
+                                    <Ellipsis ellipsis={{ rows: 2 }}>{Component}</Ellipsis>
                                 </StyledCol>
                             ))}
                         </StyledRow>

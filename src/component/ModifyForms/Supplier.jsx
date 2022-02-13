@@ -8,27 +8,22 @@ import {
     InputWrapper,
     MultilineSortableItem,
     StyledCollapse,
-    TableHead,
 } from './styles';
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
-import { companyCategories } from '../../constants/company';
 import SelectBox from '../Form/SelectBox';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import TextArea from '../Form/TextArea';
-import dayjs from 'dayjs';
-import { COMMON_FORMAT } from '../../constants/date';
 import { supplierTypes } from '../../constants/supplier';
 import DatePicker from '../Form/DatePicker';
 import DraggableFields from '../Form/SortableFields';
-import { Checkbox, Collapse, Typography } from 'antd';
-import Label from '../Form/Label';
+import { Checkbox, Typography } from 'antd';
 import SortableItem from '../Form/SortableFields/SortableItem';
 import CreateButton from '../Button/CreateButton';
 import CollapsePanel from 'antd/lib/collapse/CollapsePanel';
 
-function ModifySupplierForm({ initialValues, onSubmit, onReset, products, submitButtonLabel }) {
+function ModifySupplierForm({ initialValues, onSubmit, onReset, submitButtonLabel }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
