@@ -11,6 +11,12 @@ const theme = {
         lightBackground: '#f7f7f8',
         defaultBackground: '#f9fafb',
         danger: '#ff0054',
+        calendar: {
+            checking: '#9768d7',
+            complete: '#539ff6',
+            cancel: '#fb7d57',
+            basic: '#313131',
+        },
     },
     fontSize: {
         small: '12px',

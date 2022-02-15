@@ -1,7 +1,8 @@
 import 'antd/dist/antd.variable.min.css';
 import '../styles/globals.css';
+import '../styles/Calendar.css';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ConfigProvider } from 'antd';
 import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
