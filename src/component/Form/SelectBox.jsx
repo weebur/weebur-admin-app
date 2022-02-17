@@ -25,6 +25,9 @@ export const StyledSelect = styled(Select)`
         border: solid 1px ${({ focused, theme }) => (focused ? theme.color.primary : theme.color.light)};
 
         .ant-select-selection-search {
+            position: absolute !important;
+            left: 0 !important;
+
             display: flex;
             align-items: center;
             padding: 9px 6px 10px 10px;

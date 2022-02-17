@@ -37,13 +37,6 @@ a {
     background: var(--weebur-background-color);
 }
 
-.ant-select-single.ant-select-customize-input
-    .ant-select-selector
-    .ant-select-selection-search {
-    position: absolute;
-    left: 0;
-}
-
 .ant-select-single .ant-select-selector .ant-select-selection-search-input {
     width: 100%;
     border: none;
@@ -73,8 +66,4 @@ input::-webkit-inner-spin-button {
 
 .ant-select-selection-search {
     background: #FFFFFF;
-}
-
-.ant-select-single.ant-select-customize-input .ant-select-selector > .ant-select-selection-search {
-    position: absolute;
 }
