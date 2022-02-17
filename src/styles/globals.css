@@ -74,3 +74,7 @@ input::-webkit-inner-spin-button {
 .ant-select-selection-search {
     background: #FFFFFF;
 }
+
+.ant-select-single.ant-select-customize-input .ant-select-selector .ant-select-selection-search {
+    position: initial;
+}
