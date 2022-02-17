@@ -116,10 +116,7 @@ function Client({ name, company, mobile, email, from, to }) {
                 });
                 return;
             }
-            await fetchClients(
-                { ...searchQueries, page: next, limit: SEARCH_LIMIT },
-                true,
-            );
+            await fetchClients({ ...searchQueries, page: next, limit: SEARCH_LIMIT }, true);
         } catch (e) {
             message.error('리스트를 불러오는 데 실피하였습니다.');
         }
@@ -180,14 +177,7 @@ function Client({ name, company, mobile, email, from, to }) {
 }
 
 export const getServerSideProps = (ctx) => {
-    const {
-        name = '',
-        company = '',
-        mobile = '',
-        email = '',
-        from = '',
-        to = '',
-    } = ctx.query;
+    const { name = '', company = '', mobile = '', email = '', from = '', to = '' } = ctx.query;
 
     return {
         props: {
