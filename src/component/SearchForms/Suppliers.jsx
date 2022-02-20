@@ -76,7 +76,7 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
     }, []);
 
     return (
-        <Form onSubmit={formik.handleSubmit}>
+        <Form width={600} onSubmit={formik.handleSubmit}>
             <InputWrapper>
                 <SelectBox
                     allowClear
@@ -143,12 +143,7 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton
-                    disabled={!formik.dirty}
-                    small
-                    primary
-                    text="검색"
-                />
+                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
                 <CommonButton
                     small
                     light

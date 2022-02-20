@@ -13,6 +13,7 @@ const theme = {
         danger: '#ff0054',
         calendar: {
             checking: '#9768d7',
+            confirm: '#87d068',
             complete: '#539ff6',
             cancel: '#fb7d57',
             basic: '#313131',

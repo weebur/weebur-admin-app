@@ -5,6 +5,11 @@ export const Form = styled.form`
     flex-direction: column;
     align-items: flex-start;
     gap: 30px;
+    ${({ width }) =>
+        width &&
+        `
+        width: ${width}px;
+    `}
 `;
 
 export const InputWrapper = styled.div`
@@ -16,6 +21,6 @@ export const InputWrapper = styled.div`
         centered &&
         `
         width: 100%;
-        justify-content: center
+        justify-content: center;
     `}
 `;

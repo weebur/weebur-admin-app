@@ -1,7 +1,8 @@
 import { productDeliveryTypes } from './product';
 
 export const reservationStatus = {
-    CONFIRM_SCHEDULE: { key: 'CONFIRM_SCHEDULE', label: '접수' },
+    REQUIRED: { key: 'REQUIRED', label: '예약접수' },
+    CONFIRM_SCHEDULE: { key: 'CONFIRM_SCHEDULE', label: '일정확인' },
     DELIVERED_SCHEDULE: {
         key: 'DELIVERED_SCHEDULE',
         label: '신청전달',
@@ -16,12 +17,14 @@ export const reservationStatus = {
     },
     FINAL_CHANGE: { key: 'FINAL_CHANGE', label: '최종변경' },
     FINAL_COMPLETE: { key: 'FINAL_COMPLETE', label: '최종완료' },
+    UNKNOWN: { key: 'UNKNOWN', label: '미정' },
 };
 
 export const paymentStatus = {
     WAITING: { key: 'WAITING', label: '결제대기' },
     IN_PROGRESS: { key: 'IN_PROGRESS', label: '결제중' },
     COMPLETED: { key: 'COMPLETED', label: '결제완료' },
+    UNKNOWN: { key: 'UNKNOWN', label: '미정' },
 };
 
 export const EXCURSION_FEE = 0.05;

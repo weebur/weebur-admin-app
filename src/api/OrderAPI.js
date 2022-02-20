@@ -57,61 +57,13 @@ export const updateOrderPaymentStatus = ({ orderIds, paymentStatus, latestPaymen
         .then((res) => res.data);
 };
 
-export const createOrder = ({
-    reservationStatus,
-    paymentStatus,
-    statusDetails,
-    product,
-    supplier,
-    reservationDate,
-    participants,
-    onlineInfo,
-    payment,
-    workshop,
-}) => {
+export const fetchOrderSchedules = ({ year, month }) => {
     return api
-        .post('/orders', {
-            reservationStatus,
-            paymentStatus,
-            statusDetails,
-            product,
-            supplier,
-            reservationDate,
-            participants,
-            onlineInfo,
-            payment,
-            workshop,
-        })
-        .then((res) => res.data);
-};
-
-export const updateOrder = (
-    orderId,
-    {
-        reservationStatus,
-        paymentStatus,
-        statusDetails,
-        product,
-        supplier,
-        reservationDate,
-        participants,
-        onlineInfo,
-        payment,
-        workshop,
-    },
-) => {
-    return api
-        .put(`/orders/${orderId}`, {
-            reservationStatus,
-            paymentStatus,
-            statusDetails,
-            product,
-            supplier,
-            reservationDate,
-            participants,
-            onlineInfo,
-            payment,
-            workshop,
+        .get('/orders/calendar', {
+            params: {
+                year,
+                month,
+            },
         })
         .then((res) => res.data);
 };

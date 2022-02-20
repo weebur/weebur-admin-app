@@ -25,6 +25,16 @@ a {
     text-decoration: none;
 }
 
+li,
+ul {
+    list-style: none;
+    margin-block-start: 0;
+    margin-block-end: 0;
+    margin-inline-start: 0;
+    margin-inline-end: 0;
+    padding-inline-start: 0;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -66,4 +76,12 @@ input::-webkit-inner-spin-button {
 
 .ant-select-selection-search {
     background: #FFFFFF;
+}
+
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date {
+    padding: 4px 4px 0 !important;
+}
+
+.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-content {
+    height: 100px !important;
 }

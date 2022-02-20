@@ -46,6 +46,7 @@ function BasicModal({ isOpen, onClose, children, title, defaultBackground }) {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
+                    zIndex: 99999,
                 },
             }}
             contentLabel="Example Modal"
