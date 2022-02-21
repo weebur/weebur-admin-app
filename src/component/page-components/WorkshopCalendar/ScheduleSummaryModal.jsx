@@ -7,6 +7,7 @@ import { Col, Row } from 'antd';
 import { paymentStatus, reservationStatus } from '../../../constants/order';
 
 import styled from 'styled-components';
+import Button from '../../Button';
 
 const Header = styled(Row)`
     font-size: ${({ theme }) => theme.fontSize.small};
@@ -18,15 +19,22 @@ const BigRow = styled.div`
     margin-bottom: 10px;
 `;
 
+const ButtonRow = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+`;
+
 function ScheduleSummaryModal({ isOpen, onClose, currentDate, schedule, onDetailButtonClick }) {
     if (!schedule) return null;
 
     const reservationDate = schedule.reservationDate || null;
+    const baseDate = dayjs(reservationDate);
     return (
         <BasicModal isOpen={isOpen} onClose={onClose}>
-            <CurrentDate>{`${dayjs(reservationDate).format('YYYY.MM.DD')} ${
-                dayLabels[dayjs(reservationDate).day()]
-            }`}</CurrentDate>
+            <CurrentDate>{`${baseDate.format('YYYY.MM.DD')} ${dayLabels[baseDate.day()]} ${baseDate.format(
+                'HH:mm',
+            )}`}</CurrentDate>
 
             <BigRow>
                 <Header>
@@ -77,19 +85,64 @@ function ScheduleSummaryModal({ isOpen, onClose, currentDate, schedule, onDetail
                     <Col span={4}>진행인원</Col>
                 </Header>
                 <Row>
-                    <Col span={4}>{dayjs(schedule.reservationDate).format(COMMON_FORMAT)}</Col>
-                    <Col span={4}>{dayjs(schedule.reservationDate).format('HH:mm')}</Col>
+                    <Col span={4}>{baseDate.format(COMMON_FORMAT)}</Col>
+                    <Col span={4}>{baseDate.format('HH:mm')}</Col>
                     <Col span={4}>{`${schedule.participants}명`}</Col>
                 </Row>
             </BigRow>
+            {schedule.subject && (
+                <BigRow>
+                    <Header>
+                        <Col>워크샵 목적</Col>
+                    </Header>
+                    <Row>
+                        <Col>{schedule.subject}</Col>
+                    </Row>
+                </BigRow>
+            )}
+            {schedule.participantsInfo && (
+                <BigRow>
+                    <Header>
+                        <Col>참여자 정보</Col>
+                    </Header>
+                    <Row>
+                        <Col>{schedule.participantsInfo}</Col>
+                    </Row>
+                </BigRow>
+            )}
+            {schedule.place && (
+                <BigRow>
+                    <Header>
+                        <Col>장소 정보</Col>
+                    </Header>
+                    <Row>
+                        <Col>{schedule.place}</Col>
+                    </Row>
+                </BigRow>
+            )}
+            {schedule.onlineInfo.details && (
+                <BigRow>
+                    <Header>
+                        <Col>온라인 정보</Col>
+                    </Header>
+                    <Row>
+                        <Col>{schedule.onlineInfo.details}</Col>
+                    </Row>
+                </BigRow>
+            )}
             <BigRow>
                 <Header>
-                    <Col>워크샵 정보</Col>
+                    <Col>최종 정산액</Col>
                 </Header>
                 <Row>
-                    <Col>{schedule.info}</Col>
+                    <Col>{`${schedule.totalSettlement.toLocaleString()}원`}</Col>
                 </Row>
             </BigRow>
+            <ButtonRow>
+                <Button light onClick={() => onDetailButtonClick(schedule)}>
+                    상세보기
+                </Button>
+            </ButtonRow>
         </BasicModal>
     );
 }

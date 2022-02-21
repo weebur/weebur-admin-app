@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import DayjsCalendar from '../../Calendar/DayjsCalendar';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { Button } from 'antd';
+import { Badge, Button } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import theme from '../../../theme';
 import DateCell from './DateCell';
 import { useRouter } from 'next/router';
 import MoreScheduleModal from './MoreScheduleModal';
 import ScheduleSummaryModal from './ScheduleSummaryModal';
-import { isEmpty } from 'lodash-es';
 
 const Header = styled.div`
     display: flex;
+    justify-content: space-between;
     background: ${({ theme }) => theme.color.background};
     padding: 20px 0;
 `;
@@ -41,6 +41,12 @@ const YearMonthLabel = styled.div`
 
 const TodayButton = styled(Button)`
     height: 36px;
+`;
+
+const Caption = styled.div`
+    ${({ theme, type }) => `
+        color: ${theme.color.calendar[type]};
+    `}
 `;
 
 function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
@@ -117,6 +123,28 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
                                 </FlexBox>
 
                                 <TodayButton onClick={() => onChange(dayjs())}>오늘</TodayButton>
+                            </FlexBox>
+                            <FlexBox gap={20}>
+                                <Caption type={'checking'}>
+                                    <Badge color={theme.color.calendar.checking} />
+                                    일정확인
+                                </Caption>
+                                <Caption type={'confirm'}>
+                                    <Badge color={theme.color.calendar.confirm} />
+                                    신청전달
+                                </Caption>
+                                <Caption type={'complete'}>
+                                    <Badge color={theme.color.calendar.complete} />
+                                    예약완료 | 최종변경 | 최종완료
+                                </Caption>
+                                <Caption type={'cancel'}>
+                                    <Badge color={theme.color.calendar.cancel} />
+                                    예약취소
+                                </Caption>
+                                <Caption type={'basic'}>
+                                    <Badge color={theme.color.calendar.basic} />
+                                    예약접수 | 미정
+                                </Caption>
                             </FlexBox>
                         </Header>
                     );

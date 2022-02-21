@@ -66,12 +66,20 @@ const PaymentTotal = styled.div`
     }
 `;
 
-function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem, onTotalChange }) {
+function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem }) {
     const [open, setOpen] = useState(false);
 
     const paymentTotal = useMemo(
         () => getTotalPayment(order.payment, order.supplierType),
-        [order.payment, order.supplierType],
+        [
+            order.payment.personal,
+            order.payment.session,
+            order.payment.excursion,
+            order.payment.delivery,
+            order.payment.options,
+            order.payment.discount,
+            order.supplierType,
+        ],
     );
     const isUpdatedReservationStatus = useMemo(
         () => initialValues.orders[index]?.reservationStatus !== order.reservationStatus,
@@ -83,7 +91,7 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
     );
 
     useEffect(() => {
-        onTotalChange(index, paymentTotal.total);
+        onValueChange(`orders.${index}.payment.summary`, paymentTotal);
     }, [paymentTotal]);
 
     useEffect(() => {
@@ -121,9 +129,9 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                     <Col>{`${paymentTotal.total.toLocaleString()}원`}</Col>
                 </TitleItem>
                 <TitleItem flex={'300px'}>
-                    <Col>{reservationStatus[order.reservationStatus].label}</Col>
-                    <Col>{paymentStatus[order.paymentStatus].label}</Col>
-                    <Col>
+                    <Col flex={'0 0 70px'}>{reservationStatus[order.reservationStatus].label}</Col>
+                    <Col flex={'0 0 70px'}>{paymentStatus[order.paymentStatus].label}</Col>
+                    <Col flex={'0 0 160px'}>
                         <Ellipsis>{order.statusDetails}</Ellipsis>
                     </Col>
                 </TitleItem>
@@ -199,17 +207,21 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                     <PriceGenerator order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
 
                     <PaymentTotal>
-                        <Statistic title="판매액" value={paymentTotal.total} suffix="원" />
+                        <Statistic title="판매액" value={order.payment.summary.total} suffix="원" />
                         <Divider type="vertical" />
-                        <Statistic title="수수료" value={paymentTotal.totalIncome} suffix="원" />
+                        <Statistic title="수수료" value={order.payment.summary.totalIncome} suffix="원" />
                         <Divider type="vertical" />
-                        <Statistic title="정산액" value={paymentTotal.totalSettlement} suffix="원" />
+                        <Statistic title="정산액" value={order.payment.summary.totalSettlement} suffix="원" />
                         <Divider type="vertical" />
-                        <Statistic title="세금" value={paymentTotal.tax} suffix="원" />
+                        <Statistic
+                            title="세금"
+                            value={order.payment.summary.tax + order.payment.summary.vat}
+                            suffix="원"
+                        />
                         <Divider type="vertical" />
                         <Statistic
                             title="최종 정산액"
-                            value={paymentTotal.finalSettlement}
+                            value={order.payment.summary.finalSettlement}
                             valueStyle={{ color: theme.color.primary, fontWeight: 'bold' }}
                             suffix="원"
                         />

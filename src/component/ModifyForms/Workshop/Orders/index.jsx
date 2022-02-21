@@ -62,6 +62,14 @@ const initialOrder = {
             discountedItemsBySupplier: '',
             note: '',
         },
+        summary: {
+            total: 0,
+            totalIncome: 0,
+            totalSettlement: 0,
+            vat: 0,
+            tax: 0,
+            finalSettlement: 0,
+        },
     },
     onlineInfo: {
         details: '',
@@ -69,7 +77,7 @@ const initialOrder = {
     },
 };
 
-function Orders({ onValueChange, values, onChange, onTotalChange, initialValues }) {
+function Orders({ onValueChange, values, onChange, initialValues }) {
     const removeItem = (index) => {
         onValueChange(
             'orders',
@@ -93,7 +101,6 @@ function Orders({ onValueChange, values, onChange, onTotalChange, initialValues 
                         onChange={onChange}
                         onValueChange={onValueChange}
                         removeItem={removeItem}
-                        onTotalChange={onTotalChange}
                         initialValues={initialValues}
                     />
                 );

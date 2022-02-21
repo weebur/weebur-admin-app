@@ -54,21 +54,28 @@ export const getTotalPayment = (payment, supplierType) => {
         optionsTotalSettlement -
         discountedBySupplier;
 
+    let finalSettlement = totalSettlement;
+    let vat = 0;
     let tax = 0;
 
     if (supplierType === supplierTypes.TEMPORARY.key) {
-        tax = Math.round(totalSettlement / 1.1);
+        finalSettlement = Math.round(totalSettlement / 1.1);
+        vat = totalSettlement - finalSettlement;
     }
     if (supplierType === supplierTypes.FREELANCER.key) {
-        tax = Math.round((totalSettlement / 1.1) * 0.967);
+        const settlement = Math.round(totalSettlement / 1.1);
+        vat = totalSettlement - settlement;
+        tax = Math.round(settlement * 0.033);
+        finalSettlement = totalSettlement - vat - tax;
     }
 
     return {
         total,
         totalIncome,
         totalSettlement,
+        vat,
         tax,
-        finalSettlement: totalSettlement - tax,
+        finalSettlement,
     };
 };
 
@@ -149,4 +156,8 @@ export const calculateOptionStatement = (statement) => {
         settlement,
         total,
     };
+};
+
+export const getTotalsByOrders = (orders) => {
+    return orders.reduce((acc, order) => order.payment.summary.total + acc, 0);
 };

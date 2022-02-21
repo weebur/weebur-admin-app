@@ -10,7 +10,7 @@ import WorkshopInfo from './WorkshopInfo';
 import Payment from './Payment';
 import Orders from './Orders';
 import SubmitButton from '../../Form/SubmitButton';
-import { getTotalPayment } from '../../../services/OrderService';
+import { getTotalPayment, getTotalsByOrders } from '../../../services/OrderService';
 
 const tabs = [
     { key: 'workshop', label: '워크샵' },
@@ -52,22 +52,14 @@ function WorkshopForm({ initialValues, onSubmit }) {
             orders: [],
         },
         onSubmit: async (values, { resetForm }) => {
-            await onSubmit(values, salesTotals);
+            await onSubmit(values);
             resetForm({ values });
         },
     });
 
     const [active, setActive] = useState(tabs[0].key);
-    const [salesTotals, setSalesTotals] = useState({});
 
-    const handleTotalChange = (index, total) => {
-        setSalesTotals((state) => ({
-            ...state,
-            [index]: total,
-        }));
-    };
-
-    const salesTotal = useMemo(() => Object.values(salesTotals).reduce((acc, v) => v + acc, 0), [salesTotals]);
+    const salesTotal = useMemo(() => getTotalsByOrders(formik.values.orders), [formik.values.orders]);
 
     useEffect(() => {
         if (me && !formik.values.adminId) {
@@ -91,7 +83,6 @@ function WorkshopForm({ initialValues, onSubmit }) {
             <Orders
                 onChange={formik.handleChange}
                 onValueChange={formik.setFieldValue}
-                onTotalChange={handleTotalChange}
                 values={formik.values}
                 initialValues={formik.initialValues}
             />
