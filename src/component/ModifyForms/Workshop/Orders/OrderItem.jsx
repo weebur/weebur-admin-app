@@ -68,19 +68,19 @@ const PaymentTotal = styled.div`
 
 function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem }) {
     const [open, setOpen] = useState(false);
+    const [mount, setMount] = useState(false);
 
-    const paymentTotal = useMemo(
-        () => getTotalPayment(order.payment, order.supplierType),
-        [
-            order.payment.personal,
-            order.payment.session,
-            order.payment.excursion,
-            order.payment.delivery,
-            order.payment.options,
-            order.payment.discount,
-            order.supplierType,
-        ],
-    );
+    const paymentTotal = useMemo(() => {
+        return getTotalPayment(order.payment, order.supplierType);
+    }, [
+        order.payment.personal,
+        order.payment.session,
+        order.payment.excursion,
+        order.payment.delivery,
+        order.payment.options,
+        order.payment.discount,
+        order.supplierType,
+    ]);
     const isUpdatedReservationStatus = useMemo(
         () => initialValues.orders[index]?.reservationStatus !== order.reservationStatus,
         [initialValues, order.reservationStatus],
@@ -91,6 +91,8 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
     );
 
     useEffect(() => {
+        console.log(mount);
+        if (!mount) return;
         onValueChange(`orders.${index}.payment.summary`, paymentTotal);
     }, [paymentTotal]);
 
@@ -116,6 +118,10 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
         }
     }, [isUpdatedPaymentStatus]);
 
+    useEffect(() => {
+        setMount(true);
+    }, []);
+
     return (
         <Order>
             <Title>
@@ -126,7 +132,7 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                         <Ellipsis line={1}>{order.productName}</Ellipsis>
                     </Col>
                     <Col flex={'0 0 70px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
-                    <Col>{`${paymentTotal.total.toLocaleString()}원`}</Col>
+                    <Col>{`${order.payment.summary.total.toLocaleString()}원`}</Col>
                 </TitleItem>
                 <TitleItem flex={'300px'}>
                     <Col flex={'0 0 70px'}>{reservationStatus[order.reservationStatus].label}</Col>

@@ -54,7 +54,16 @@ const Ellipsis = styled.div`
     word-break: keep-all;
 `;
 
-function List({ data = [], headers, withCheckBox, hasNext, fetchData, onItemClick, onCheckedItemChange }) {
+function List({
+    data = [],
+    headers,
+    withCheckBox,
+    hasNext,
+    fetchData,
+    onItemClick,
+    onCheckedItemChange,
+    useInfiniteScroll = true,
+}) {
     const [checkedList, setCheckedList] = useState([]);
     const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
@@ -100,19 +109,43 @@ function List({ data = [], headers, withCheckBox, hasNext, fetchData, onItemClic
                     </StyledCol>
                 ))}
             </StyledHeader>
-            <InfiniteScroll
-                dataLength={data.length}
-                next={fetchData}
-                hasMore={hasNext}
-                loader={<Loader />}
-                scrollThreshold="200px"
-                endMessage={
-                    <ListWrapper>
-                        <Alert message="검색이 완료되었습니다." type="success" />
-                    </ListWrapper>
-                }
-            >
-                {data.map(({ id, rows }) => {
+            {useInfiniteScroll ? (
+                <InfiniteScroll
+                    dataLength={data.length}
+                    next={fetchData}
+                    hasMore={hasNext}
+                    loader={<Loader />}
+                    scrollThreshold="200px"
+                    endMessage={
+                        <ListWrapper>
+                            <Alert message="검색이 완료되었습니다." type="success" />
+                        </ListWrapper>
+                    }
+                >
+                    {data.map(({ id, rows }) => {
+                        return (
+                            <StyledRow key={id} gutter={10} onClick={() => onItemClick(id)}>
+                                {withCheckBox && (
+                                    <StyledCol span={1} onClick={(e) => e.stopPropagation()}>
+                                        <Checkbox
+                                            onChange={(e) => {
+                                                handleCheckBoxChange(id, e.target.checked);
+                                            }}
+                                            checked={checkedList.includes(id)}
+                                        />
+                                    </StyledCol>
+                                )}
+                                {rows.map(({ key, span, Component }) => (
+                                    <StyledCol key={key} span={span}>
+                                        <Ellipsis ellipsis={{ rows: 2 }}>{Component}</Ellipsis>
+                                    </StyledCol>
+                                ))}
+                            </StyledRow>
+                        );
+                    })}
+                </InfiniteScroll>
+            ) : (
+                data.map(({ id, rows }) => {
                     return (
                         <StyledRow key={id} gutter={10} onClick={() => onItemClick(id)}>
                             {withCheckBox && (
@@ -132,8 +165,8 @@ function List({ data = [], headers, withCheckBox, hasNext, fetchData, onItemClic
                             ))}
                         </StyledRow>
                     );
-                })}
-            </InfiniteScroll>
+                })
+            )}
         </ListWrapper>
     );
 }
