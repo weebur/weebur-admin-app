@@ -36,7 +36,7 @@ function WorkshopDetail({ workshopId }) {
 export const getServerSideProps = (ctx) => {
     return {
         props: {
-            workshopId: ctx.query.workshopId || '',
+            workshopId: ctx.params.workshopId || '',
         },
     };
 };

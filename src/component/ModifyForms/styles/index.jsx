@@ -8,12 +8,17 @@ export const Form = styled.form`
     justify-content: center;
     gap: 30px;
     width: 1000px;
+    ${({ full }) =>
+        full &&
+        `
+        width: 100%;
+    `}
 `;
 
 export const InputWrapper = styled.div`
     display: flex;
     width: 100%;
-    align-items: center;
+    align-items: flex-end;
     gap: 15px;
 
     ${({ centered }) =>

@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { optionFeeTypes } from '../constants/order';
+import { optionFeeTypes, reservationStatus } from '../constants/order';
 import { supplierTypes } from '../constants/supplier';
 
 export const getTotalPayment = (payment, supplierType) => {
@@ -159,5 +159,10 @@ export const calculateOptionStatement = (statement) => {
 };
 
 export const getTotalsByOrders = (orders) => {
-    return orders.reduce((acc, order) => order.payment.summary.total + acc, 0);
+    return orders.reduce((acc, order) => {
+        if (order.reservationStatus === reservationStatus.CANCEL_RESERVATION.key) {
+            return acc;
+        }
+        return order.payment.summary.total + acc;
+    }, 0);
 };

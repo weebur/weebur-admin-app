@@ -1,5 +1,11 @@
+import FileUploader from '../component/FileUploader';
+
 function Home() {
-    return <div />;
+    return (
+        <div>
+            <FileUploader />
+        </div>
+    );
 }
 
 export default Home;

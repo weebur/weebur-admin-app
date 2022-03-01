@@ -6,7 +6,6 @@ import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import { supplierTypes } from '../../constants/supplier';
-import { InputNumber } from 'antd';
 
 const SEARCH_START_YEAR = 2015;
 
@@ -17,8 +16,6 @@ function SettlementsSearchForm({ initialValues, onSubmit, onReset }) {
         onSubmit,
     });
 
-    console.log(formik.values);
-
     return (
         <Form width={600} onSubmit={formik.handleSubmit}>
             <InputWrapper>
@@ -26,7 +23,7 @@ function SettlementsSearchForm({ initialValues, onSubmit, onReset }) {
                     name="year"
                     label="연도"
                     onChange={formik.setFieldValue}
-                    value={formik.values.year}
+                    value={Number(formik.values.year)}
                     options={new Array(12).fill(null).map((_, i) => {
                         return { key: i + SEARCH_START_YEAR, label: `${i + SEARCH_START_YEAR}년` };
                     })}
@@ -36,7 +33,7 @@ function SettlementsSearchForm({ initialValues, onSubmit, onReset }) {
                     name="month"
                     label="월"
                     onChange={formik.setFieldValue}
-                    value={formik.values.month}
+                    value={Number(formik.values.month)}
                     options={new Array(12).fill(null).map((_, i) => {
                         return { key: i + 1, label: `${i + 1}월` };
                     })}

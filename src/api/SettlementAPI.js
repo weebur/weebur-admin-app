@@ -14,3 +14,15 @@ export const fetchSettlements = ({ supplierName, supplierType, isCompleted, isPa
         })
         .then((res) => res.data);
 };
+
+export const updateSettlements = ({ year, month }) => {
+    return api.post('/settlements', { year, month }).then((res) => res.data);
+};
+
+export const fetchSettlement = (id) => {
+    return api.get(`/settlements/${id}`).then((res) => res.data);
+};
+
+export const updateSettlement = (id, settlement) => {
+    return api.put(`/settlements/${id}`, settlement).then((res) => res.data);
+};

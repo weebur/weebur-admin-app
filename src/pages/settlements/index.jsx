@@ -8,6 +8,7 @@ import { supplierTypes } from '../../constants/supplier';
 import SettlementsSearchForm from '../../component/SearchForms/Settlements';
 import { useRouter } from 'next/router';
 import { toQueryObject } from '../../utils/queryString';
+import { message } from 'antd';
 
 const headers = [
     {
@@ -79,7 +80,7 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
 
     const fetchSettlements = useSettlementStore((state) => state.fetchSettlements);
     const settlements = useSettlementStore((state) => state.settlements);
-    console.log(settlements);
+    const updateSettlements = useSettlementStore((state) => state.updateSettlements);
 
     const supplierList = settlements?.map((result) => {
         return {
@@ -94,22 +95,50 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
         };
     });
 
+    const handleLoadSettlements = async ({ supplierName, supplierType, isPaid, isCompleted, year, month }) => {
+        try {
+            await fetchSettlements({ supplierName, supplierType, isPaid, isCompleted, year, month });
+            message.success(`${year}년 ${month}월 정산내역을 불러오는데 성공하였습니다.`);
+        } catch (e) {
+            message.error('정산내역을 불러오는데 실패하였습니다.');
+        }
+    };
+
+    const handleModifyButtonClick = async () => {
+        try {
+            await updateSettlements(searchQueries);
+
+            router.replace({
+                pathname: '/settlements',
+                query: toQueryObject(searchQueries),
+            });
+
+            message.success(`${year}년 ${month}월 정산내역 갱신을 성공하였습니다.`);
+        } catch (e) {
+            message.error('정산내역 갱신을 실패하였습니다.');
+        }
+    };
+
     useEffect(() => {
-        fetchSettlements({ supplierName, supplierType, isPaid, isCompleted, year, month });
+        handleLoadSettlements({ supplierName, supplierType, isPaid, isCompleted, year, month });
     }, [supplierName, supplierType, isPaid, isCompleted, year, month]);
+
     return (
         <ContentLayout>
             <SearchList
-                // withCheckBox
-                title="업체 검색"
+                title="정산내역"
                 headers={headers}
                 items={supplierList}
                 totalLength={settlements.length || 0}
-                onItemClick={() => {}}
-                createButtonText=""
-                onCreateButtonClick={() => {}}
-                // modifyButtonText={checkedItems.length > 0 ? '상태변경' : ''}
-                // onCheckedItemChange={(v) => setCheckedItems(v)}
+                modifyButtonText={'정산내역 갱신하기'}
+                onModifyButtonClick={handleModifyButtonClick}
+                onItemClick={(id) => {
+                    console.log(id);
+                    router.push({
+                        pathname: `/settlements/${id}`,
+                        as: '/settlements/[settlementsId]',
+                    });
+                }}
             >
                 <SettlementsSearchForm
                     initialValues={searchQueries}

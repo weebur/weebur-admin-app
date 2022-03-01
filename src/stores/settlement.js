@@ -1,18 +1,33 @@
 import create from 'zustand';
-import { fetchOrdersBySupplierAndYearMonth, fetchSettlements } from '../api/SettlementAPI';
+import {
+    fetchOrdersBySupplierAndYearMonth,
+    fetchSettlement,
+    fetchSettlements,
+    updateSettlement,
+    updateSettlements,
+} from '../api/SettlementAPI';
 
-const useSettlementStore = create((set) => ({
+const useSettlementStore = create((set, get) => ({
     settlements: [],
-    settlementsByOrders: [],
+    settlement: {},
     fetchSettlements: async ({ supplierName, supplierType, isPaid, isCompleted, year, month }) => {
         const settlements = await fetchSettlements({ supplierName, supplierType, isPaid, isCompleted, year, month });
 
         set({ settlements });
     },
-    fetchOrdersBySupplierAndYearMonth: async ({ supplierId, year, month }) => {
-        const settlementsByOrders = await fetchOrdersBySupplierAndYearMonth({ supplierId, year, month });
+    updateSettlements: async ({ supplierName, supplierType, isPaid, isCompleted, year, month }) => {
+        await updateSettlements({ year, month });
+        await get().fetchSettlements({ supplierName, supplierType, isPaid, isCompleted, year, month });
+    },
+    fetchSettlement: async (settlementId) => {
+        const settlement = await fetchSettlement(settlementId);
 
-        set({ settlementsByOrders });
+        set({ settlement });
+    },
+    updateSettlement: async (settlementId, payload) => {
+        await updateSettlement(settlementId, payload);
+        await get().fetchSettlement(settlementId);
+        // set({ settlement });
     },
 }));
 

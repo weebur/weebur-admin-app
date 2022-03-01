@@ -9,7 +9,7 @@ const StyledModal = styled(Modal)`
     background: #ffffff;
     min-width: 700px;
     min-height: 400px;
-    max-height: 1000px;
+    max-height: calc(100vh - 100px);
     overflow: scroll;
 
     ${({ defaultBackground, theme }) =>
