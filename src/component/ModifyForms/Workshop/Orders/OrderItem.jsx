@@ -124,14 +124,14 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
     return (
         <Order>
             <Title>
-                <TitleItem flex={'50%'}>
-                    <Col flex={'0 0 70px'}>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
-                    <Col flex={'0 0 70px'}>{dayjs(order.reservationDate).format('HH:mm')}</Col>
+                <TitleItem flex={'60%'}>
+                    <Col flex={'0 0 100px'}>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
+                    <Col flex={'0 0 100px'}>{dayjs(order.reservationDate).format('HH:mm')}</Col>
                     <Col flex={'0 0 250px'}>
                         <Ellipsis line={1}>{order.productName}</Ellipsis>
                     </Col>
-                    <Col flex={'0 0 70px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
-                    <Col flex={'0 0 100px'}>{`${order.payment.summary.total.toLocaleString()}원`}</Col>
+                    <Col flex={'0 0 100px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
+                    <Col flex={'0 0 150px'}>{`${order.payment.summary.total.toLocaleString()}원`}</Col>
                 </TitleItem>
                 <TitleItem flex={'20%'}>
                     <Col flex={'0 0 70px'}>{reservationStatus[order.reservationStatus].label}</Col>
