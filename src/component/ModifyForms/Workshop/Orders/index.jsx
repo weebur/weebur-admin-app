@@ -1,6 +1,6 @@
 import React from 'react';
 import { SubTitle } from '../styles';
-import { Typography } from 'antd';
+import { Modal, Typography } from 'antd';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
 import dayjs from 'dayjs';
 import CreateButton from '../../../Button/CreateButton';
@@ -79,10 +79,17 @@ const initialOrder = {
 
 function Orders({ onValueChange, values, onChange, initialValues }) {
     const removeItem = (index) => {
-        onValueChange(
-            'orders',
-            values.orders.filter((order, i) => i !== index),
-        );
+        Modal.confirm({
+            centered: true,
+            title: '선택한 주문이 삭제됩니다. 진행하시겠습니까?',
+            content: '저장을 해야 삭제가 완료됩니다.',
+            onOk() {
+                onValueChange(
+                    'orders',
+                    values.orders.filter((order, i) => i !== index),
+                );
+            },
+        });
     };
     return (
         <>

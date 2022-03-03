@@ -13,6 +13,7 @@ const useWorkshopsStore = create((set) => ({
     createWorkshop: async (workshop) => {
         const newWorkshop = await createWorkshop(workshop);
         set({ workshop: newWorkshop });
+        return newWorkshop;
     },
     updateWorkshop: async (workshopId, workshop) => {
         const newWorkshop = await updateWorkshop(workshopId, workshop);

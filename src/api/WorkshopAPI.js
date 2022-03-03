@@ -11,3 +11,7 @@ export const createWorkshop = async (workshop) => {
 export const updateWorkshop = async (workshopId, workshop) => {
     return api.put(`/workshops/${workshopId}`, workshop).then((res) => res.data);
 };
+
+export const removeWorkshop = async (workshopId) => {
+    return api.delete(`/workshops/${workshopId}`).then((res) => res.data);
+};

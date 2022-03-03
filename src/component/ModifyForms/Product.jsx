@@ -187,7 +187,10 @@ function ModifyProductForm({ initialValues, onSubmit, onReset, submitButtonLabel
                                         name={`prices.product.${i}.type`}
                                         onChange={formik.setFieldValue}
                                         value={type}
-                                        options={Object.values(productPriceTypes)}
+                                        options={[
+                                            { key: 'SESSION', label: '회당' },
+                                            { key: 'PERSON', label: '인당' },
+                                        ]}
                                     />
                                     <NumberInput
                                         name={`prices.product.${i}.range.from`}

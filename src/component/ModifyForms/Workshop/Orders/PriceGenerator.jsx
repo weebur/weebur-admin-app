@@ -84,8 +84,8 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
         }
 
         if (current === 'excursion') {
-            const target = excursionRegions[0];
-            const price = target.price;
+            const target = excursionRegions?.[0];
+            const price = target?.price || 0;
             const income = Math.round(price * EXCURSION_FEE);
 
             onValueChange(`orders.${index}.payment.excursion`, {
@@ -100,7 +100,7 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
                         income,
                         settlement: price - income,
                         total: price,
-                        region: target.region,
+                        region: target?.region || '',
                         note: '',
                     },
                 ],
@@ -108,7 +108,7 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
         }
 
         if (current === 'delivery') {
-            const target = productDelivery[0];
+            const target = productDelivery?.[0];
             const price = target?.price || 0;
             const total = price * order.participants;
             const type = target?.type || productDeliveryTypes.PERSONAL.key;
@@ -139,7 +139,7 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
         }
 
         if (current === 'options') {
-            const target = productOptions[0];
+            const target = productOptions?.[0];
             const price = target?.price || 0;
             const total = price * order.participants;
             const income = Math.round(total * OPTION_FEE);

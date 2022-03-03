@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Typography } from 'antd';
 import AsyncSelectBox from '../../Form/AsyncSelectBox';
 import { fetchClients } from '../../../api/ClientAPI';
@@ -6,8 +6,34 @@ import TextInput from '../../Form/Input';
 import DatePicker from '../../Form/DatePicker';
 import TextArea from '../../Form/TextArea';
 import { ClientSelectBox, Fields, FieldSection, SubTitle } from './styles';
+import useAdminsStore from '../../../stores/admins';
+import SelectBox from '../../Form/SelectBox';
 
-function ClientInfo({ onValueChange, values, onChange }) {
+function ClientInfo({ onValueChange, values, onChange, errors }) {
+    const admins = useAdminsStore((state) => state.admins);
+    const fetchAdmins = useAdminsStore((state) => state.fetchAdmins);
+    const { result = [] } = admins;
+    const adminsOptions = [
+        ...result.map((admin) => ({
+            label: admin.name,
+            value: admin._id,
+            key: admin._id,
+            data: {
+                adminId: admin._id,
+                adminName: admin.name,
+            },
+        })),
+        {
+            label: values.adminName,
+            value: values.adminId,
+            key: values.adminId,
+            data: {
+                adminId: values.adminId,
+                adminName: values.adminName,
+            },
+        },
+    ];
+
     const fetchClientOptions = async (name) => {
         try {
             const clients = await fetchClients({
@@ -33,6 +59,13 @@ function ClientInfo({ onValueChange, values, onChange }) {
         }
     };
 
+    useEffect(() => {
+        if (result.length > 0) {
+            return;
+        }
+        fetchAdmins({ page: 1, limit: 100 });
+    }, []);
+
     return (
         <>
             <SubTitle>
@@ -43,12 +76,12 @@ function ClientInfo({ onValueChange, values, onChange }) {
                         name={'clientId'}
                         onChange={(name, v, option) => {
                             const value = option.data;
-                            onValueChange('clientId', value.clientId);
                             onValueChange('clientName', value.clientName);
                             onValueChange('clientEmail', value.clientEmail);
                             onValueChange('clientMobile', value.clientMobile);
                             onValueChange('companyId', value.companyId);
                             onValueChange('companyName', value.companyName);
+                            onValueChange('clientId', value.clientId);
                         }}
                         value={values.clientId}
                         fetchOptions={fetchClientOptions}
@@ -56,7 +89,7 @@ function ClientInfo({ onValueChange, values, onChange }) {
                             {
                                 key: values.clientId,
                                 value: values.clientId,
-                                label: `${values.clientName}(${values.companyName})`,
+                                label: values.clientName ? `${values.clientName}(${values.companyName})` : '',
                                 data: {
                                     clientId: values.clientId,
                                     clientName: values.clientName,
@@ -68,6 +101,7 @@ function ClientInfo({ onValueChange, values, onChange }) {
                             },
                         ]}
                     />
+                    {errors.clientId && <Typography.Text type="danger">{errors.clientId}</Typography.Text>}
                 </ClientSelectBox>
             </SubTitle>
 
@@ -77,7 +111,17 @@ function ClientInfo({ onValueChange, values, onChange }) {
                     <DatePicker label="문의일" name="createdAt" value={values.createdAt} onChange={onValueChange} />
                     <TextInput disabled label="모바일" name="clientMobile" value={values.clientMobile} />
                     <TextInput disabled label="이메일" name="clientEmail" value={values.clientEmail} />
-                    <TextInput disabled label="담당자" name="adminName" value={values.adminName} />
+                    <SelectBox
+                        label="담당자"
+                        name="adminId"
+                        value={values.adminId}
+                        options={adminsOptions}
+                        onChange={(name, v, option) => {
+                            const value = option.data;
+                            onValueChange('adminName', value.adminName);
+                            onValueChange('adminId', value.adminId);
+                        }}
+                    />
                 </Fields>
                 <Fields>
                     <TextArea label="요청사항" name="requirements" value={values.requirements} onChange={onChange} />

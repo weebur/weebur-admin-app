@@ -32,6 +32,8 @@ class ProductService {
                 };
         }
     };
+
+    getSummaryForTeacher = (workshop, order) => {};
 }
 
 export default new ProductService();

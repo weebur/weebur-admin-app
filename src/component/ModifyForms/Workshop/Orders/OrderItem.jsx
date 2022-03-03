@@ -91,7 +91,6 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
     );
 
     useEffect(() => {
-        console.log(mount);
         if (!mount) return;
         onValueChange(`orders.${index}.payment.summary`, paymentTotal);
     }, [paymentTotal]);
@@ -210,28 +209,37 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                         <StatusDetails />
                     </StyledFields>
 
-                    <PriceGenerator order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
+                    {order.productId && (
+                        <>
+                            <PriceGenerator
+                                order={order}
+                                index={index}
+                                onChange={onChange}
+                                onValueChange={onValueChange}
+                            />
 
-                    <PaymentTotal>
-                        <Statistic title="판매액" value={order.payment.summary.total} suffix="원" />
-                        <Divider type="vertical" />
-                        <Statistic title="수수료" value={order.payment.summary.totalIncome} suffix="원" />
-                        <Divider type="vertical" />
-                        <Statistic title="정산액" value={order.payment.summary.totalSettlement} suffix="원" />
-                        <Divider type="vertical" />
-                        <Statistic
-                            title="세금"
-                            value={order.payment.summary.tax + order.payment.summary.vat}
-                            suffix="원"
-                        />
-                        <Divider type="vertical" />
-                        <Statistic
-                            title="최종 정산액"
-                            value={order.payment.summary.finalSettlement}
-                            valueStyle={{ color: theme.color.primary, fontWeight: 'bold' }}
-                            suffix="원"
-                        />
-                    </PaymentTotal>
+                            <PaymentTotal>
+                                <Statistic title="판매액" value={order.payment.summary.total} suffix="원" />
+                                <Divider type="vertical" />
+                                <Statistic title="수수료" value={order.payment.summary.totalIncome} suffix="원" />
+                                <Divider type="vertical" />
+                                <Statistic title="정산액" value={order.payment.summary.totalSettlement} suffix="원" />
+                                <Divider type="vertical" />
+                                <Statistic
+                                    title="세금"
+                                    value={order.payment.summary.tax + order.payment.summary.vat}
+                                    suffix="원"
+                                />
+                                <Divider type="vertical" />
+                                <Statistic
+                                    title="최종 정산액"
+                                    value={order.payment.summary.finalSettlement}
+                                    valueStyle={{ color: theme.color.primary, fontWeight: 'bold' }}
+                                    suffix="원"
+                                />
+                            </PaymentTotal>
+                        </>
+                    )}
                 </OrderForm>
             )}
         </Order>

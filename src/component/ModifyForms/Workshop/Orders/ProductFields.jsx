@@ -6,6 +6,10 @@ import useOrdersStore from '../../../../stores/order';
 import styled from 'styled-components';
 import { supplierTypes } from '../../../../constants/supplier';
 
+const ProductNames = styled.div`
+    flex: 0 0 40%;
+    display: flex;
+`;
 const SuppliersDetails = styled.div`
     flex: 0 0 60%;
     display: flex;
@@ -93,67 +97,72 @@ function ProductFields({ order, index, onValueChange }) {
 
     return (
         <>
-            <AsyncSelectBox
-                allowClear
-                name={`orders.${index}.productId`}
-                label="상품선택"
-                onChange={(name, productId) => {
-                    const value = formData.products.find((product) => product._id === productId);
+            <ProductNames>
+                <AsyncSelectBox
+                    allowClear
+                    name={`orders.${index}.productId`}
+                    label="상품선택"
+                    onChange={(name, productId) => {
+                        const value = formData.products.find((product) => product._id === productId);
 
-                    if (!value) {
-                        onValueChange(`orders.${index}.productType`, '');
-                        onValueChange(`orders.${index}.productName`, '');
-                        onValueChange(name, '');
-                        onValueChange(`orders.${index}.supplierType`, '');
-                        onValueChange(`orders.${index}.supplierName`, '');
-                        onValueChange(`orders.${index}.supplierId`, '');
-                        return;
-                    }
+                        if (!value) {
+                            onValueChange(`orders.${index}.productType`, '');
+                            onValueChange(`orders.${index}.productName`, '');
+                            onValueChange(name, '');
+                            onValueChange(`orders.${index}.supplierType`, '');
+                            onValueChange(`orders.${index}.supplierName`, '');
+                            onValueChange(`orders.${index}.supplierId`, '');
+                            return;
+                        }
 
-                    onValueChange(`orders.${index}.productType`, value.type);
-                    onValueChange(`orders.${index}.productName`, value.name);
-                    onValueChange(`orders.${index}.productFee`, value.fee);
-                    onValueChange(name, value._id);
+                        onValueChange(`orders.${index}.productType`, value.type);
+                        onValueChange(`orders.${index}.productName`, value.name);
+                        onValueChange(`orders.${index}.productFee`, value.fee);
+                        onValueChange(name, value._id);
 
-                    loadSupplier(value._id);
-                }}
-                value={order.productId}
-                fetchOptions={fetchProductOptions}
-                initialOptions={[{ label: order.productName, value: order.productId, key: order.productId }]}
-            />
-            <SuppliersDetails>
-                <SelectBox
-                    label="업체 선택"
-                    name={`orders.${index}.supplierId`}
-                    value={order.supplierId}
-                    onChange={(name, supplierId) => {
-                        const value = formData.suppliers.find((supplier) => supplier._id === supplierId);
-
-                        onValueChange(`orders.${index}.supplierId`, value._id);
-                        onValueChange(`orders.${index}.supplierName`, value.name);
-                        onValueChange(`orders.${index}.supplierType`, value.type);
-                        onValueChange(`orders.${index}.mainTeacherId`, value.mainTeacher?._id);
-                        onValueChange(`orders.${index}.mainTeacherName`, value.mainTeacher?.name);
-                        onValueChange(`orders.${index}.mainTeacherMobile`, value.mainTeacher?.mobile);
+                        loadSupplier(value._id);
                     }}
-                    options={supplierOptions}
+                    value={order.productId}
+                    fetchOptions={fetchProductOptions}
+                    initialOptions={[{ label: order.productName, value: order.productId, key: order.productId }]}
                 />
-                <SupplierItem>
-                    <Typography.Text>{supplierTypes[order.supplierType]?.label}</Typography.Text>
-                </SupplierItem>
-                <Divider type="vertical" />
-                <SupplierItem>
-                    <Typography.Text>{`수수료 ${(order.productFee * 100).toFixed(0)}%`}</Typography.Text>
-                </SupplierItem>
-                <Divider type="vertical" />
-                <SupplierItem>
-                    <Typography.Text>{order.mainTeacherName}</Typography.Text>
-                </SupplierItem>
-                <Divider type="vertical" />
-                <SupplierItem>
-                    <Typography.Text>{order.mainTeacherMobile}</Typography.Text>
-                </SupplierItem>
-            </SuppliersDetails>
+            </ProductNames>
+
+            {order.productId && (
+                <SuppliersDetails>
+                    <SelectBox
+                        label="업체 선택"
+                        name={`orders.${index}.supplierId`}
+                        value={order.supplierId}
+                        onChange={(name, supplierId) => {
+                            const value = formData.suppliers.find((supplier) => supplier._id === supplierId);
+
+                            onValueChange(`orders.${index}.supplierId`, value._id);
+                            onValueChange(`orders.${index}.supplierName`, value.name);
+                            onValueChange(`orders.${index}.supplierType`, value.type);
+                            onValueChange(`orders.${index}.mainTeacherId`, value.mainTeacher?._id);
+                            onValueChange(`orders.${index}.mainTeacherName`, value.mainTeacher?.name);
+                            onValueChange(`orders.${index}.mainTeacherMobile`, value.mainTeacher?.mobile);
+                        }}
+                        options={supplierOptions}
+                    />
+                    <SupplierItem>
+                        <Typography.Text>{supplierTypes[order.supplierType]?.label}</Typography.Text>
+                    </SupplierItem>
+                    <Divider type="vertical" />
+                    <SupplierItem>
+                        <Typography.Text>{`수수료 ${(order.productFee * 100).toFixed(0)}%`}</Typography.Text>
+                    </SupplierItem>
+                    <Divider type="vertical" />
+                    <SupplierItem>
+                        <Typography.Text>{order.mainTeacherName}</Typography.Text>
+                    </SupplierItem>
+                    <Divider type="vertical" />
+                    <SupplierItem>
+                        <Typography.Text>{order.mainTeacherMobile}</Typography.Text>
+                    </SupplierItem>
+                </SuppliersDetails>
+            )}
         </>
     );
 }
