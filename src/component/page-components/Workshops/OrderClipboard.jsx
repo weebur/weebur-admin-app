@@ -4,6 +4,8 @@ import SelectBox from '../../Form/SelectBox';
 import CommonButton from '../../Button';
 import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../constants/date';
+import TextArea from '../../Form/TextArea';
+import ProductService from '../../../services/ProductService';
 
 const FieldSection = styled.div`
     width: 100%;
@@ -21,7 +23,9 @@ const getLabel = (order) =>
 
 function OrderClipboard({ workshop, forUser, forTeacher }) {
     const [order, setOrder] = useState('');
-    console.log(workshop);
+
+    const summary = order ? ProductService.getSummaryForTeacher(workshop, order) : '';
+
     return (
         <div>
             <FieldSection>
@@ -36,9 +40,11 @@ function OrderClipboard({ workshop, forUser, forTeacher }) {
                         value: order._id,
                     }))}
                 />
-                <CommonButton>클립보드 복사</CommonButton>
+                <CommonButton inline>클립보드 복사</CommonButton>
             </FieldSection>
-            <FieldSection></FieldSection>
+            <FieldSection>
+                <TextArea rows={4} value={summary} />
+            </FieldSection>
         </div>
     );
 }

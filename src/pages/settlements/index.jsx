@@ -133,7 +133,6 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
                 modifyButtonText={'정산내역 갱신하기'}
                 onModifyButtonClick={handleModifyButtonClick}
                 onItemClick={(id) => {
-                    console.log(id);
                     router.push({
                         pathname: `/settlements/${id}`,
                         as: '/settlements/[settlementsId]',

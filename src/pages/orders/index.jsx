@@ -147,7 +147,6 @@ function Orders({
             await updateOrderStatus({ orderIds: checkedItems, type, ...values });
             message.success('상태 변경을 완료하였습니다.');
         } catch (e) {
-            console.log(e);
             message.error('상태 변경을 실패하였습니다.');
         }
     };

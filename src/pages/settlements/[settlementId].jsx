@@ -63,7 +63,6 @@ function SettlementDetailPage({ settlementId, year, month }) {
     const updateSettlement = useSettlementStore((state) => state.updateSettlement);
     const settlement = useSettlementStore((state) => state.settlement);
 
-    console.log(settlement);
     const totalSettlement = useMemo(
         () => settlement.orders?.reduce((acc, order) => acc + order.totalSettlement, 0),
         [settlement],

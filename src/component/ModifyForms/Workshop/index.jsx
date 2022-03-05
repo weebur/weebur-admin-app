@@ -58,7 +58,6 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             resetForm({ values });
         },
         validate: (values) => {
-            console.log(values.clientId);
             if (!values.clientId) {
                 return { clientId: '회원은 필수로 입력해야 합니다.' };
             }

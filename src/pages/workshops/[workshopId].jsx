@@ -26,6 +26,15 @@ function WorkshopDetail({ workshopId }) {
     const updateWorkshop = useWorkshopsStore((state) => state.updateWorkshop);
     const updateOrdersByWorkshop = useOrdersStore((state) => state.updateOrdersByWorkshop);
 
+    const initializeWorkshop = async (workshopId) => {
+        try {
+            await fetchWorkshop(workshopId);
+        } catch (e) {
+            message.warn('워크샵이 존재하지 않습니다.');
+            router.replace('/orders');
+        }
+    };
+
     const handleSubmit = async (values) => {
         try {
             await updateWorkshop(workshopId, values);
@@ -48,7 +57,7 @@ function WorkshopDetail({ workshopId }) {
 
     useEffect(() => {
         if (workshopId) {
-            fetchWorkshop(workshopId);
+            initializeWorkshop(workshopId);
         }
     }, [workshopId]);
 

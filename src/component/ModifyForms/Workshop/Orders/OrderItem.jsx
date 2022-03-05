@@ -15,6 +15,9 @@ import DatePicker from '../../../Form/DatePicker';
 import NumberInput from '../../../Form/NumberInput';
 import PriceGenerator from './PriceGenerator';
 import theme from '../../../../theme';
+import useOrdersStore from '../../../../stores/order';
+import CommonButton from '../../../Button';
+import { productTypes } from '../../../../constants/product';
 
 const Order = styled.div`
     width: 100%;
@@ -41,6 +44,7 @@ const OrderForm = styled.div`
 const StyledFields = styled(Fields)`
     gap: 20px;
     margin-bottom: 45px;
+    align-items: flex-end;
 `;
 
 const StatusDetails = styled.div`
@@ -52,6 +56,7 @@ const PaymentTotal = styled.div`
     gap: 20px;
     justify-content: flex-end;
     align-items: center;
+    margin-bottom: 40px;
 
     & > .ant-divider {
         border: 1px solid ${({ theme }) => theme.color.text};
@@ -67,8 +72,12 @@ const PaymentTotal = styled.div`
 `;
 
 function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem }) {
+    const formData = useOrdersStore((state) => state.formData);
+
     const [open, setOpen] = useState(false);
     const [mount, setMount] = useState(false);
+
+    const isOnline = formData.product?.type === productTypes.ONLINE.key;
 
     const paymentTotal = useMemo(() => {
         return getTotalPayment(order.payment, order.supplierType);
@@ -187,9 +196,9 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                             />
                         </StatusDetails>
                     </StyledFields>
-                    <StyledFields>
-                        <ProductFields order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
-                    </StyledFields>
+
+                    <ProductFields order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
+
                     <StyledFields>
                         <DatePicker
                             showTime
@@ -239,6 +248,41 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                                 />
                             </PaymentTotal>
                         </>
+                    )}
+
+                    {isOnline && (
+                        <StyledFields>
+                            <TextInput
+                                label="온라인 화상정보"
+                                placeholder="http://zoom123.url.abc"
+                                name={`orders.${index}.onlineInfo.details`}
+                                value={order.onlineInfo.details}
+                                onChange={onChange}
+                            />
+
+                            <TextInput
+                                label="온라인 배송정보 (https만 입력 가능)"
+                                placeholder="weebur.com"
+                                name={`orders.${index}.onlineInfo.fileUrl`}
+                                value={order.onlineInfo.fileUrl}
+                                onChange={onChange}
+                            />
+
+                            <CommonButton
+                                inline
+                                small
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (order.onlineInfo.fileUrl.startsWith('https://')) {
+                                        window.open(order.onlineInfo.fileUrl, '_blank');
+                                        return;
+                                    }
+                                    window.open('https://' + order.onlineInfo.fileUrl, '_blank');
+                                }}
+                            >
+                                폴더이동
+                            </CommonButton>
+                        </StyledFields>
                     )}
                 </OrderForm>
             )}

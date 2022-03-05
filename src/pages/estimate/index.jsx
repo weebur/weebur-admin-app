@@ -5,7 +5,6 @@ const Estimate = dynamic(() => import('../../component/page-components/Estimate'
 
 function EstimatePage(props) {
     // if (typeof window !== 'undefined') return null;
-    console.log('render');
     return <Estimate />;
 }
 

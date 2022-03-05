@@ -149,9 +149,7 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
                         </Header>
                     );
                 }}
-                onPanelChange={(value, mode) => {
-                    console.log(value, mode);
-                }}
+                onPanelChange={(value, mode) => {}}
             />
             <MoreScheduleModal
                 isOpen={!!moreSchedules.length}

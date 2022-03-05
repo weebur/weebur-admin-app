@@ -13,7 +13,6 @@ function PersonalPrices({ personalPrices, name, onChange, onValueChange, partici
     const { statements } = personalPrices;
     const updateTotal = (newStatement, index) => {
         const nextStatements = getNextStatements(personalPrices, newStatement, index);
-        console.log(newStatement);
         onValueChange(`${name}`, nextStatements);
     };
 
@@ -74,7 +73,6 @@ function PersonalPrices({ personalPrices, name, onChange, onValueChange, partici
                                     name={`${name}.statements.${i}.price`}
                                     value={statement.price.toLocaleString()}
                                     onChange={(_, price) => {
-                                        console.log(statement);
                                         const total = price * participants;
                                         const income = Math.round(total * statement.fee);
 

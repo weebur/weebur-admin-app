@@ -15,7 +15,6 @@ function FileUploader(props) {
             const file = input.files[0];
             const filename = await uploadFile(file);
         } catch (e) {
-            console.log(e);
             alert('이미지업로드에 실패하였습니다');
         }
     };
@@ -23,13 +22,7 @@ function FileUploader(props) {
     return (
         <div>
             <Input ref={ref} type="file" onChange={handleInputChange} />
-            <button
-                onClick={async () => {
-                    console.log(ref.current.files);
-                }}
-            >
-                업로드
-            </button>
+            <button onClick={async () => {}}>업로드</button>
         </div>
     );
 }
