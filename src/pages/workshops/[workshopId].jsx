@@ -9,6 +9,9 @@ import Tab from '../../component/Tab';
 import OrderClipboard from '../../component/page-components/Workshops/OrderClipboard';
 import { removeWorkshop } from '../../api/WorkshopAPI';
 import { useRouter } from 'next/router';
+import SendEmailTemplate from '../../component/page-components/Workshops/SendEmailTemplate';
+import { sendReservationEmail } from '../../api/OrderAPI';
+import { sendEmail } from '../../api/EmailAPI';
 
 const tabs = [
     { key: 'workshop', label: '워크샵' },
@@ -55,6 +58,36 @@ function WorkshopDetail({ workshopId }) {
         }
     };
 
+    const handleSendEmail = async ({
+        senderName,
+        senderAddress,
+        senderPassword,
+        receiver,
+        subject,
+        textBody,
+        htmlBody,
+    }) => {
+        Modal.confirm({
+            content: '이메일을 발송하시겠습니까?',
+            onOk: async () => {
+                try {
+                    await sendEmail({
+                        senderName,
+                        senderAddress,
+                        senderPassword,
+                        receiver,
+                        subject,
+                        textBody,
+                        htmlBody,
+                    });
+                    message.success('이메일 발송이 완료되었습니다.');
+                } catch (e) {
+                    message.error('워크샵 삭제를 실패하였습니다.');
+                }
+            },
+        });
+    };
+
     useEffect(() => {
         if (workshopId) {
             initializeWorkshop(workshopId);
@@ -91,8 +124,8 @@ function WorkshopDetail({ workshopId }) {
                     onDirtyChange={(v) => setIsDirty(v)}
                 />
             )}
-            {active === tabs[1].key && <OrderClipboard forTeacher workshop={workshop} />}
-            {active === tabs[2].key && <OrderClipboard forUser workshop={workshop} />}
+            {active === tabs[1].key && <OrderClipboard workshop={workshop} />}
+            {active === tabs[2].key && <SendEmailTemplate workshop={workshop} onSendEmail={handleSendEmail} />}
         </ContentLayout>
     );
 }

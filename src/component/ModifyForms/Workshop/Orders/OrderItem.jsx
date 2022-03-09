@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../../constants/date';
 import { getTotalPayment } from '../../../../services/OrderService';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
-import { Col, Divider, Row, Statistic } from 'antd';
+import { Checkbox, Col, Divider, Row, Statistic } from 'antd';
 import Ellipsis from '../../../Text/Ellipsis';
 import SelectBox from '../../../Form/SelectBox';
 import TextInput from '../../../Form/Input';
@@ -18,6 +18,7 @@ import theme from '../../../../theme';
 import useOrdersStore from '../../../../stores/order';
 import CommonButton from '../../../Button';
 import { productTypes } from '../../../../constants/product';
+import TextArea from '../../../Form/TextArea';
 
 const Order = styled.div`
     width: 100%;
@@ -44,7 +45,11 @@ const OrderForm = styled.div`
 const StyledFields = styled(Fields)`
     gap: 20px;
     margin-bottom: 45px;
-    align-items: flex-end;
+    //align-items: flex-end;
+`;
+
+const InlineButtonWrapper = styled.div`
+    padding-top: 18px;
 `;
 
 const StatusDetails = styled.div`
@@ -71,7 +76,7 @@ const PaymentTotal = styled.div`
     }
 `;
 
-function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem }) {
+function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem, checked, onCheckedChange }) {
     const formData = useOrdersStore((state) => state.formData);
 
     const [open, setOpen] = useState(false);
@@ -134,6 +139,18 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
         <Order>
             <Title>
                 <TitleItem flex={'60%'}>
+                    <Col flex={'0 0 20px'}>
+                        <Checkbox
+                            checked={checked.includes(index)}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    onCheckedChange([...checked, index]);
+                                    return;
+                                }
+                                onCheckedChange(checked.filter((item) => item !== index));
+                            }}
+                        />
+                    </Col>
                     <Col flex={'0 0 100px'}>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
                     <Col flex={'0 0 100px'}>{dayjs(order.reservationDate).format('HH:mm')}</Col>
                     <Col flex={'0 0 250px'}>
@@ -252,7 +269,8 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
 
                     {isOnline && (
                         <StyledFields>
-                            <TextInput
+                            <TextArea
+                                rows={10}
                                 label="온라인 화상정보"
                                 placeholder="http://zoom123.url.abc"
                                 name={`orders.${index}.onlineInfo.details`}
@@ -268,20 +286,22 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                                 onChange={onChange}
                             />
 
-                            <CommonButton
-                                inline
-                                small
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    if (order.onlineInfo.fileUrl.startsWith('https://')) {
-                                        window.open(order.onlineInfo.fileUrl, '_blank');
-                                        return;
-                                    }
-                                    window.open('https://' + order.onlineInfo.fileUrl, '_blank');
-                                }}
-                            >
-                                폴더이동
-                            </CommonButton>
+                            <InlineButtonWrapper>
+                                <CommonButton
+                                    inline
+                                    small
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (order.onlineInfo.fileUrl.startsWith('https://')) {
+                                            window.open(order.onlineInfo.fileUrl, '_blank');
+                                            return;
+                                        }
+                                        window.open('https://' + order.onlineInfo.fileUrl, '_blank');
+                                    }}
+                                >
+                                    폴더이동
+                                </CommonButton>
+                            </InlineButtonWrapper>
                         </StyledFields>
                     )}
                 </OrderForm>

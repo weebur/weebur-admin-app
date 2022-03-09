@@ -41,6 +41,7 @@ function OptionPrices({ optionPrices, productOptions, name, onChange, onValueCha
         >
             <Typography.Title level={5}>옵션</Typography.Title>
             {statements.map((statement, i) => {
+                console.log(statement);
                 return (
                     <SortableItem
                         key={i}
@@ -68,6 +69,7 @@ function OptionPrices({ optionPrices, productOptions, name, onChange, onValueCha
                                     const newStatement = calculateOptionStatement({
                                         ...statement,
                                         price,
+                                        name,
                                     });
                                     updateTotal(newStatement, i);
                                 }}

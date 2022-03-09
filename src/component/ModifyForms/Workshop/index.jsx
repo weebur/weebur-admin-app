@@ -15,8 +15,10 @@ import dynamic from 'next/dynamic';
 import { Modal } from 'antd';
 import { paymentMethods } from '../../../constants/Workshop';
 import { isEmpty } from 'lodash-es';
+import Application from '../../page-components/Workshops/Estimate/Application';
+import Receipt from '../../page-components/Workshops/Estimate/Receipt';
 
-const Estimate = dynamic(() => import('../../page-components/Estimate'), { ssr: false });
+const Estimate = dynamic(() => import('../../page-components/Workshops/Estimate'), { ssr: false });
 
 const FormContainer = styled.form`
     display: flex;
@@ -28,7 +30,6 @@ const FormContainer = styled.form`
 const SubmitButtonWrapper = styled.div`
     display: flex;
     gap: 20px;
-    //width: 240px;
 `;
 
 function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
@@ -51,6 +52,7 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             paymentMethod: paymentMethods.CREDIT_CARD.key,
             paymentRequirements: '',
             certificatedRegistration: false,
+            isCanceled: false,
             orders: [],
         },
         onSubmit: async (values, { resetForm }) => {
@@ -63,7 +65,9 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             }
         },
     });
+    const [openApplication, setOpenApplication] = useState(false);
     const [openEstimate, setOpenEstimate] = useState(false);
+    const [openReceipt, setOpenReceipt] = useState(false);
 
     const salesTotal = useMemo(() => getTotalsByOrders(formik.values.orders), [formik.values.orders]);
 
@@ -93,6 +97,7 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
                     onValueChange={formik.setFieldValue}
                     values={formik.values}
                     salesTotal={salesTotal}
+                    initialValues={formik.initialValues}
                 />
                 <Orders
                     onChange={formik.handleChange}
@@ -102,11 +107,28 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
                 />
                 <SubmitButtonWrapper>
                     <CommonButton
-                        onClick={() => {
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setOpenApplication(true);
+                        }}
+                    >
+                        예약신청서 발행
+                    </CommonButton>
+                    <CommonButton
+                        onClick={(e) => {
+                            e.preventDefault();
                             setOpenEstimate(true);
                         }}
                     >
                         견적서 발행
+                    </CommonButton>
+                    <CommonButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setOpenReceipt(true);
+                        }}
+                    >
+                        거래명세서 발행
                     </CommonButton>
                     {onRemove && (
                         <CommonButton
@@ -130,8 +152,14 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
                 </SubmitButtonWrapper>
             </FormContainer>
 
-            <BasicModal isOpen={openEstimate} onClose={() => setOpenEstimate(false)}>
-                <Estimate />
+            <BasicModal isOpen={!!openApplication} onClose={() => setOpenApplication(false)}>
+                <Application workshop={formik.values} />
+            </BasicModal>
+            <BasicModal isOpen={!!openEstimate} onClose={() => setOpenEstimate(false)}>
+                <Estimate workshop={formik.values} />
+            </BasicModal>
+            <BasicModal isOpen={!!openReceipt} onClose={() => setOpenReceipt(false)}>
+                <Receipt workshop={formik.values} />
             </BasicModal>
         </>
     );

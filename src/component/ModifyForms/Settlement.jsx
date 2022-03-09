@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { FieldSection, Form, InputWrapper } from './styles';
 import DatePicker from '../Form/DatePicker';
@@ -9,6 +9,8 @@ import styled from 'styled-components';
 import CheckBoxInput from '../Form/CheckBoxInput';
 import NumberInput from '../Form/NumberInput';
 import TextArea from '../Form/TextArea';
+import BasicModal from '../Modal';
+import CommonButton from '../Button';
 
 const FormWrapper = styled.div`
     width: 100%;
@@ -29,7 +31,7 @@ const ButtonsWrapper = styled.div`
     width: 100%;
 `;
 
-function SettlementModifyForm({ initialValues = {}, totalSettlement, onSubmit, submitButtonLabel }) {
+function SettlementModifyForm({ initialValues = {}, totalSettlement, onSubmit, submitButtonLabel, onDocButtonClick }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
@@ -122,6 +124,14 @@ function SettlementModifyForm({ initialValues = {}, totalSettlement, onSubmit, s
                         </InputWrapper>
                     </FormRow>
                     <ButtonsWrapper>
+                        <CommonButton
+                            onClick={(e) => {
+                                e.preventDefault();
+                                onDocButtonClick();
+                            }}
+                        >
+                            정산내역서 출력
+                        </CommonButton>
                         <SubmitButton
                             disabled={!formik.dirty || formik.isSubmitting}
                             small

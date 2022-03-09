@@ -70,7 +70,7 @@ function SideBar({ user }) {
                     width={150}
                     height={(150 * 48) / 210}
                     alt="logo"
-                    src="/logo.png"
+                    src="/images/full_logo.png"
                     onClick={() => {
                         router.push('/');
                     }}

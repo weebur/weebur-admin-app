@@ -1,30 +1,40 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useEffect, useState } from 'react';
 import SelectBox from '../../Form/SelectBox';
 import CommonButton from '../../Button';
 import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../constants/date';
 import TextArea from '../../Form/TextArea';
 import ProductService from '../../../services/ProductService';
-
-const FieldSection = styled.div`
-    width: 100%;
-    display: flex;
-    margin-top: 30px;
-    align-items: flex-end;
-    padding: 33px 42px 44px 38px;
-    background: #ffffff;
-    gap: 20px;
-    border-radius: 20px;
-`;
+import ClipboardJS from 'clipboard';
+import { message } from 'antd';
+import { FieldSection } from './styles';
 
 const getLabel = (order) =>
     `${dayjs(order.reservationDate).format(COMMON_FORMAT)} | ${order.productName} | ${order.supplierName}`;
 
-function OrderClipboard({ workshop, forUser, forTeacher }) {
+function OrderClipboard({ workshop }) {
+    const [text, setText] = useState('');
     const [order, setOrder] = useState('');
 
-    const summary = order ? ProductService.getSummaryForTeacher(workshop, order) : '';
+    useEffect(() => {
+        const clipboard = new ClipboardJS('.btn');
+
+        clipboard.on('success', function (e) {
+            message.success('클립보드에 복사되었습니다.');
+
+            e.clearSelection();
+        });
+
+        clipboard.on('error', function (e) {
+            message.error('복사를 실패하였습니다.');
+        });
+
+        return () => {};
+    }, []);
+
+    useEffect(() => {
+        setText(order ? ProductService.getSummaryForTeacher(workshop, order) : '');
+    }, [order]);
 
     return (
         <div>
@@ -40,10 +50,19 @@ function OrderClipboard({ workshop, forUser, forTeacher }) {
                         value: order._id,
                     }))}
                 />
-                <CommonButton inline>클립보드 복사</CommonButton>
+                <CommonButton className="btn" data-clipboard-target="#summary-for-teacher" inline>
+                    클립보드 복사
+                </CommonButton>
             </FieldSection>
             <FieldSection>
-                <TextArea rows={4} value={summary} />
+                <TextArea
+                    id="summary-for-teacher"
+                    rows={30}
+                    value={text}
+                    onChange={(e) => {
+                        setText(e.target.value);
+                    }}
+                />
             </FieldSection>
         </div>
     );

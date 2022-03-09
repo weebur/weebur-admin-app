@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { SubTitle } from '../styles';
-import { Modal, Typography } from 'antd';
+import { Col, Modal, Row, Typography } from 'antd';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
 import dayjs from 'dayjs';
 import CreateButton from '../../../Button/CreateButton';
 import OrderItem from './OrderItem';
+import SelectBox from '../../../Form/SelectBox';
 
 const initialOrder = {
     reservationStatus: reservationStatus.CONFIRM_SCHEDULE.key,
@@ -78,6 +79,12 @@ const initialOrder = {
 };
 
 function Orders({ onValueChange, values, onChange, initialValues }) {
+    const [checked, setChecked] = useState([]);
+    const [modifyStatus, setModifyStatus] = useState({
+        reservationStatus: '',
+        paymentStatus: '',
+    });
+
     const removeItem = (index) => {
         Modal.confirm({
             centered: true,
@@ -91,13 +98,56 @@ function Orders({ onValueChange, values, onChange, initialValues }) {
             },
         });
     };
+
     return (
         <>
             <SubTitle>
                 <Typography.Title level={5}>주문 정보</Typography.Title>
-                <div>
-                    <CreateButton onClick={() => onValueChange('orders', [...values.orders, initialOrder])} />
-                </div>
+                <Row gutter={10} align="middle" justify="end" style={{ flex: '0 0 500px' }}>
+                    {checked.length > 0 && (
+                        <Col flex={'0 0 310px'}>
+                            <Row gutter={10} align="bottom">
+                                <Col flex={'0 0 150px'}>
+                                    <SelectBox
+                                        label="예약상태"
+                                        name="reservationStatus"
+                                        value={modifyStatus.reservationStatus}
+                                        onChange={(_, v) => {
+                                            setModifyStatus((status) => ({
+                                                ...status,
+                                                reservationStatus: v,
+                                            }));
+                                            checked.forEach((i) => {
+                                                onValueChange(`orders.${i}.reservationStatus`, v);
+                                            });
+                                        }}
+                                        options={Object.values(reservationStatus)}
+                                    />
+                                </Col>
+                                <Col flex={'0 0 150px'}>
+                                    <SelectBox
+                                        label="결제상태"
+                                        name="paymentStatus"
+                                        value={modifyStatus.paymentStatus}
+                                        onChange={(_, v) => {
+                                            setModifyStatus((status) => ({
+                                                ...status,
+                                                paymentStatus: v,
+                                            }));
+                                            checked.forEach((i) => {
+                                                onValueChange(`orders.${i}.paymentStatus`, v);
+                                            });
+                                        }}
+                                        options={Object.values(paymentStatus)}
+                                    />
+                                </Col>
+                            </Row>
+                        </Col>
+                    )}
+                    <Col>
+                        <CreateButton onClick={() => onValueChange('orders', [...values.orders, initialOrder])} />
+                    </Col>
+                </Row>
             </SubTitle>
             {values.orders.map((order, index) => {
                 return (
@@ -109,6 +159,8 @@ function Orders({ onValueChange, values, onChange, initialValues }) {
                         onValueChange={onValueChange}
                         removeItem={removeItem}
                         initialValues={initialValues}
+                        checked={checked}
+                        onCheckedChange={(v) => setChecked(v)}
                     />
                 );
             })}

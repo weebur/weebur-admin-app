@@ -8,6 +8,7 @@ import TextInput from '../../Form/Input';
 import NumberInput from '../../Form/NumberInput';
 import styled from 'styled-components';
 import { paymentMethods } from '../../../constants/Workshop';
+import { reservationStatus } from '../../../constants/order';
 
 const PaymentRequirements = styled.div`
     flex: 1;
@@ -25,7 +26,7 @@ const StyledFields = styled(Fields)`
     gap: 20px;
 `;
 
-function Payment({ values, onChange, onValueChange, salesTotal }) {
+function Payment({ values, onChange, onValueChange, salesTotal, initialValues }) {
     const [open, setOpen] = useState(true);
     return (
         <>
@@ -67,12 +68,44 @@ function Payment({ values, onChange, onValueChange, salesTotal }) {
                                 onChange={onValueChange}
                             />
                         </CertificatedRegistration>
+                    </StyledFields>
+                    <StyledFields>
                         <SalesTotal>
                             <NumberInput
                                 label="워크샵 총합계"
                                 disabled
                                 value={(salesTotal || 0).toLocaleString()}
                                 suffix="원"
+                            />
+                        </SalesTotal>
+                        <SalesTotal>
+                            <SelectBox
+                                label="워크샵 취소"
+                                name="isCanceled"
+                                value={values.isCanceled ? 1 : 0}
+                                onChange={(name, v) => {
+                                    if (v) {
+                                        values.orders.forEach((_, i) => {
+                                            onValueChange(
+                                                `orders.${i}.reservationStatus`,
+                                                reservationStatus.CANCEL_RESERVATION.key,
+                                            );
+                                        });
+                                        onValueChange(name, true);
+                                        return;
+                                    }
+                                    values.orders.forEach((_, i) => {
+                                        onValueChange(
+                                            `orders.${i}.reservationStatus`,
+                                            initialValues.orders[i].reservationStatus,
+                                        );
+                                    });
+                                    onValueChange(name, false);
+                                }}
+                                options={[
+                                    { key: 1, value: 1, label: '취소' },
+                                    { key: 0, value: 0, label: '정상' },
+                                ]}
                             />
                         </SalesTotal>
                     </StyledFields>

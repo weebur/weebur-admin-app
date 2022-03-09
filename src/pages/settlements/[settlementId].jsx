@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import useSettlementStore from '../../stores/settlement';
 import SettlementsSearchForm from '../../component/SearchForms/Settlements';
@@ -10,6 +10,8 @@ import { COMMON_FORMAT } from '../../constants/date';
 import { get, isEmpty, omit } from 'lodash-es';
 import { useRouter } from 'next/router';
 import { Divider, message, Typography } from 'antd';
+import BasicModal from '../../component/Modal';
+import Settlement from '../../component/page-components/Workshops/Estimate/Settlement';
 
 const headers = [
     {
@@ -59,6 +61,9 @@ const headers = [
 
 function SettlementDetailPage({ settlementId, year, month }) {
     const router = useRouter();
+
+    const [openSettlementDoc, setOpenSettlementDoc] = useState(false);
+
     const fetchSettlement = useSettlementStore((state) => state.fetchSettlement);
     const updateSettlement = useSettlementStore((state) => state.updateSettlement);
     const settlement = useSettlementStore((state) => state.settlement);
@@ -102,6 +107,7 @@ function SettlementDetailPage({ settlementId, year, month }) {
                     totalSettlement={totalSettlement}
                     initialValues={omit(settlement, ['orders'])}
                     onSubmit={handleSubmit}
+                    onDocButtonClick={() => setOpenSettlementDoc(true)}
                 />
             )}
             <Divider />
@@ -117,6 +123,10 @@ function SettlementDetailPage({ settlementId, year, month }) {
                     }}
                 />
             </ContentSpace>
+
+            <BasicModal isOpen={openSettlementDoc} onClose={() => setOpenSettlementDoc(false)}>
+                <Settlement settlement={settlement} />
+            </BasicModal>
         </ContentLayout>
     );
 }
