@@ -2,12 +2,7 @@ import create from 'zustand';
 import { fetchProduct, fetchProducts } from '../api/ProductAPI';
 import produce from 'immer';
 import { fetchSuppliers } from '../api/SupplierAPI';
-import {
-    fetchOrders,
-    updateOrderPaymentStatus,
-    updateOrderReservationStatus,
-    updateOrderStatus,
-} from '../api/OrderAPI';
+import { fetchOrders, updateOrderPaymentStatus, updateOrderReservationStatus } from '../api/OrderAPI';
 
 const useOrdersStore = create((set) => ({
     orders: {},
@@ -17,21 +12,24 @@ const useOrdersStore = create((set) => ({
         suppliers: [],
         product: {},
     },
-    fetchOrders: async ({
-        createdStartAt,
-        createdEndAt,
-        reservedStartAt,
-        reservedEndAt,
-        adminName,
-        companyName,
-        clientName,
-        reservationStatus,
-        paymentStatus,
-        productName,
-        productType,
-        page,
-        limit,
-    }) => {
+    fetchOrders: async (
+        {
+            createdStartAt,
+            createdEndAt,
+            reservedStartAt,
+            reservedEndAt,
+            adminName,
+            companyName,
+            clientName,
+            reservationStatus,
+            paymentStatus,
+            productName,
+            productType,
+            page,
+            limit,
+        },
+        loadMore,
+    ) => {
         const orders = await fetchOrders({
             createdStartAt,
             createdEndAt,
@@ -48,7 +46,16 @@ const useOrdersStore = create((set) => ({
             limit,
         });
 
-        set({ orders });
+        if (loadMore) {
+            set((state) => ({
+                orders: {
+                    ...orders,
+                    result: [...(state.orders?.result || []), ...orders.result],
+                },
+            }));
+        } else {
+            set({ orders });
+        }
     },
     resetOrders: () => {
         set({ orders: {} });

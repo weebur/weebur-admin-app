@@ -8,6 +8,7 @@ import { menu } from '../../constants/menu';
 import useAdminsStore from '../../stores/admins';
 import { adminRoles } from '../../constants/admin';
 import Loader from '../Loader';
+import NextImage from 'next/image';
 
 const Logo = styled.div`
     margin-top: 40px;
@@ -65,7 +66,15 @@ function SideBar({ user }) {
     return (
         <StyledSider>
             <Logo className="logo">
-                <Image alt="logo" src="/logo.png" />
+                <NextImage
+                    width={150}
+                    height={(150 * 48) / 210}
+                    alt="logo"
+                    src="/images/full_logo.png"
+                    onClick={() => {
+                        router.push('/');
+                    }}
+                />
             </Logo>
             <AdminUser>
                 {user ? (

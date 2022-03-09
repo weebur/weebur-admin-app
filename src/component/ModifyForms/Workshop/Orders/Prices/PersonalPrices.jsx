@@ -8,16 +8,16 @@ import { Tooltip, Typography } from 'antd';
 import produce from 'immer';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useEffect } from 'react';
+import useMount from '../../../../../hooks/useMount';
 
 function PersonalPrices({ personalPrices, name, onChange, onValueChange, participants }) {
     const { statements } = personalPrices;
     const updateTotal = (newStatement, index) => {
         const nextStatements = getNextStatements(personalPrices, newStatement, index);
-
         onValueChange(`${name}`, nextStatements);
     };
 
-    useEffect(() => {
+    useMount(() => {
         const nextPrices = produce(personalPrices, (next) => {
             next.statements.forEach((statement) => {
                 const sales = statement.price * participants;
@@ -53,7 +53,7 @@ function PersonalPrices({ personalPrices, name, onChange, onValueChange, partici
         >
             <Typography.Title level={5}>인당</Typography.Title>
             {statements.map((statement, i) => {
-                const fee = Number((statement.income / (statement.price * participants)).toFixed(4));
+                const fee = Number((statement.income / (statement.price * participants)).toFixed(6));
                 return (
                     <SortableItem
                         key={i}

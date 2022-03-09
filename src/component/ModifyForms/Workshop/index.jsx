@@ -1,6 +1,4 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Typography } from 'antd';
-import Tab from '../../Tab';
 import styled from 'styled-components';
 import { useFormik } from 'formik';
 import ClientInfo from './ClientInfo';
@@ -10,26 +8,31 @@ import WorkshopInfo from './WorkshopInfo';
 import Payment from './Payment';
 import Orders from './Orders';
 import SubmitButton from '../../Form/SubmitButton';
-import { getTotalPayment, getTotalsByOrders } from '../../../services/OrderService';
+import { getTotalsByOrders } from '../../../services/OrderService';
+import CommonButton from '../../Button';
+import BasicModal from '../../Modal';
+import dynamic from 'next/dynamic';
+import { Modal } from 'antd';
+import { paymentMethods } from '../../../constants/Workshop';
+import { isEmpty } from 'lodash-es';
+import Application from '../../page-components/Workshops/Estimate/Application';
+import Receipt from '../../page-components/Workshops/Estimate/Receipt';
 
-const tabs = [
-    { key: 'workshop', label: '워크샵' },
-    { key: 'teacher', label: '강사용' },
-    { key: 'user', label: '회원용' },
-];
+const Estimate = dynamic(() => import('../../page-components/Workshops/Estimate'), { ssr: false });
 
 const FormContainer = styled.form`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding-bottom: 300px;
+    padding: 20px 0 300px;
 `;
 
 const SubmitButtonWrapper = styled.div`
-    width: 240px;
+    display: flex;
+    gap: 20px;
 `;
 
-function WorkshopForm({ initialValues, onSubmit }) {
+function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
     const me = useAdminsStore((state) => state.me);
     const formik = useFormik({
         initialValues: initialValues || {
@@ -46,20 +49,31 @@ function WorkshopForm({ initialValues, onSubmit }) {
             subject: '',
             participantsInfo: '',
             place: '',
-            paymentMethod: '',
+            paymentMethod: paymentMethods.CREDIT_CARD.key,
             paymentRequirements: '',
             certificatedRegistration: false,
+            isCanceled: false,
             orders: [],
         },
         onSubmit: async (values, { resetForm }) => {
             await onSubmit(values);
             resetForm({ values });
         },
+        validate: (values) => {
+            if (!values.clientId) {
+                return { clientId: '회원은 필수로 입력해야 합니다.' };
+            }
+        },
     });
-
-    const [active, setActive] = useState(tabs[0].key);
+    const [openApplication, setOpenApplication] = useState(false);
+    const [openEstimate, setOpenEstimate] = useState(false);
+    const [openReceipt, setOpenReceipt] = useState(false);
 
     const salesTotal = useMemo(() => getTotalsByOrders(formik.values.orders), [formik.values.orders]);
+
+    useEffect(() => {
+        onDirtyChange && onDirtyChange(formik.dirty);
+    }, [formik.dirty]);
 
     useEffect(() => {
         if (me && !formik.values.adminId) {
@@ -69,27 +83,85 @@ function WorkshopForm({ initialValues, onSubmit }) {
     }, [me]);
 
     return (
-        <FormContainer onSubmit={formik.handleSubmit}>
-            <Typography.Title level={4}>워크샵생성</Typography.Title>
-            <Tab tabs={tabs} active={active} onChange={setActive} />
-            <ClientInfo onChange={formik.handleChange} onValueChange={formik.setFieldValue} values={formik.values} />
-            <WorkshopInfo onChange={formik.handleChange} values={formik.values} />
-            <Payment
-                onChange={formik.handleChange}
-                onValueChange={formik.setFieldValue}
-                values={formik.values}
-                salesTotal={salesTotal}
-            />
-            <Orders
-                onChange={formik.handleChange}
-                onValueChange={formik.setFieldValue}
-                values={formik.values}
-                initialValues={formik.initialValues}
-            />
-            <SubmitButtonWrapper>
-                <SubmitButton disabled={!formik.dirty} primary text={'저장'} />
-            </SubmitButtonWrapper>
-        </FormContainer>
+        <>
+            <FormContainer onSubmit={formik.handleSubmit}>
+                <ClientInfo
+                    onChange={formik.handleChange}
+                    onValueChange={formik.setFieldValue}
+                    values={formik.values}
+                    errors={formik.errors}
+                />
+                <WorkshopInfo onChange={formik.handleChange} values={formik.values} />
+                <Payment
+                    onChange={formik.handleChange}
+                    onValueChange={formik.setFieldValue}
+                    values={formik.values}
+                    salesTotal={salesTotal}
+                    initialValues={formik.initialValues}
+                />
+                <Orders
+                    onChange={formik.handleChange}
+                    onValueChange={formik.setFieldValue}
+                    values={formik.values}
+                    initialValues={formik.initialValues}
+                />
+                <SubmitButtonWrapper>
+                    <CommonButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setOpenApplication(true);
+                        }}
+                    >
+                        예약신청서 발행
+                    </CommonButton>
+                    <CommonButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setOpenEstimate(true);
+                        }}
+                    >
+                        견적서 발행
+                    </CommonButton>
+                    <CommonButton
+                        onClick={(e) => {
+                            e.preventDefault();
+                            setOpenReceipt(true);
+                        }}
+                    >
+                        거래명세서 발행
+                    </CommonButton>
+                    {onRemove && (
+                        <CommonButton
+                            light
+                            onClick={(e) => {
+                                e.preventDefault();
+                                Modal.confirm({
+                                    centered: true,
+                                    content: '주문목록과 워크샵이 전부 삭제됩니다. 삭제하시겠습니까?',
+                                    okText: '삭제',
+                                    cancelText: '취소',
+                                    onOk: onRemove,
+                                });
+                            }}
+                        >
+                            삭제하기
+                        </CommonButton>
+                    )}
+
+                    <SubmitButton disabled={!formik.dirty || !isEmpty(formik.errors)} primary text={'저장'} />
+                </SubmitButtonWrapper>
+            </FormContainer>
+
+            <BasicModal isOpen={!!openApplication} onClose={() => setOpenApplication(false)}>
+                <Application workshop={formik.values} />
+            </BasicModal>
+            <BasicModal isOpen={!!openEstimate} onClose={() => setOpenEstimate(false)}>
+                <Estimate workshop={formik.values} />
+            </BasicModal>
+            <BasicModal isOpen={!!openReceipt} onClose={() => setOpenReceipt(false)}>
+                <Receipt workshop={formik.values} />
+            </BasicModal>
+        </>
     );
 }
 

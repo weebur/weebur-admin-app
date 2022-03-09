@@ -16,6 +16,12 @@ const serverSideApi = axios.create({
     withCredentials: true,
 });
 
+export const uploadApi = axios.create({
+    baseURL: '/upload',
+    timeout: 5000,
+    withCredentials: true,
+});
+
 const api = isServer ? serverSideApi : clientSideApi;
 
 api.interceptors.response.use(

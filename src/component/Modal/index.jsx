@@ -9,7 +9,7 @@ const StyledModal = styled(Modal)`
     background: #ffffff;
     min-width: 700px;
     min-height: 400px;
-    max-height: 1000px;
+    max-height: calc(100vh - 100px);
     overflow: scroll;
 
     ${({ defaultBackground, theme }) =>
@@ -46,7 +46,7 @@ function BasicModal({ isOpen, onClose, children, title, defaultBackground }) {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    zIndex: 99999,
+                    zIndex: 2,
                 },
             }}
             contentLabel="Example Modal"

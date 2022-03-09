@@ -42,8 +42,8 @@ const headers = [
         span: 2,
         render: ({ reservationDate }) => dayjs(reservationDate).format(COMMON_FORMAT),
     },
-    { key: 'participants', label: '인원', span: 1, render: ({ participants }) => participants.toLocaleString() },
-    { key: 'salesTotal', label: '총 비용', span: 2, render: ({ salesTotal }) => salesTotal.toLocaleString() },
+    { key: 'participants', label: '인원', span: 1, render: ({ participants }) => participants?.toLocaleString() || 0 },
+    { key: 'salesTotal', label: '총 비용', span: 2, render: ({ salesTotal }) => salesTotal?.toLocaleString() || 0 },
     {
         key: 'paymentStatus',
         label: '결제',
@@ -147,7 +147,6 @@ function Orders({
             await updateOrderStatus({ orderIds: checkedItems, type, ...values });
             message.success('상태 변경을 완료하였습니다.');
         } catch (e) {
-            console.log(e);
             message.error('상태 변경을 실패하였습니다.');
         }
     };

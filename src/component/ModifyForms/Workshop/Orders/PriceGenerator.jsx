@@ -84,8 +84,8 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
         }
 
         if (current === 'excursion') {
-            const target = excursionRegions[0];
-            const price = target.price;
+            const target = excursionRegions?.[0];
+            const price = target?.price || 0;
             const income = Math.round(price * EXCURSION_FEE);
 
             onValueChange(`orders.${index}.payment.excursion`, {
@@ -100,7 +100,7 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
                         income,
                         settlement: price - income,
                         total: price,
-                        region: target.region,
+                        region: target?.region || '',
                         note: '',
                     },
                 ],
@@ -108,7 +108,7 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
         }
 
         if (current === 'delivery') {
-            const target = productDelivery[0];
+            const target = productDelivery?.[0];
             const price = target?.price || 0;
             const total = price * order.participants;
             const type = target?.type || productDeliveryTypes.PERSONAL.key;
@@ -139,7 +139,7 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
         }
 
         if (current === 'options') {
-            const target = productOptions[0];
+            const target = productOptions?.[0];
             const price = target?.price || 0;
             const total = price * order.participants;
             const income = Math.round(total * OPTION_FEE);
@@ -175,56 +175,68 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
             </TabHeader>
             <PriceArea>
                 {/* 인당 가격 */}
-                <PersonalPrices
-                    name={`orders.${index}.payment.personal`}
-                    personalPrices={personal}
-                    participants={order.participants}
-                    onValueChange={onValueChange}
-                    onChange={onChange}
-                />
+                {personal && (
+                    <PersonalPrices
+                        name={`orders.${index}.payment.personal`}
+                        personalPrices={personal}
+                        participants={order.participants}
+                        onValueChange={onValueChange}
+                        onChange={onChange}
+                    />
+                )}
 
                 {/* 회당 가격 */}
-                <SessionPrices
-                    name={`orders.${index}.payment.session`}
-                    sessionPrices={session}
-                    onValueChange={onValueChange}
-                    onChange={onChange}
-                />
+                {session && (
+                    <SessionPrices
+                        name={`orders.${index}.payment.session`}
+                        sessionPrices={session}
+                        onValueChange={onValueChange}
+                        onChange={onChange}
+                    />
+                )}
 
                 {/* 출장비 */}
-                <ExcursionPrices
-                    name={`orders.${index}.payment.excursion`}
-                    excursionPrices={excursion}
-                    onValueChange={onValueChange}
-                    onChange={onChange}
-                />
+                {excursion && (
+                    <ExcursionPrices
+                        name={`orders.${index}.payment.excursion`}
+                        excursionPrices={excursion}
+                        onValueChange={onValueChange}
+                        onChange={onChange}
+                    />
+                )}
 
                 {/* 배송비 */}
-                <DeliveryPrices
-                    name={`orders.${index}.payment.delivery`}
-                    productDelivery={productDelivery || []}
-                    deliveryPrices={delivery}
-                    onValueChange={onValueChange}
-                    onChange={onChange}
-                />
+                {delivery && (
+                    <DeliveryPrices
+                        name={`orders.${index}.payment.delivery`}
+                        productDelivery={productDelivery || []}
+                        deliveryPrices={delivery}
+                        onValueChange={onValueChange}
+                        onChange={onChange}
+                    />
+                )}
 
                 {/* 옵션 */}
-                <OptionPrices
-                    name={`orders.${index}.payment.options`}
-                    productOptions={productOptions || []}
-                    participants={order.participants}
-                    optionPrices={options}
-                    onValueChange={onValueChange}
-                    onChange={onChange}
-                />
+                {options && (
+                    <OptionPrices
+                        name={`orders.${index}.payment.options`}
+                        productOptions={productOptions || []}
+                        participants={order.participants}
+                        optionPrices={options}
+                        onValueChange={onValueChange}
+                        onChange={onChange}
+                    />
+                )}
 
-                {/* 배송비 */}
-                <Discount
-                    name={`orders.${index}.payment.discount`}
-                    discount={discount}
-                    onValueChange={onValueChange}
-                    onChange={onChange}
-                />
+                {/* 할인 */}
+                {discount && (
+                    <Discount
+                        name={`orders.${index}.payment.discount`}
+                        discount={discount}
+                        onValueChange={onValueChange}
+                        onChange={onChange}
+                    />
+                )}
 
                 {/*정산비고*/}
                 <PricesDetails name={`orders.${index}.payment.note`} note={note} onChange={onChange} />

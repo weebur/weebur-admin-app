@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import ContentSpace from '../../component/Layout/ContentSpace';
 import List from '../../component/List';
 import Summary from '../../component/List/Summary';
-import Loader from '../../component/Loader';
 import CreateButton from '../Button/CreateButton';
 import CommonButton from '../Button';
 

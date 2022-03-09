@@ -24,6 +24,12 @@ const StyledButton = styled.button`
         min-width: 160px;
     `}
 
+    ${({ inline }) =>
+        inline &&
+        `
+        height: 44px;
+    `}
+
     ${({ primary, theme }) =>
         primary &&
         `

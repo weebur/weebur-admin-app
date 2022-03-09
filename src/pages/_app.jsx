@@ -26,7 +26,12 @@ if (typeof document === 'undefined') {
 
 function App({ Component, pageProps }) {
     const { me } = useAdminUser();
-    const { withoutSidebar, ...props } = pageProps;
+    const { withoutSidebar, withoutContext, ...props } = pageProps;
+
+    if (withoutContext) {
+        return <Component {...props} />;
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <AppLayout me={me} withoutSidebar={withoutSidebar}>

@@ -20,7 +20,7 @@ const ScheduleSummary = styled.li`
         `
         color: ${mapStatusToBadgeColor[status]};
     `}
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     &:hover {
         background-color: ${({ theme }) => theme.color.background};
     }
@@ -47,7 +47,7 @@ function DateCell({ schedules, currentDate, onItemClick, onMoreClick }) {
         return currentDate.get('month') === target.get('month') && currentDate.get('date') === target.get('date');
     });
 
-    const viewData = listData.slice(0, 2);
+    const viewData = listData.slice(0, 3);
 
     return (
         <DateCellContent>
@@ -71,9 +71,11 @@ function DateCell({ schedules, currentDate, onItemClick, onMoreClick }) {
                         <DateCellColumn>
                             <Ellipsis>{item.clientName}</Ellipsis>
                         </DateCellColumn>
+                        <DateCellColumn>|</DateCellColumn>
                         <DateCellColumn>
                             <Ellipsis>{item.adminName}</Ellipsis>
                         </DateCellColumn>
+                        <DateCellColumn>|</DateCellColumn>
                         <DateCellColumn>
                             <Ellipsis>{productTypes[item.productType].label}</Ellipsis>
                         </DateCellColumn>

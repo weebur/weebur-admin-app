@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../../constants/date';
 import { getTotalPayment } from '../../../../services/OrderService';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
-import { Col, Divider, Row, Statistic } from 'antd';
+import { Checkbox, Col, Divider, Row, Statistic } from 'antd';
 import Ellipsis from '../../../Text/Ellipsis';
 import SelectBox from '../../../Form/SelectBox';
 import TextInput from '../../../Form/Input';
@@ -15,6 +15,10 @@ import DatePicker from '../../../Form/DatePicker';
 import NumberInput from '../../../Form/NumberInput';
 import PriceGenerator from './PriceGenerator';
 import theme from '../../../../theme';
+import useOrdersStore from '../../../../stores/order';
+import CommonButton from '../../../Button';
+import { productTypes } from '../../../../constants/product';
+import TextArea from '../../../Form/TextArea';
 
 const Order = styled.div`
     width: 100%;
@@ -41,6 +45,11 @@ const OrderForm = styled.div`
 const StyledFields = styled(Fields)`
     gap: 20px;
     margin-bottom: 45px;
+    //align-items: flex-end;
+`;
+
+const InlineButtonWrapper = styled.div`
+    padding-top: 18px;
 `;
 
 const StatusDetails = styled.div`
@@ -52,6 +61,7 @@ const PaymentTotal = styled.div`
     gap: 20px;
     justify-content: flex-end;
     align-items: center;
+    margin-bottom: 40px;
 
     & > .ant-divider {
         border: 1px solid ${({ theme }) => theme.color.text};
@@ -66,21 +76,25 @@ const PaymentTotal = styled.div`
     }
 `;
 
-function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem }) {
-    const [open, setOpen] = useState(false);
+function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem, checked, onCheckedChange }) {
+    const formData = useOrdersStore((state) => state.formData);
 
-    const paymentTotal = useMemo(
-        () => getTotalPayment(order.payment, order.supplierType),
-        [
-            order.payment.personal,
-            order.payment.session,
-            order.payment.excursion,
-            order.payment.delivery,
-            order.payment.options,
-            order.payment.discount,
-            order.supplierType,
-        ],
-    );
+    const [open, setOpen] = useState(false);
+    const [mount, setMount] = useState(false);
+
+    const isOnline = formData.product?.type === productTypes.ONLINE.key;
+
+    const paymentTotal = useMemo(() => {
+        return getTotalPayment(order.payment, order.supplierType);
+    }, [
+        order.payment.personal,
+        order.payment.session,
+        order.payment.excursion,
+        order.payment.delivery,
+        order.payment.options,
+        order.payment.discount,
+        order.supplierType,
+    ]);
     const isUpdatedReservationStatus = useMemo(
         () => initialValues.orders[index]?.reservationStatus !== order.reservationStatus,
         [initialValues, order.reservationStatus],
@@ -91,6 +105,7 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
     );
 
     useEffect(() => {
+        if (!mount) return;
         onValueChange(`orders.${index}.payment.summary`, paymentTotal);
     }, [paymentTotal]);
 
@@ -116,19 +131,35 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
         }
     }, [isUpdatedPaymentStatus]);
 
+    useEffect(() => {
+        setMount(true);
+    }, []);
+
     return (
         <Order>
             <Title>
-                <TitleItem flex={'50%'}>
-                    <Col>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
-                    <Col>{dayjs(order.reservationDate).format('HH:mm')}</Col>
-                    <Col flex={'0 0 150px'}>
+                <TitleItem flex={'60%'}>
+                    <Col flex={'0 0 20px'}>
+                        <Checkbox
+                            checked={checked.includes(index)}
+                            onChange={(e) => {
+                                if (e.target.checked) {
+                                    onCheckedChange([...checked, index]);
+                                    return;
+                                }
+                                onCheckedChange(checked.filter((item) => item !== index));
+                            }}
+                        />
+                    </Col>
+                    <Col flex={'0 0 100px'}>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Col>
+                    <Col flex={'0 0 100px'}>{dayjs(order.reservationDate).format('HH:mm')}</Col>
+                    <Col flex={'0 0 250px'}>
                         <Ellipsis line={1}>{order.productName}</Ellipsis>
                     </Col>
-                    <Col flex={'0 0 70px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
-                    <Col>{`${paymentTotal.total.toLocaleString()}원`}</Col>
+                    <Col flex={'0 0 100px'}>{`총 ${order.participants.toLocaleString()}명`}</Col>
+                    <Col flex={'0 0 150px'}>{`${order.payment.summary.total.toLocaleString()}원`}</Col>
                 </TitleItem>
-                <TitleItem flex={'300px'}>
+                <TitleItem flex={'20%'}>
                     <Col flex={'0 0 70px'}>{reservationStatus[order.reservationStatus].label}</Col>
                     <Col flex={'0 0 70px'}>{paymentStatus[order.paymentStatus].label}</Col>
                     <Col flex={'0 0 160px'}>
@@ -182,9 +213,9 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                             />
                         </StatusDetails>
                     </StyledFields>
-                    <StyledFields>
-                        <ProductFields order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
-                    </StyledFields>
+
+                    <ProductFields order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
+
                     <StyledFields>
                         <DatePicker
                             showTime
@@ -204,28 +235,75 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                         <StatusDetails />
                     </StyledFields>
 
-                    <PriceGenerator order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
+                    {order.productId && (
+                        <>
+                            <PriceGenerator
+                                order={order}
+                                index={index}
+                                onChange={onChange}
+                                onValueChange={onValueChange}
+                            />
 
-                    <PaymentTotal>
-                        <Statistic title="판매액" value={order.payment.summary.total} suffix="원" />
-                        <Divider type="vertical" />
-                        <Statistic title="수수료" value={order.payment.summary.totalIncome} suffix="원" />
-                        <Divider type="vertical" />
-                        <Statistic title="정산액" value={order.payment.summary.totalSettlement} suffix="원" />
-                        <Divider type="vertical" />
-                        <Statistic
-                            title="세금"
-                            value={order.payment.summary.tax + order.payment.summary.vat}
-                            suffix="원"
-                        />
-                        <Divider type="vertical" />
-                        <Statistic
-                            title="최종 정산액"
-                            value={order.payment.summary.finalSettlement}
-                            valueStyle={{ color: theme.color.primary, fontWeight: 'bold' }}
-                            suffix="원"
-                        />
-                    </PaymentTotal>
+                            <PaymentTotal>
+                                <Statistic title="판매액" value={order.payment.summary.total} suffix="원" />
+                                <Divider type="vertical" />
+                                <Statistic title="수수료" value={order.payment.summary.totalIncome} suffix="원" />
+                                <Divider type="vertical" />
+                                <Statistic title="정산액" value={order.payment.summary.totalSettlement} suffix="원" />
+                                <Divider type="vertical" />
+                                <Statistic
+                                    title="세금"
+                                    value={order.payment.summary.tax + order.payment.summary.vat}
+                                    suffix="원"
+                                />
+                                <Divider type="vertical" />
+                                <Statistic
+                                    title="최종 정산액"
+                                    value={order.payment.summary.finalSettlement}
+                                    valueStyle={{ color: theme.color.primary, fontWeight: 'bold' }}
+                                    suffix="원"
+                                />
+                            </PaymentTotal>
+                        </>
+                    )}
+
+                    {isOnline && (
+                        <StyledFields>
+                            <TextArea
+                                rows={10}
+                                label="온라인 화상정보"
+                                placeholder="http://zoom123.url.abc"
+                                name={`orders.${index}.onlineInfo.details`}
+                                value={order.onlineInfo.details}
+                                onChange={onChange}
+                            />
+
+                            <TextInput
+                                label="온라인 배송정보 (https만 입력 가능)"
+                                placeholder="weebur.com"
+                                name={`orders.${index}.onlineInfo.fileUrl`}
+                                value={order.onlineInfo.fileUrl}
+                                onChange={onChange}
+                            />
+
+                            <InlineButtonWrapper>
+                                <CommonButton
+                                    inline
+                                    small
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        if (order.onlineInfo.fileUrl.startsWith('https://')) {
+                                            window.open(order.onlineInfo.fileUrl, '_blank');
+                                            return;
+                                        }
+                                        window.open('https://' + order.onlineInfo.fileUrl, '_blank');
+                                    }}
+                                >
+                                    폴더이동
+                                </CommonButton>
+                            </InlineButtonWrapper>
+                        </StyledFields>
+                    )}
                 </OrderForm>
             )}
         </Order>
