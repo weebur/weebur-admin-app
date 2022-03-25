@@ -178,7 +178,7 @@ function Products({ active, name, supplierName, type }) {
             </ContentLayout>
             <BasicModal
                 defaultBackground
-                title={createMode ? '회사 생성' : '회사 수정'}
+                title={createMode ? '상품 생성' : '상품 수정'}
                 isOpen={!!product}
                 onClose={() => {
                     resetProduct();

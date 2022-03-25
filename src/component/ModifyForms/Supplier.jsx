@@ -128,6 +128,10 @@ function ModifySupplierForm({ initialValues, onSubmit, onReset, submitButtonLabe
                                         'teachers',
                                         teachers.filter((_, index) => i !== index),
                                     );
+
+                                    if (mainTeacher._id === _id) {
+                                        formik.setFieldValue('mainTeacher', null);
+                                    }
                                 }}
                             >
                                 <StyledCollapse>

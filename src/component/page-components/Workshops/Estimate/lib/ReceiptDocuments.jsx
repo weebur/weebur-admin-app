@@ -123,7 +123,7 @@ const ReceiptDocuments = ({ workshop }) => {
                         </View>
                         {orders.map((order) => {
                             const hasDiscount = !!order.payment.discount.amount;
-                            console.log(order.payment.discount);
+
                             return (
                                 <View key={order._id} style={styles.orderTableRow}>
                                     <View style={styles.orderTableCol1}>

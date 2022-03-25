@@ -63,6 +63,14 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             if (!values.clientId) {
                 return { clientId: '회원은 필수로 입력해야 합니다.' };
             }
+
+            if (values.orders.some((order) => !order.productId)) {
+                return { productId: '상품은 필수로 입력해야 합니다.' };
+            }
+
+            if (values.orders.some((order) => !order.supplierId)) {
+                return { supplierId: '업체는 필수로 입력해야 합니다.' };
+            }
         },
     });
     const [openApplication, setOpenApplication] = useState(false);
@@ -104,6 +112,7 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
                     onValueChange={formik.setFieldValue}
                     values={formik.values}
                     initialValues={formik.initialValues}
+                    errors={formik.errors}
                 />
                 <SubmitButtonWrapper>
                     <CommonButton

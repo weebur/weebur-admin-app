@@ -1,11 +1,12 @@
 import { Spin } from 'antd';
 import debounce from 'lodash/debounce';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import SelectBox from './SelectBox';
 
 function AsyncSelectBox({ initialOptions = [], fetchOptions, debounceTimeout = 300, ...props }) {
     const [fetching, setFetching] = useState(false);
     const [options, setOptions] = useState(initialOptions);
+    const [isInit, setIsInit] = useState(false);
     const fetchRef = useRef(0);
 
     const debounceFetcher = useMemo(() => {
@@ -27,6 +28,13 @@ function AsyncSelectBox({ initialOptions = [], fetchOptions, debounceTimeout = 3
 
         return debounce(loadOptions, debounceTimeout);
     }, [fetchOptions, debounceTimeout]);
+
+    useEffect(() => {
+        if (!isInit && initialOptions.length > 0) {
+            setOptions(initialOptions);
+            setIsInit(true);
+        }
+    }, [initialOptions]);
 
     return (
         <SelectBox

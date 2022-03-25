@@ -78,7 +78,7 @@ const initialOrder = {
     },
 };
 
-function Orders({ onValueChange, values, onChange, initialValues }) {
+function Orders({ onValueChange, values, onChange, initialValues, errors }) {
     const [checked, setChecked] = useState([]);
     const [modifyStatus, setModifyStatus] = useState({
         reservationStatus: '',
@@ -161,6 +161,7 @@ function Orders({ onValueChange, values, onChange, initialValues }) {
                         initialValues={initialValues}
                         checked={checked}
                         onCheckedChange={(v) => setChecked(v)}
+                        errors={errors}
                     />
                 );
             })}

@@ -47,7 +47,7 @@ function OrdersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     onChange={formik.setFieldValue}
                     from={formik.values.reservedStartAt}
                     to={formik.values.reservedEndAt}
-                    fromName={'reservedStartAtt'}
+                    fromName={'reservedStartAt'}
                     toName={'reservedEndAt'}
                 />
             </InputWrapper>

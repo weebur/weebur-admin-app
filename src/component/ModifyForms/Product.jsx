@@ -118,13 +118,8 @@ function ModifyProductForm({ initialValues, onSubmit, onReset, submitButtonLabel
                         label="수수료"
                         name="fee"
                         value={formik.values.fee * 100}
-                        onChange={(e) => {
-                            const value = e.target.value;
-                            if (isNaN(value) || Number(value) > 100) {
-                                return;
-                            }
-                            e.target.value = Number(value) / 100;
-                            formik.handleChange(e);
+                        onChange={(name, value) => {
+                            formik.setFieldValue(name, value / 100);
                         }}
                         suffix={'%'}
                     />

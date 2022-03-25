@@ -76,7 +76,17 @@ const PaymentTotal = styled.div`
     }
 `;
 
-function OrderItem({ order, index, initialValues, onChange, onValueChange, removeItem, checked, onCheckedChange }) {
+function OrderItem({
+    order,
+    index,
+    initialValues,
+    onChange,
+    onValueChange,
+    removeItem,
+    errors,
+    checked,
+    onCheckedChange,
+}) {
     const formData = useOrdersStore((state) => state.formData);
 
     const [open, setOpen] = useState(false);
@@ -214,7 +224,13 @@ function OrderItem({ order, index, initialValues, onChange, onValueChange, remov
                         </StatusDetails>
                     </StyledFields>
 
-                    <ProductFields order={order} index={index} onChange={onChange} onValueChange={onValueChange} />
+                    <ProductFields
+                        order={order}
+                        index={index}
+                        onChange={onChange}
+                        onValueChange={onValueChange}
+                        errors={errors}
+                    />
 
                     <StyledFields>
                         <DatePicker
