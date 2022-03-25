@@ -17,6 +17,7 @@ import { paymentMethods } from '../../../constants/Workshop';
 import { isEmpty } from 'lodash-es';
 import Application from '../../page-components/Workshops/Estimate/Application';
 import Receipt from '../../page-components/Workshops/Estimate/Receipt';
+import ErrorMessage from '../../Text/ErrorMessage';
 
 const Estimate = dynamic(() => import('../../page-components/Workshops/Estimate'), { ssr: false });
 
@@ -64,6 +65,10 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
                 return { clientId: '회원은 필수로 입력해야 합니다.' };
             }
 
+            if (values.orders.length === 0) {
+                return { orders: '1건 이상의 주문건을 입력해야 합니다.' };
+            }
+
             if (values.orders.some((order) => !order.productId)) {
                 return { productId: '상품은 필수로 입력해야 합니다.' };
             }
@@ -89,7 +94,7 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             formik.setFieldValue('adminName', me.name);
         }
     }, [me]);
-
+    console.log(formik.errors);
     return (
         <>
             <FormContainer onSubmit={formik.handleSubmit}>
@@ -114,6 +119,7 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
                     initialValues={formik.initialValues}
                     errors={formik.errors}
                 />
+                {formik.errors.orders && <ErrorMessage text={formik.errors.orders} />}
                 <SubmitButtonWrapper>
                     <CommonButton
                         onClick={(e) => {

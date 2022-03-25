@@ -139,9 +139,11 @@ function Products({ active, name, supplierName, type }) {
     };
 
     useEffect(() => {
-        if (products.result) return;
-
-        fetchMore(true);
+        const isInit = !!router.query.init;
+        if (isInit || products.result) {
+            fetchMore(true);
+            router.replace({ pathname: router.pathname });
+        }
     }, [active, name, supplierName, type]);
 
     return (

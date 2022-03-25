@@ -102,8 +102,11 @@ function Companies() {
     };
 
     useEffect(() => {
-        if (companies.result) return;
-        fetchMore(true);
+        const isInit = !!router.query.init;
+        if (isInit || companies.result) {
+            fetchMore(true);
+            router.replace({ pathname: router.pathname });
+        }
     }, [name, category, from, to]);
 
     return (

@@ -123,8 +123,11 @@ function Client({ name, company, mobile, email, from, to }) {
     };
 
     useEffect(() => {
-        if (clients.result) return;
-        fetchMore(true);
+        const isInit = !!router.query.init;
+        if (isInit || clients.result) {
+            fetchMore(true);
+            router.replace({ pathname: router.pathname });
+        }
     }, [name, company, mobile, email, from, to]);
 
     return (

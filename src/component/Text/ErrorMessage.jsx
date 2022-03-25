@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Typography } from 'antd';
 
 const Message = styled.div`
-    position: absolute;
     font-size: ${({ theme }) => theme.fontSize.small};
 `;
 

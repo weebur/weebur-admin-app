@@ -119,7 +119,7 @@ function SideBar({ user }) {
                             }
                             onClick={() => {
                                 setSelectedKeys([path]);
-                                router.push(path);
+                                router.push({ pathname: path, query: { init: true } });
                             }}
                         >
                             {name}

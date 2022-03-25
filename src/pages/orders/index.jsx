@@ -152,8 +152,11 @@ function Orders({
     };
 
     useEffect(() => {
-        if (orders.result) return;
-        fetchMore(true);
+        const isInit = !!router.query.init;
+        if (isInit || orders.result) {
+            fetchMore(true);
+            router.replace({ pathname: router.pathname });
+        }
     }, [
         createdStartAt,
         createdEndAt,
