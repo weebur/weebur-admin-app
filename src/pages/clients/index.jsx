@@ -125,7 +125,7 @@ function Client({ name, company, mobile, email, from, to }) {
     useEffect(() => {
         if (clients.result) return;
         fetchMore(true);
-    }, [searchQueries]);
+    }, [name, company, mobile, email, from, to]);
 
     return (
         <>

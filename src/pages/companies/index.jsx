@@ -22,9 +22,10 @@ const headers = [
     { key: 'details', label: '특징', span: 12 },
 ];
 
-function Companies({ name, category, from, to }) {
+function Companies() {
     const router = useRouter();
 
+    const { name, category, from, to } = router.query;
     const searchQueries = { name, category, from, to };
     const [createMode, setCreateMode] = useState(true);
 
@@ -129,7 +130,7 @@ function Companies({ name, category, from, to }) {
                         initialValues={{ name, category, from, to }}
                         onSubmit={({ name, category, from, to }) => {
                             resetCompanies();
-                            router.push({
+                            router.replace({
                                 pathname: '/companies',
                                 query: toQueryObject({
                                     name,

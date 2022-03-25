@@ -142,7 +142,7 @@ function Products({ active, name, supplierName, type }) {
         if (products.result) return;
 
         fetchMore(true);
-    }, [searchQueries]);
+    }, [active, name, supplierName, type]);
 
     return (
         <>

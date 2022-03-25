@@ -154,7 +154,19 @@ function Orders({
     useEffect(() => {
         if (orders.result) return;
         fetchMore(true);
-    }, [searchQueries]);
+    }, [
+        createdStartAt,
+        createdEndAt,
+        reservedStartAt,
+        reservedEndAt,
+        adminName,
+        companyName,
+        clientName,
+        reservationStatus,
+        paymentStatus,
+        productName,
+        productType,
+    ]);
 
     return (
         <>

@@ -149,7 +149,7 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
         if (suppliers.result) return;
 
         fetchMore(true);
-    }, [searchQueries]);
+    }, [from, to, active, name, teacher, type, product, teacherMobile, teacherEmail]);
 
     return (
         <>
