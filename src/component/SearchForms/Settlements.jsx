@@ -6,6 +6,7 @@ import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import { supplierTypes } from '../../constants/supplier';
+import SearchButtons from '../Button/SearchButtons';
 
 const SEARCH_START_YEAR = 2015;
 
@@ -80,19 +81,8 @@ function SettlementsSearchForm({ initialValues, onSubmit, onReset }) {
                     ]}
                 />
             </InputWrapper>
-
             <InputWrapper centered>
-                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
-                <CommonButton
-                    small
-                    light
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onReset && onReset();
-                    }}
-                >
-                    초기화
-                </CommonButton>
+                <SearchButtons disabled={!formik.dirty} onReset={onReset} />
             </InputWrapper>
         </Form>
     );

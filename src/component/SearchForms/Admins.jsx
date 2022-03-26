@@ -3,6 +3,7 @@ import Input from '../Form/Input';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import { Form, InputWrapper } from './styles';
+import SearchButtons from '../Button/SearchButtons';
 
 function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const formik = useFormik({
@@ -19,17 +20,7 @@ function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
-                <CommonButton
-                    small
-                    light
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onReset && onReset();
-                    }}
-                >
-                    초기화
-                </CommonButton>
+                <SearchButtons disabled={!formik.dirty} onReset={onReset} />
             </InputWrapper>
         </Form>
     );

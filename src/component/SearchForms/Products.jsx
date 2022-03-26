@@ -5,6 +5,7 @@ import CommonButton from '../Button';
 import SelectBox from '../Form/SelectBox';
 import { productTypes } from '../../constants/product';
 import { Form, InputWrapper } from './styles';
+import SearchButtons from '../Button/SearchButtons';
 
 function ProductSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const formik = useFormik({
@@ -55,17 +56,7 @@ function ProductSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
-                <CommonButton
-                    small
-                    light
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onReset && onReset();
-                    }}
-                >
-                    초기화
-                </CommonButton>
+                <SearchButtons disabled={!formik.dirty} onReset={onReset} />
             </InputWrapper>
         </Form>
     );

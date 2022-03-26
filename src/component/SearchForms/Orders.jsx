@@ -8,6 +8,7 @@ import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import { paymentStatus, reservationStatus } from '../../constants/order';
 import { productTypes } from '../../constants/product';
+import SearchButtons from '../Button/SearchButtons';
 
 /**
  {
@@ -95,17 +96,7 @@ function OrdersSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
-                <CommonButton
-                    small
-                    light
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onReset && onReset();
-                    }}
-                >
-                    초기화
-                </CommonButton>
+                <SearchButtons disabled={!formik.dirty} onReset={onReset} />
             </InputWrapper>
         </Form>
     );

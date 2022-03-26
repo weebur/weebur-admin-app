@@ -61,7 +61,11 @@ const StyledButton = styled.button`
 `;
 
 function CommonButton({ children, ...props }) {
-    return <StyledButton {...props}>{children}</StyledButton>;
+    return (
+        <StyledButton type="button" {...props}>
+            {children}
+        </StyledButton>
+    );
 }
 
 export default CommonButton;

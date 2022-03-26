@@ -7,6 +7,7 @@ import AsyncSelectBox from '../Form/AsyncSelectBox';
 import { fetchCompanies, fetchCompany } from '../../api/companyAPI';
 import { useEffect, useState } from 'react';
 import { Form, InputWrapper } from './styles';
+import SearchButtons from '../Button/SearchButtons';
 
 function ClientsSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const [companyOptions, setCompanyOptions] = useState([]);
@@ -80,17 +81,7 @@ function ClientsSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
-                <CommonButton
-                    small
-                    light
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onReset && onReset();
-                    }}
-                >
-                    초기화
-                </CommonButton>
+                <SearchButtons disabled={!formik.dirty} onReset={onReset} />
             </InputWrapper>
         </Form>
     );

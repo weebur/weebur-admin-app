@@ -1,7 +1,5 @@
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
-import SubmitButton from '../Form/SubmitButton';
-import CommonButton from '../Button';
 import SelectBox from '../Form/SelectBox';
 import { supplierTypes } from '../../constants/supplier';
 import AsyncSelectBox from '../Form/AsyncSelectBox';
@@ -9,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { fetchProduct, fetchProducts } from '../../api/ProductAPI';
 import { Form, InputWrapper } from './styles';
 import { fetchTeacher, fetchTeachers } from '../../api/TeacherAPI';
+import SearchButtons from '../Button/SearchButtons';
 
 function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const [productOptions, setProductOptions] = useState([]);
@@ -143,17 +142,7 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
-                <CommonButton
-                    small
-                    light
-                    onClick={(e) => {
-                        e.preventDefault();
-                        onReset && onReset();
-                    }}
-                >
-                    초기화
-                </CommonButton>
+                <SearchButtons disabled={!formik.dirty} onReset={onReset} />
             </InputWrapper>
         </Form>
     );
