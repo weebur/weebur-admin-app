@@ -117,7 +117,7 @@ function ModifyProductForm({ initialValues, onSubmit, onReset, submitButtonLabel
                     <NumberInput
                         label="수수료"
                         name="fee"
-                        value={formik.values.fee * 100}
+                        value={Math.round(formik.values.fee * 100)}
                         onChange={(name, value) => {
                             formik.setFieldValue(name, value / 100);
                         }}
