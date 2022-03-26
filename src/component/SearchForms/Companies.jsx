@@ -25,12 +25,7 @@ function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
                 />
             </InputWrapper>
             <InputWrapper>
-                <Input
-                    name="name"
-                    label="이름"
-                    onChange={formik.handleChange}
-                    value={formik.values.name}
-                />
+                <Input name="name" label="이름" onChange={formik.handleChange} value={formik.values.name} />
                 <SelectBox
                     allowClear
                     name="category"
@@ -42,17 +37,12 @@ function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper>
-                <SubmitButton
-                    disabled={!formik.dirty}
-                    small
-                    primary
-                    text="검색"
-                />
+                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
                 <CommonButton
                     small
                     light
-                    onClick={() => {
-                        formik.setValues(initialValues);
+                    onClick={(e) => {
+                        e.preventDefault();
                         onReset && onReset();
                     }}
                 >

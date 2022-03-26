@@ -147,6 +147,9 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
                             query: toQueryObject(values),
                         });
                     }}
+                    onReset={() => {
+                        router.replace({ pathname: '/settlements' });
+                    }}
                 />
             </SearchList>
         </ContentLayout>

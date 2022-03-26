@@ -14,32 +14,17 @@ function AdminsSearchForm({ initialValues = {}, onSubmit, onReset }) {
     return (
         <Form onSubmit={formik.handleSubmit}>
             <InputWrapper>
-                <Input
-                    name="name"
-                    label="이름"
-                    onChange={formik.handleChange}
-                    value={formik.values.name}
-                />
-                <Input
-                    name="email"
-                    label="이메일"
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
-                />
+                <Input name="name" label="이름" onChange={formik.handleChange} value={formik.values.name} />
+                <Input name="email" label="이메일" onChange={formik.handleChange} value={formik.values.email} />
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton
-                    disabled={!formik.dirty}
-                    small
-                    primary
-                    text="검색"
-                />
+                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
                 <CommonButton
                     small
                     light
-                    onClick={() => {
-                        formik.setValues(initialValues);
+                    onClick={(e) => {
+                        e.preventDefault();
                         onReset && onReset();
                     }}
                 >

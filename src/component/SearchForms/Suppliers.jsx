@@ -147,8 +147,8 @@ function SuppliersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                 <CommonButton
                     small
                     light
-                    onClick={() => {
-                        formik.setValues(initialValues);
+                    onClick={(e) => {
+                        e.preventDefault();
                         onReset && onReset();
                     }}
                 >

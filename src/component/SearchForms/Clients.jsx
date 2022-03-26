@@ -76,26 +76,16 @@ function ClientsSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     value={formik.values.mobile}
                     autoComplete="new-password"
                 />
-                <Input
-                    name="email"
-                    label="이메일"
-                    onChange={formik.handleChange}
-                    value={formik.values.email}
-                />
+                <Input name="email" label="이메일" onChange={formik.handleChange} value={formik.values.email} />
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton
-                    disabled={!formik.dirty}
-                    small
-                    primary
-                    text="검색"
-                />
+                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
                 <CommonButton
                     small
                     light
-                    onClick={() => {
-                        formik.setValues(initialValues);
+                    onClick={(e) => {
+                        e.preventDefault();
                         onReset && onReset();
                     }}
                 >

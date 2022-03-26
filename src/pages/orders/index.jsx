@@ -195,10 +195,13 @@ function Orders({
                         initialValues={searchQueries}
                         onSubmit={(values) => {
                             resetOrders();
-                            router.push({
+                            router.replace({
                                 pathname: '/orders',
                                 query: toQueryObject(values),
                             });
+                        }}
+                        onReset={() => {
+                            router.replace({ pathname: '/orders', query: { init: true } });
                         }}
                     />
                 </SearchList>

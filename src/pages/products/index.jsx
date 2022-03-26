@@ -171,10 +171,13 @@ function Products({ active, name, supplierName, type }) {
                         initialValues={searchQueries}
                         onSubmit={(values) => {
                             resetProducts();
-                            router.push({
+                            router.replace({
                                 pathname: '/products',
                                 query: toQueryObject(values),
                             });
+                        }}
+                        onReset={() => {
+                            router.replace({ pathname: '/products', query: { init: true } });
                         }}
                     />
                 </SearchList>

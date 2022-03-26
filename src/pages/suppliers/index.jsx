@@ -178,10 +178,13 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
                         initialValues={searchQueries}
                         onSubmit={(values) => {
                             resetSuppliers();
-                            router.push({
+                            router.replace({
                                 pathname: '/suppliers',
                                 query: toQueryObject(values),
                             });
+                        }}
+                        onReset={() => {
+                            router.replace({ pathname: '/suppliers', query: { init: true } });
                         }}
                     />
                 </SearchList>

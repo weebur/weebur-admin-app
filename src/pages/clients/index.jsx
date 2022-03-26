@@ -155,10 +155,13 @@ function Client({ name, company, mobile, email, from, to }) {
                         initialValues={searchQueries}
                         onSubmit={(values) => {
                             resetClients();
-                            router.push({
+                            router.replace({
                                 pathname: '/clients',
                                 query: toQueryObject(values),
                             });
+                        }}
+                        onReset={() => {
+                            router.replace({ pathname: '/clients', query: { init: true } });
                         }}
                     />
                 </SearchList>

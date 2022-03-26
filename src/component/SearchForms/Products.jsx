@@ -55,17 +55,12 @@ function ProductSearchForm({ initialValues = {}, onSubmit, onReset }) {
             </InputWrapper>
 
             <InputWrapper centered>
-                <SubmitButton
-                    disabled={!formik.dirty}
-                    small
-                    primary
-                    text="검색"
-                />
+                <SubmitButton disabled={!formik.dirty} small primary text="검색" />
                 <CommonButton
                     small
                     light
-                    onClick={() => {
-                        formik.setValues(initialValues);
+                    onClick={(e) => {
+                        e.preventDefault();
                         onReset && onReset();
                     }}
                 >

@@ -144,6 +144,9 @@ function Companies() {
                                 }),
                             });
                         }}
+                        onReset={() => {
+                            router.replace({ pathname: '/companies', query: { init: true } });
+                        }}
                     />
                 </SearchList>
             </ContentLayout>
