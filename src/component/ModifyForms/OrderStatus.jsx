@@ -13,10 +13,10 @@ const ButtonWrapper = styled.div`
 
 function OrderStatusModifyForm({ initialValues, onSubmit, onClose }) {
     const formik = useFormik({
-        enableReinitialize: true,
         initialValues,
         onSubmit,
     });
+
     return (
         <Form onSubmit={formik.handleSubmit}>
             <FieldSection direction="column">
@@ -33,12 +33,12 @@ function OrderStatusModifyForm({ initialValues, onSubmit, onClose }) {
                             small
                             type="button"
                             disabled={formik.initialValues.reservationStatus === formik.values.reservationStatus}
-                            onClick={async () => {
+                            onClick={async (e) => {
+                                e.preventDefault();
                                 await onSubmit(
                                     'reservation',
                                     pick(formik.values, ['reservationStatus', 'latestReservationStatusUpdatedAt']),
                                 );
-                                formik.resetForm();
                             }}
                         >
                             변경하기
@@ -58,12 +58,12 @@ function OrderStatusModifyForm({ initialValues, onSubmit, onClose }) {
                             small
                             type="button"
                             disabled={formik.initialValues.paymentStatus === formik.values.paymentStatus}
-                            onClick={async () => {
+                            onClick={async (e) => {
+                                e.preventDefault();
                                 await onSubmit(
                                     'payment',
                                     pick(formik.values, ['paymentStatus', 'latestPaymentStatusUpdatedAt']),
                                 );
-                                formik.resetForm();
                             }}
                         >
                             변경하기
