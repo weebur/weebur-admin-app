@@ -23,6 +23,7 @@ function RangePicker({ onChange, from, to, label, fromName, toName }) {
             <Row gutter={2}>
                 <Col>
                     <DatePicker
+                        start
                         name={fromName || 'from'}
                         onChange={onChange}
                         value={from}
@@ -37,6 +38,7 @@ function RangePicker({ onChange, from, to, label, fromName, toName }) {
                 <IconWrapper>~</IconWrapper>
                 <Col>
                     <DatePicker
+                        end
                         name={toName || 'to'}
                         onChange={onChange}
                         value={to}

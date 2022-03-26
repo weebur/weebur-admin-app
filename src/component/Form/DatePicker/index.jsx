@@ -33,7 +33,7 @@ const StyledDatePicker = styled(DayjsPicker)`
     }
 `;
 
-function DatePicker({ label, value, name, onChange, ...props }) {
+function DatePicker({ label, value, name, onChange, start, end, ...props }) {
     const [focused, setFocused] = useState(false);
 
     return (
@@ -46,7 +46,12 @@ function DatePicker({ label, value, name, onChange, ...props }) {
                 placeholder="날짜를 선택해주세요"
                 value={value ? dayjs(value) : null}
                 onChange={(date) => {
-                    onChange(name, date?.toISOString() || null);
+                    const dateString = start
+                        ? date?.startOf('day').toISOString() || null
+                        : end
+                        ? date?.endOf('day').toISOString() || null
+                        : date?.toISOString() || null;
+                    onChange(name, dateString);
                 }}
                 onFocus={() => {
                     setFocused(true);
