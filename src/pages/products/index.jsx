@@ -139,10 +139,11 @@ function Products({ active, name, supplierName, type }) {
     };
 
     useEffect(() => {
-        const isInit = !!router.query.init;
-        if (isInit || products.result) {
+        const { init, ...query } = router.query;
+
+        if (!!init || !products.result) {
             fetchMore(true);
-            router.replace({ pathname: router.pathname });
+            router.replace({ pathname: router.pathname, query });
         }
     }, [active, name, supplierName, type]);
 

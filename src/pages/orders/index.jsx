@@ -152,10 +152,11 @@ function Orders({
     };
 
     useEffect(() => {
-        const isInit = !!router.query.init;
-        if (isInit || orders.result) {
+        const { init, ...query } = router.query;
+
+        if (!!init || !orders.result) {
             fetchMore(true);
-            router.replace({ pathname: router.pathname });
+            router.replace({ pathname: router.pathname, query });
         }
     }, [
         createdStartAt,

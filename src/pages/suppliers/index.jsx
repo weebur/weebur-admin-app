@@ -146,10 +146,11 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
     }, [supplier]);
 
     useEffect(() => {
-        const isInit = !!router.query.init;
-        if (isInit || suppliers.result) {
+        const { init, ...query } = router.query;
+
+        if (!!init || !suppliers.result) {
             fetchMore(true);
-            router.replace({ pathname: router.pathname });
+            router.replace({ pathname: router.pathname, query });
         }
     }, [from, to, active, name, teacher, type, product, teacherMobile, teacherEmail]);
 
