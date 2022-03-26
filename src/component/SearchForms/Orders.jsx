@@ -94,7 +94,7 @@ function OrdersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                 />
             </InputWrapper>
 
-            <InputWrapper>
+            <InputWrapper centered>
                 <SubmitButton disabled={!formik.dirty} small primary text="검색" />
                 <CommonButton
                     small
