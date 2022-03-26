@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FieldSection, PaymentEmailTemplate, TemplateContainer } from './styles';
-import { Col, Tabs } from 'antd';
-import SelectBox from '../../Form/SelectBox';
+import { Divider, List, Tabs, Descriptions } from 'antd';
 import dayjs from 'dayjs';
-import { COMMON_FORMAT } from '../../../constants/date';
 import ProductService from '../../../services/ProductService';
 import TextArea from '../../Form/TextArea';
 import TextInput from '../../Form/Input';
 import styled from 'styled-components';
 import CommonButton from '../../Button';
 import useAdminsStore from '../../../stores/admins';
+import AttachList from './lib/AttachList';
 
 const EmailAccounts = styled.div`
     flex: 0 0 50%;
@@ -17,9 +16,8 @@ const EmailAccounts = styled.div`
     align-items: flex-end;
     gap: 10px;
 `;
+
 const { TabPane } = Tabs;
-const getLabel = (order) =>
-    `${dayjs(order.reservationDate).format(COMMON_FORMAT)} | ${order.productName} | ${order.supplierName}`;
 
 function SendEmailTemplate({ workshop, onSendEmail }) {
     const me = useAdminsStore((state) => state.me);
@@ -27,7 +25,23 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
     const [tab, setTab] = useState('reservation');
     const [reservationEmail, setReservationEmail] = useState('');
     const [emailAccount, setEmailAccount] = useState({ email: me?.email || '', password: '' });
-    const [order, setOrder] = useState('');
+    const [attachedApplication, setAttachedApplication] = useState([]);
+    const [attachedEstimates, setAttachedEstimates] = useState([]);
+    const [attachedReceipts, setAttachedReceipts] = useState([]);
+
+    const notAttachedApplication =
+        workshop?.applications
+            ?.filter((item) => !attachedApplication.find((attach) => attach.key === item.key))
+            .sort((a, b) => b.createdAt - a.createdAt) || [];
+
+    const notAttachedEstimates =
+        workshop?.estimates
+            ?.filter((item) => !attachedEstimates.find((attach) => attach.key === item.key))
+            .sort((a, b) => b.createdAt - a.createdAt) || [];
+    const notAttachedReceipts =
+        workshop?.receipts
+            ?.filter((item) => !attachedReceipts.find((attach) => attach.key === item.key))
+            .sort((a, b) => b.createdAt - a.createdAt) || [];
 
     const paymentEmail = ProductService.getPaymentEmail({
         clientName: workshop?.clientName,
@@ -42,25 +56,12 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
     };
 
     useEffect(() => {
-        setReservationEmail(order ? ProductService.getEmailTextByOrder(workshop, order) : '');
-    }, [order]);
+        setReservationEmail(ProductService.getEmailTextByOrder(workshop));
+    }, []);
 
     return (
         <>
             <FieldSection>
-                <Col flex="50%">
-                    <SelectBox
-                        label="대상 상품 선택"
-                        name={'order'}
-                        value={order}
-                        onChange={(_, v) => setOrder(v)}
-                        options={workshop.orders.map((order) => ({
-                            key: order._id,
-                            label: getLabel(order),
-                            value: order._id,
-                        }))}
-                    />
-                </Col>
                 <EmailAccounts>
                     <TextInput
                         disabled
@@ -98,28 +99,178 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                         : '[위버] 결제 확인 되었습니다.',
                                 textBody: tab === 'reservation' ? reservationEmail : '',
                                 htmlBody: tab === 'payment' ? paymentEmail : '',
+                                fileKeys:
+                                    tab === 'reservation'
+                                        ? [...attachedEstimates, ...attachedReceipts, ...attachedApplication].map(
+                                              (attach) => attach.key,
+                                          )
+                                        : [],
                             });
                         }}
                     >
                         메일발송
                     </CommonButton>
                 </EmailAccounts>
+                <Descriptions bordered title="받는 사람">
+                    <Descriptions.Item label="Email">{workshop.clientEmail}</Descriptions.Item>
+                </Descriptions>
             </FieldSection>
             <TemplateContainer>
-                <Tabs defaultActiveKey="reservation" type="card" size="large" value={tab} onChange={(v) => setTab(v)}>
-                    <TabPane tab="예약안내 메일 발송" key="reservation">
-                        <TextArea
-                            rows={30}
-                            value={reservationEmail}
-                            onChange={(e) => {
-                                setReservationEmail(e.target.value);
-                            }}
-                        />
-                    </TabPane>
-                    <TabPane tab="결제확인 메일 발송" key="payment">
-                        <PaymentEmailTemplate dangerouslySetInnerHTML={{ __html: paymentEmail }} />
-                    </TabPane>
-                </Tabs>
+                <div>
+                    <Tabs
+                        defaultActiveKey="reservation"
+                        type="card"
+                        size="large"
+                        value={tab}
+                        onChange={(v) => setTab(v)}
+                    >
+                        <TabPane tab="예약안내 메일 발송" key="reservation">
+                            <TextArea
+                                rows={30}
+                                value={reservationEmail}
+                                onChange={(e) => {
+                                    setReservationEmail(e.target.value);
+                                }}
+                            />
+                        </TabPane>
+                        <TabPane tab="결제확인 메일 발송" key="payment">
+                            <PaymentEmailTemplate dangerouslySetInnerHTML={{ __html: paymentEmail }} />
+                        </TabPane>
+                    </Tabs>
+                </div>
+                {tab === 'reservation' && (
+                    <div>
+                        <Divider orientation="left">파일 첨부</Divider>
+                        <Tabs defaultActiveKey="applications" type="card" size="large">
+                            <TabPane tab="예약신청서" key="applications">
+                                <Divider orientation="left">파일 첨부</Divider>
+
+                                <AttachList
+                                    label={'예약신청서'}
+                                    dataSource={attachedApplication}
+                                    renderActions={(item) => [
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setAttachedApplication(
+                                                    attachedApplication.filter((attach) => attach.key !== item.key),
+                                                );
+                                            }}
+                                        >
+                                            삭제
+                                        </a>,
+                                    ]}
+                                />
+
+                                <Divider orientation="left">파일첨부</Divider>
+
+                                <AttachList
+                                    label={'예약신청서'}
+                                    dataSource={notAttachedApplication}
+                                    renderActions={(item) => [
+                                        <a key="list-loadmore-edit" href={item.url}>
+                                            다운로드
+                                        </a>,
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setAttachedApplication([...attachedApplication, item]);
+                                            }}
+                                        >
+                                            첨부하기
+                                        </a>,
+                                    ]}
+                                />
+                            </TabPane>
+                            <TabPane tab="견적서" key="estimates">
+                                <Divider orientation="left">파일 첨부</Divider>
+
+                                <AttachList
+                                    label={'견적서'}
+                                    dataSource={attachedEstimates}
+                                    renderActions={(item) => [
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setAttachedEstimates(
+                                                    attachedEstimates.filter((attach) => attach.key !== item.key),
+                                                );
+                                            }}
+                                        >
+                                            삭제
+                                        </a>,
+                                    ]}
+                                />
+
+                                <Divider orientation="left">파일첨부</Divider>
+
+                                <AttachList
+                                    label={'견적서'}
+                                    dataSource={notAttachedEstimates}
+                                    renderActions={(item) => [
+                                        <a key="list-loadmore-edit" href={item.url}>
+                                            다운로드
+                                        </a>,
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setAttachedEstimates([...attachedEstimates, item]);
+                                            }}
+                                        >
+                                            첨부하기
+                                        </a>,
+                                    ]}
+                                />
+                            </TabPane>
+                            <TabPane tab="거래명세서" key="receipts">
+                                <Divider orientation="left">파일 첨부</Divider>
+
+                                <AttachList
+                                    label={'거래명세서'}
+                                    dataSource={attachedReceipts}
+                                    renderActions={(item) => [
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setAttachedReceipts(
+                                                    attachedReceipts.filter((attach) => attach.key !== item.key),
+                                                );
+                                            }}
+                                        >
+                                            삭제
+                                        </a>,
+                                    ]}
+                                />
+
+                                <Divider orientation="left">파일첨부</Divider>
+
+                                <AttachList
+                                    label={'거래명세서'}
+                                    dataSource={notAttachedReceipts}
+                                    renderActions={(item) => [
+                                        <a key="list-loadmore-edit" href={item.url}>
+                                            다운로드
+                                        </a>,
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setAttachedReceipts([...attachedReceipts, item]);
+                                            }}
+                                        >
+                                            첨부하기
+                                        </a>,
+                                    ]}
+                                />
+                            </TabPane>
+                        </Tabs>
+                    </div>
+                )}
             </TemplateContainer>
         </>
     );

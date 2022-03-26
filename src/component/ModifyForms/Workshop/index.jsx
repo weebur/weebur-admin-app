@@ -94,7 +94,7 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             formik.setFieldValue('adminName', me.name);
         }
     }, [me]);
-    console.log(formik.errors);
+
     return (
         <>
             <FormContainer onSubmit={formik.handleSubmit}>
@@ -168,7 +168,10 @@ function WorkshopForm({ initialValues, onSubmit, onDirtyChange, onRemove }) {
             </FormContainer>
 
             <BasicModal isOpen={!!openApplication} onClose={() => setOpenApplication(false)}>
-                <Application workshop={formik.values} />
+                <Application
+                    workshop={formik.values}
+                    updateWorkshopDocs={(docs) => formik.setFieldValue('application', docs)}
+                />
             </BasicModal>
             <BasicModal isOpen={!!openEstimate} onClose={() => setOpenEstimate(false)}>
                 <Estimate workshop={formik.values} />

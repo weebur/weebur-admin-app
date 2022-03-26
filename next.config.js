@@ -13,13 +13,4 @@ module.exports = {
         styledComponents: true,
         scrollRestoration: true,
     },
-    // async redirects() {
-    //     return [
-    //         {
-    //             source: '/',
-    //             destination: '/admins',
-    //             permanent: false,
-    //         },
-    //     ];
-    // },
 };

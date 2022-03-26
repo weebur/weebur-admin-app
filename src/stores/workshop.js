@@ -1,8 +1,9 @@
 import create from 'zustand';
 import { createWorkshop, fetchWorkshop, updateWorkshop } from '../api/WorkshopAPI';
 import { fetchOrderSchedules } from '../api/OrderAPI';
+import produce from 'immer';
 
-const useWorkshopsStore = create((set) => ({
+const useWorkshopsStore = create((set, get) => ({
     workshop: null,
     workshopSchedules: [],
     fetchWorkshop: async (workshopId) => {
@@ -23,6 +24,14 @@ const useWorkshopsStore = create((set) => ({
         const workshopSchedules = await fetchOrderSchedules({ year, month });
 
         set({ workshopSchedules });
+    },
+    updateWorkshopDocuments: (docType, docs) => {
+        if (!get().workshop) return;
+        set(
+            produce((state) => {
+                state.workshop[docType] = docs;
+            }),
+        );
     },
 }));
 

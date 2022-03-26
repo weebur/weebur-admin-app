@@ -80,9 +80,15 @@ ${order.onlineInfo.details}
 }`;
     };
 
-    getEmailTextByOrder = (workshop, orderId) => {
-        const order = workshop.orders.find((order) => order._id === orderId);
-        const isOnline = order.productType === productTypes.ONLINE.key;
+    getEmailTextByOrder = (workshop) => {
+        const reservationDate = workshop.orders.reduce((date, order) => {
+            if (dayjs(date).isBefore(dayjs(order.reservationDate))) {
+                return date;
+            } else {
+                return order.reservationDate;
+            }
+        });
+        const isOnline = workshop.orders.some((order) => order.productType === productTypes.ONLINE.key);
 
         return `안녕하세요, ${workshop.clientName} 담당자님 
 워크샵 추천 플랫폼 위버 ${workshop.adminName}입니다. 
@@ -107,7 +113,7 @@ ${
 2) 배송정보를 강사님 메일로 보내주시면 택배 발송을 시작합니다.
 ※ 개별배송인 경우 첨부드린 양식을 사용해주세요.`
         : `2. 인원 확정
-진행일(${dayjs(order.reservationDate).format(COMMON_FORMAT)}) 7일 전까지 최종 인원을 확정해 알려주세요.`
+진행일(${dayjs(reservationDate).format(COMMON_FORMAT)}) 7일 전까지 최종 인원을 확정해 알려주세요.`
 }
 
 3. 결제방식

@@ -66,6 +66,7 @@ function WorkshopDetail({ workshopId }) {
         subject,
         textBody,
         htmlBody,
+        fileKeys,
     }) => {
         Modal.confirm({
             content: '이메일을 발송하시겠습니까?',
@@ -79,10 +80,11 @@ function WorkshopDetail({ workshopId }) {
                         subject,
                         textBody,
                         htmlBody,
+                        fileKeys,
                     });
                     message.success('이메일 발송이 완료되었습니다.');
                 } catch (e) {
-                    message.error('워크샵 삭제를 실패하였습니다.');
+                    message.error('이메일 발송을 실패하였습니다.');
                 }
             },
         });

@@ -12,7 +12,12 @@ export const FieldSection = styled.div`
 `;
 
 export const TemplateContainer = styled.div`
+    display: flex;
     padding: 20px;
+    & > div {
+        padding: 5px;
+        flex: 1 0 50%;
+    }
 `;
 
 export const PaymentEmailTemplate = styled.div`
