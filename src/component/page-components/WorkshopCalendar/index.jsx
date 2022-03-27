@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DayjsCalendar from '../../Calendar/DayjsCalendar';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
@@ -9,6 +9,11 @@ import DateCell from './DateCell';
 import { useRouter } from 'next/router';
 import MoreScheduleModal from './MoreScheduleModal';
 import ScheduleSummaryModal from './ScheduleSummaryModal';
+import AsyncSelectBox from '../../Form/AsyncSelectBox';
+import SelectBox from '../../Form/SelectBox';
+import { reservationStatus } from '../../../constants/order';
+import useFetchInitialOptions from '../../../hooks/useFetchInitialOptions';
+import { fetchSupplier, fetchSuppliers } from '../../../api/SupplierAPI';
 
 const Header = styled.div`
     display: flex;
@@ -18,7 +23,7 @@ const Header = styled.div`
 `;
 const FlexBox = styled.div`
     display: flex;
-
+    align-items: flex-end;
     ${({ gap }) =>
         gap &&
         `
@@ -49,11 +54,18 @@ const Caption = styled.div`
     `}
 `;
 
-function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
+const SelectWrapper = styled.div`
+    width: 200px;
+`;
+
+function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierId }) {
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
     const [moreSchedules, setMoreSchedules] = useState([]);
+    const [currentSchedule, setCurrentSchedule] = useState(schedules);
+    const [currentSupplier, setCurrentSupplier] = useState(supplierId);
+    const [currentReservationStatus, setCurrentReservationStatus] = useState('ALL');
 
     const handleItemClick = (item) => {
         setSelectedSchedule(item);
@@ -66,7 +78,7 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
     const dateCellRender = (value) => {
         return (
             <DateCell
-                schedules={schedules}
+                schedules={currentSchedule}
                 currentDate={value}
                 onItemClick={handleItemClick}
                 onMoreClick={({ listData }) => {
@@ -76,6 +88,32 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
             />
         );
     };
+
+    const fetchOptions = (name) => {
+        return fetchSuppliers({ page: 0, limit: 10, name }).then((suppliers) => {
+            return suppliers.result.map((supplier) => ({
+                label: supplier.name,
+                value: supplier._id,
+                key: supplier._id,
+            }));
+        });
+    };
+
+    const { options: supplierOptions } = useFetchInitialOptions(fetchSupplier, supplierId);
+
+    useEffect(() => {
+        setCurrentSchedule(
+            schedules.filter((schedule) => {
+                if (currentReservationStatus !== 'ALL' && schedule.reservationStatus !== currentReservationStatus) {
+                    return false;
+                }
+                if (currentSupplier && schedule.supplierId !== currentSupplier) {
+                    return false;
+                }
+                return true;
+            }),
+        );
+    }, [schedules, currentReservationStatus, currentSupplier]);
 
     return (
         <>
@@ -123,6 +161,25 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange }) {
                                 </FlexBox>
 
                                 <TodayButton onClick={() => onChange(dayjs())}>오늘</TodayButton>
+
+                                <SelectWrapper>
+                                    <AsyncSelectBox
+                                        allowClear
+                                        label="업체명"
+                                        onChange={(_, v) => setCurrentSupplier(v)}
+                                        value={currentSupplier}
+                                        fetchOptions={fetchOptions}
+                                        initialOptions={supplierOptions}
+                                    />
+                                </SelectWrapper>
+                                <SelectWrapper>
+                                    <SelectBox
+                                        label="예약 상태"
+                                        value={currentReservationStatus}
+                                        options={[{ key: 'ALL', label: '전체' }, ...Object.values(reservationStatus)]}
+                                        onChange={(_, v) => setCurrentReservationStatus(v)}
+                                    />
+                                </SelectWrapper>
                             </FlexBox>
                             <FlexBox gap={20}>
                                 <Caption type={'checking'}>

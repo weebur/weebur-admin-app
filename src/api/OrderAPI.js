@@ -60,10 +60,10 @@ export const updateOrderPaymentStatus = ({ orderIds, paymentStatus, latestPaymen
 export const fetchOrderSchedules = ({ year, month }) => {
     return api
         .get('/orders/calendar', {
-            params: {
+            params: toQueryObject({
                 year,
                 month,
-            },
+            }),
         })
         .then((res) => res.data);
 };
