@@ -8,6 +8,7 @@ import {
     CalendarOutlined,
     ShopOutlined,
     SkinOutlined,
+    BarChartOutlined,
 } from '@ant-design/icons/lib/icons';
 
 export const menu = [
@@ -59,5 +60,11 @@ export const menu = [
         name: '어드민(ok)',
         path: '/admins',
         Icon: SettingOutlined,
+    },
+    {
+        key: 'dashboard',
+        name: '대시보드',
+        path: '/dashboard',
+        Icon: BarChartOutlined,
     },
 ];
