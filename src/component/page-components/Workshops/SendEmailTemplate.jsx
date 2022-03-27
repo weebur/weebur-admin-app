@@ -32,16 +32,16 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
     const notAttachedApplication =
         workshop?.applications
             ?.filter((item) => !attachedApplication.find((attach) => attach.key === item.key))
-            .sort((a, b) => b.createdAt - a.createdAt) || [];
+            .sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? 1 : -1)) || [];
 
     const notAttachedEstimates =
         workshop?.estimates
             ?.filter((item) => !attachedEstimates.find((attach) => attach.key === item.key))
-            .sort((a, b) => b.createdAt - a.createdAt) || [];
+            .sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? 1 : -1)) || [];
     const notAttachedReceipts =
         workshop?.receipts
             ?.filter((item) => !attachedReceipts.find((attach) => attach.key === item.key))
-            .sort((a, b) => b.createdAt - a.createdAt) || [];
+            .sort((a, b) => (dayjs(a.createdAt).isBefore(dayjs(b.createdAt)) ? 1 : -1)) || [];
 
     const paymentEmail = ProductService.getPaymentEmail({
         clientName: workshop?.clientName,
@@ -126,7 +126,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                     >
                         <TabPane tab="예약안내 메일 발송" key="reservation">
                             <TextArea
-                                rows={30}
+                                rows={60}
                                 value={reservationEmail}
                                 onChange={(e) => {
                                     setReservationEmail(e.target.value);
@@ -143,7 +143,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                         <Divider orientation="left">파일 첨부</Divider>
                         <Tabs defaultActiveKey="applications" type="card" size="large">
                             <TabPane tab="예약신청서" key="applications">
-                                <Divider orientation="left">파일 첨부</Divider>
+                                <Divider orientation="left">첨부된 파일</Divider>
 
                                 <AttachList
                                     label={'예약신청서'}
@@ -163,7 +163,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                     ]}
                                 />
 
-                                <Divider orientation="left">파일첨부</Divider>
+                                <Divider orientation="left">저장된 문서</Divider>
 
                                 <AttachList
                                     label={'예약신청서'}
@@ -185,7 +185,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                 />
                             </TabPane>
                             <TabPane tab="견적서" key="estimates">
-                                <Divider orientation="left">파일 첨부</Divider>
+                                <Divider orientation="left">첨부된 파일</Divider>
 
                                 <AttachList
                                     label={'견적서'}
@@ -205,7 +205,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                     ]}
                                 />
 
-                                <Divider orientation="left">파일첨부</Divider>
+                                <Divider orientation="left">저장된 문서</Divider>
 
                                 <AttachList
                                     label={'견적서'}
@@ -227,7 +227,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                 />
                             </TabPane>
                             <TabPane tab="거래명세서" key="receipts">
-                                <Divider orientation="left">파일 첨부</Divider>
+                                <Divider orientation="left">첨부된 파일</Divider>
 
                                 <AttachList
                                     label={'거래명세서'}
@@ -247,7 +247,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                     ]}
                                 />
 
-                                <Divider orientation="left">파일첨부</Divider>
+                                <Divider orientation="left">저장된 문서</Divider>
 
                                 <AttachList
                                     label={'거래명세서'}
