@@ -47,9 +47,9 @@ function DatePicker({ label, value, name, onChange, start, end, ...props }) {
                 value={value ? dayjs(value) : null}
                 onChange={(date) => {
                     const dateString = start
-                        ? date?.startOf('day').toISOString() || null
+                        ? date?.startOf(props.mode || 'day').toISOString() || null
                         : end
-                        ? date?.endOf('day').toISOString() || null
+                        ? date?.endOf(props.mode || 'day').toISOString() || null
                         : date?.toISOString() || null;
                     onChange(name, dateString);
                 }}

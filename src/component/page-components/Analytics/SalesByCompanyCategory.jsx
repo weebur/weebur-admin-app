@@ -29,6 +29,9 @@ function SalesByCompanyCategory({ data, title, onChange, onDownloadClick, ...pro
                         </Col>
                         <Col>
                             <RangePicker
+                                mode={'month'}
+                                picker={'month'}
+                                format={'YYYY-MM'}
                                 onChange={(name, v) => {
                                     if (name === 'from') {
                                         setFrom(v);

@@ -15,7 +15,7 @@ const IconWrapper = styled(Col)`
     text-align: center;
 `;
 
-function RangePicker({ onChange, from, to, label, fromName, toName }) {
+function RangePicker({ onChange, from, to, label, fromName, toName, ...props }) {
     const [focused, setFocused] = useState(false);
     return (
         <InputWrapper>
@@ -33,6 +33,7 @@ function RangePicker({ onChange, from, to, label, fromName, toName }) {
                         onBlur={() => {
                             setFocused(false);
                         }}
+                        {...props}
                     />
                 </Col>
                 <IconWrapper>~</IconWrapper>
@@ -48,6 +49,7 @@ function RangePicker({ onChange, from, to, label, fromName, toName }) {
                         onBlur={() => {
                             setFocused(false);
                         }}
+                        {...props}
                     />
                 </Col>
             </Row>
