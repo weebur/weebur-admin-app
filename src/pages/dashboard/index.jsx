@@ -17,6 +17,7 @@ import SalesByCompanyCategory from '../../component/page-components/Analytics/Sa
 import SalesByClientType from '../../component/page-components/Analytics/SalesByClientType';
 import SalesByProduct from '../../component/page-components/Analytics/SalesByProduct';
 import SalesBySupplier from '../../component/page-components/Analytics/SalesBySupplier';
+import { debounce } from 'lodash-es';
 
 function DashBoard() {
     const {
@@ -34,10 +35,12 @@ function DashBoard() {
     } = useAnalyticsStore((state) => state);
     const { from, to, companyCategory, clientType, fromMonth, toMonth } = initialFactors;
 
+    const handleSuccess = debounce(() => message.success('자료 로드를 성공하였습니다.'), 500);
+
     const handleChangeSalesByRange = async (from, to) => {
         try {
             await fetchSalesByRange(from, to);
-            message.success('자료 로드를 성공하였습니다.');
+            handleSuccess();
         } catch (e) {
             message.error(JSON.stringify(e));
         }
@@ -46,7 +49,7 @@ function DashBoard() {
     const handleChangeSalesByCompanyCategory = async (from, to, companyCategory) => {
         try {
             await fetchSalesByCompanyCategory(from, to, companyCategory);
-            message.success('자료 로드를 성공하였습니다.');
+            handleSuccess();
         } catch (e) {
             message.error(JSON.stringify(e));
         }
@@ -55,7 +58,7 @@ function DashBoard() {
     const handleChangeSalesByClientType = async (from, to, clientType) => {
         try {
             await fetchSalesByClientType(from, to, clientType);
-            message.success('자료 로드를 성공하였습니다.');
+            handleSuccess();
         } catch (e) {
             message.error(JSON.stringify(e));
         }
@@ -64,7 +67,7 @@ function DashBoard() {
     const handleChangeSalesBySupplier = async (from, to) => {
         try {
             await fetchSalesBySupplier(from, to);
-            message.success('자료 로드를 성공하였습니다.');
+            handleSuccess();
         } catch (e) {
             message.error(JSON.stringify(e));
         }
@@ -72,7 +75,7 @@ function DashBoard() {
     const handleChangeSalesByProduct = async (from, to) => {
         try {
             await fetchSalesByProduct(from, to);
-            message.success('자료 로드를 성공하였습니다.');
+            handleSuccess();
         } catch (e) {
             message.error(JSON.stringify(e));
         }
