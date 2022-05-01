@@ -4,6 +4,7 @@ import '../styles/Calendar.css';
 
 import React from 'react';
 import { ConfigProvider } from 'antd';
+import Head from 'next/head';
 import theme from '../theme';
 import { ThemeProvider } from 'styled-components';
 import { setTwoToneColor } from '@ant-design/icons';
@@ -33,11 +34,18 @@ function App({ Component, pageProps }) {
     }
 
     return (
-        <ThemeProvider theme={theme}>
-            <AppLayout me={me} withoutSidebar={withoutSidebar}>
-                <Component {...props} />
-            </AppLayout>
-        </ThemeProvider>
+        <>
+            <Head>
+                <link rel="shortcut icon" href="/favicon.ico" />
+                <title>WEEBUR BACKOFFICE 2.0</title>
+            </Head>
+
+            <ThemeProvider theme={theme}>
+                <AppLayout me={me} withoutSidebar={withoutSidebar}>
+                    <Component {...props} />
+                </AppLayout>
+            </ThemeProvider>
+        </>
     );
 }
 
