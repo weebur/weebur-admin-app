@@ -13,6 +13,8 @@ import { COMMON_FORMAT } from '../../constants/date';
 import { message } from 'antd';
 import BasicModal from '../../component/Modal';
 import ModifySupplierForm from '../../component/ModifyForms/Supplier';
+import { downloadSuppliers } from '../../api/SupplierAPI';
+import { download } from '../../services/FileDownloadService';
 
 const headers = [
     {
@@ -97,14 +99,25 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
 
     const handleSubmit = async (values) => {
         try {
+            const mainTeacherIndex = values.teachers.findIndex((teacher) => teacher._id === values.mainTeacher?._id);
+            const payload = {
+                ...values,
+                mainTeacher: mainTeacherIndex === -1 ? null : mainTeacherIndex,
+                teachers: values.teachers.map(({ _id, ...teacher }) => {
+                    if (_id.startsWith('newTeacher-')) {
+                        return teacher;
+                    }
+                    return { _id, teacher };
+                }),
+            };
             if (createMode) {
-                await createSupplier(values);
+                await createSupplier(payload);
                 await fetchSuppliers({
                     page: 1,
                     limit: SEARCH_LIMIT,
                 });
             } else {
-                await updateSupplier(supplier._id, values);
+                await updateSupplier(supplier._id, payload);
             }
 
             resetSupplier();
@@ -172,6 +185,10 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
                     onCreateButtonClick={() => {
                         initializeSupplier();
                         setCreateMode(true);
+                    }}
+                    modifyButtonText={'다운로드'}
+                    onModifyButtonClick={async () => {
+                        await download(() => downloadSuppliers(searchQueries), 'products');
                     }}
                 >
                     <SuppliersSearchForm

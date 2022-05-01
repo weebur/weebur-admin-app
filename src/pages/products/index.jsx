@@ -14,6 +14,8 @@ import { productTypes } from '../../constants/product';
 import { message } from 'antd';
 import BasicModal from '../../component/Modal';
 import ModifyProductForm from '../../component/ModifyForms/Product';
+import { downloadProducts } from '../../api/ProductAPI';
+import { download } from '../../services/FileDownloadService';
 
 const headers = [
     {
@@ -165,6 +167,10 @@ function Products({ active, name, supplierName, type }) {
                     onCreateButtonClick={() => {
                         initializeProduct();
                         setCreateMode(true);
+                    }}
+                    modifyButtonText={'다운로드'}
+                    onModifyButtonClick={async () => {
+                        await download(() => downloadProducts(searchQueries), 'products');
                     }}
                 >
                     <ProductsSearchForm

@@ -1,25 +1,38 @@
 import React from 'react';
-import {
-    DndContext,
-    useSensors,
-    useSensor,
-    MouseSensor,
-    TouchSensor,
-} from '@dnd-kit/core';
+import { DndContext, useSensors, useSensor, PointerSensor } from '@dnd-kit/core';
 import Droppable from './Droppable';
 import { cloneDeep } from 'lodash-es';
 
+class MyPointerSensor extends PointerSensor {
+    static activators = [
+        {
+            eventName: 'onPointerDown',
+            handler: ({ nativeEvent: event }) => {
+                if (!event.isPrimary || event.button !== 0 || isInteractiveElement(event.target)) {
+                    return false;
+                }
+
+                return true;
+            },
+        },
+    ];
+}
+
+function isInteractiveElement(element) {
+    const interactiveElements = ['button', 'input', 'textarea', 'select', 'option'];
+
+    if (interactiveElements.includes(element.tagName.toLowerCase())) {
+        return true;
+    }
+
+    return false;
+}
+
 function DraggableFields({ id, ids, onChange, children }) {
     const sensors = useSensors(
-        useSensor(MouseSensor, {
+        useSensor(MyPointerSensor, {
             activationConstraint: {
                 distance: 10,
-            },
-        }),
-        useSensor(TouchSensor, {
-            activationConstraint: {
-                delay: 250,
-                tolerance: 10,
             },
         }),
     );

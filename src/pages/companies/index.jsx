@@ -10,6 +10,8 @@ import { useRouter } from 'next/router';
 import BasicModal from '../../component/Modal';
 import ModifyCompanyForm from '../../component/ModifyForms/Company';
 import { message } from 'antd';
+import { downloadCompanies } from '../../api/companyAPI';
+import { download } from '../../services/FileDownloadService';
 
 const headers = [
     { key: 'name', label: '회사명', span: 8 },
@@ -129,6 +131,10 @@ function Companies() {
                         setCreateMode(true);
                     }}
                     onItemClick={handleCompanyClick}
+                    modifyButtonText={'다운로드'}
+                    onModifyButtonClick={async () => {
+                        await download(() => downloadCompanies(searchQueries), 'companies');
+                    }}
                 >
                     <CompaniesSearchForm
                         initialValues={{ name, category, from, to }}

@@ -51,3 +51,18 @@ export const updateClient = (id, { name, company, mobile, phoneNumber, email, in
         })
         .then((res) => res.data);
 };
+
+export const downLoadClients = ({ name, company, mobile, email, from, to }) => {
+    return api
+        .get('/clients/download', {
+            params: toQueryObject({
+                name,
+                company,
+                mobile,
+                email,
+                from,
+                to,
+            }),
+        })
+        .then((res) => res.data);
+};

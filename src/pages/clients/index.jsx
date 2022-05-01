@@ -12,6 +12,8 @@ import { COMMON_FORMAT } from '../../constants/date';
 import BasicModal from '../../component/Modal';
 import ModifyClientForm from '../../component/ModifyForms/Client';
 import { message } from 'antd';
+import { downLoadClients } from '../../api/ClientAPI';
+import { download } from '../../services/FileDownloadService';
 
 const headers = [
     {
@@ -150,6 +152,10 @@ function Client({ name, company, mobile, email, from, to }) {
                         setCreateMode(true);
                     }}
                     onItemClick={handleClientClick}
+                    modifyButtonText={'다운로드'}
+                    onModifyButtonClick={async () => {
+                        await download(() => downLoadClients(searchQueries), 'clients');
+                    }}
                 >
                     <ClientSearchForm
                         initialValues={searchQueries}

@@ -14,16 +14,22 @@ export const fetchCompany = (id) => {
 };
 
 export const createCompany = ({ name, category, details, partner }) => {
-    return api
-        .post('/companies', { name, category, details, partner })
-        .then((res) => res.data);
+    return api.post('/companies', { name, category, details, partner }).then((res) => res.data);
 };
 
-export const updateCompany = (
-    companyId,
-    { name, category, details, partner },
-) => {
+export const updateCompany = (companyId, { name, category, details, partner }) => {
+    return api.put(`/companies/${companyId}`, { name, category, details, partner }).then((res) => res.data);
+};
+
+export const downloadCompanies = ({ name, category, from, to }) => {
     return api
-        .put(`/companies/${companyId}`, { name, category, details, partner })
+        .get('/companies/download', {
+            params: toQueryObject({
+                name,
+                category,
+                from,
+                to,
+            }),
+        })
         .then((res) => res.data);
 };

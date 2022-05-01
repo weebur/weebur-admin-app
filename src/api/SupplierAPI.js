@@ -103,3 +103,21 @@ export const updateSupplier = (
         })
         .then((res) => res.data);
 };
+
+export const downloadSuppliers = ({ from, to, active, name, teacher, type, product, teacherMobile, teacherEmail }) => {
+    return api
+        .get('/suppliers/download', {
+            params: toQueryObject({
+                from,
+                to,
+                active,
+                name,
+                teacher,
+                type,
+                product,
+                teacherMobile,
+                teacherEmail,
+            }),
+        })
+        .then((res) => res.data);
+};

@@ -18,10 +18,11 @@ import TextArea from '../Form/TextArea';
 import { supplierTypes } from '../../constants/supplier';
 import DatePicker from '../Form/DatePicker';
 import DraggableFields from '../Form/SortableFields';
-import { Checkbox, Typography } from 'antd';
+import { Checkbox, message, Typography } from 'antd';
 import SortableItem from '../Form/SortableFields/SortableItem';
 import CreateButton from '../Button/CreateButton';
 import CollapsePanel from 'antd/lib/collapse/CollapsePanel';
+import { uniqueId } from 'lodash-es';
 
 function ModifySupplierForm({ initialValues, onSubmit, onReset, submitButtonLabel }) {
     const formik = useFormik({
@@ -217,6 +218,7 @@ function ModifySupplierForm({ initialValues, onSubmit, onReset, submitButtonLabe
                                 formik.setFieldValue('teachers', [
                                     ...teachers,
                                     {
+                                        _id: uniqueId('newTeacher-'),
                                         name: '',
                                         email: '',
                                         mobile: '',

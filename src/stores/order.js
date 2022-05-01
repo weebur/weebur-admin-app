@@ -61,7 +61,7 @@ const useOrdersStore = create((set) => ({
         set({ orders: {} });
     },
     fetchProducts: async (name) => {
-        const products = await fetchProducts({ page: 1, limit: 10, name });
+        const products = await fetchProducts({ page: 1, limit: 10, name, active: true });
 
         set(
             produce((state) => {
