@@ -16,7 +16,7 @@ function NewWorkshop() {
             router.push(`/workshops/${workshop._id}`);
             message.success('저장이 완료되었습니다.');
         } catch (e) {
-            message.error('저장을 실패하였습니다.');
+            message.error(JSON.stringify(e));
         }
     };
     return (

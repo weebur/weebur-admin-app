@@ -84,7 +84,7 @@ function WorkshopDetail({ workshopId }) {
                     });
                     message.success('이메일 발송이 완료되었습니다.');
                 } catch (e) {
-                    message.error('이메일 발송을 실패하였습니다.');
+                    message.error(JSON.stringify(e));
                 }
             },
         });

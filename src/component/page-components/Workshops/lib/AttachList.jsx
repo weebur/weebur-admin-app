@@ -15,16 +15,22 @@ function AttachList({ dataSource, renderActions, label }) {
                                 'YYYY-MM-DD HH:mm:ss',
                             )} 발행`}</a>
                         }
-                        description={item.orders.map((order) => (
-                            <div key={order._id}>
-                                <div>{`${dayjs(order.reservationDate).format('YY-MM-DD HH:mm')} | ${
-                                    order.productName
-                                }`}</div>
-                                <div>{`${order.participants}명 | ${
-                                    order.supplierName
-                                } | ${order.total.toLocaleString()}원`}</div>
-                            </div>
-                        ))}
+                        description={
+                            item.orders ? (
+                                item.orders.map((order) => (
+                                    <div key={order._id}>
+                                        <div>{`${dayjs(order.reservationDate).format('YY-MM-DD HH:mm')} | ${
+                                            order.productName
+                                        }`}</div>
+                                        <div>{`${order.participants}명 | ${
+                                            order.supplierName
+                                        } | ${order.total.toLocaleString()}원`}</div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div />
+                            )
+                        }
                     />
                 </List.Item>
             )}

@@ -28,6 +28,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
     const [attachedApplication, setAttachedApplication] = useState([]);
     const [attachedEstimates, setAttachedEstimates] = useState([]);
     const [attachedReceipts, setAttachedReceipts] = useState([]);
+    const [isAttachedShipping, setIsAttachedShipping] = useState(false);
 
     const notAttachedApplication =
         workshop?.applications
@@ -54,6 +55,8 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
             [e.target.name]: e.target.value,
         });
     };
+
+    console.log(notAttachedEstimates);
 
     useEffect(() => {
         setReservationEmail(ProductService.getEmailTextByOrder(workshop));
@@ -101,9 +104,14 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                 htmlBody: tab === 'payment' ? paymentEmail : '',
                                 fileKeys:
                                     tab === 'reservation'
-                                        ? [...attachedEstimates, ...attachedReceipts, ...attachedApplication].map(
-                                              (attach) => attach.key,
-                                          )
+                                        ? [
+                                              ...attachedEstimates,
+                                              ...attachedReceipts,
+                                              ...attachedApplication,
+                                              ...(isAttachedShipping
+                                                  ? [{ key: 'shipping/weebur_shippingform.xlsx' }]
+                                                  : []),
+                                          ].map((attach) => attach.key)
                                         : [],
                             });
                         }}
@@ -267,6 +275,31 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                         </a>,
                                     ]}
                                 />
+                            </TabPane>
+                            <TabPane tab="배송지 양식" key="shipping">
+                                <Divider orientation="left">첨부된 파일</Divider>
+
+                                <AttachList
+                                    label={'배송지 양식'}
+                                    dataSource={
+                                        isAttachedShipping ? [{ key: 'shipping/weebur_shippingform.xlsx' }] : []
+                                    }
+                                    renderActions={() => [
+                                        <a
+                                            key="list-loadmore-more"
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                setIsAttachedShipping(false);
+                                            }}
+                                        >
+                                            삭제
+                                        </a>,
+                                    ]}
+                                />
+                                <Divider orientation="left" />
+                                <CommonButton onClick={() => setIsAttachedShipping(!isAttachedShipping)}>
+                                    첨부하기
+                                </CommonButton>
                             </TabPane>
                         </Tabs>
                     </div>
