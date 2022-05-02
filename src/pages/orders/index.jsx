@@ -14,6 +14,8 @@ import { paymentStatus, reservationStatus } from '../../constants/order';
 import { paymentMethods } from '../../constants/Workshop';
 import BasicModal from '../../component/Modal';
 import OrderStatusModifyForm from '../../component/ModifyForms/OrderStatus';
+import { download } from '../../services/FileDownloadService';
+import { downloadOrders } from '../../api/OrderAPI';
 
 const headers = [
     { key: 'workshop.adminName', label: '담당자', span: 2 },
@@ -186,10 +188,16 @@ function Orders({
                     fetchData={fetchMore}
                     initialPage={page}
                     nextPage={next}
-                    modifyButtonText={checkedItems.length > 0 ? '상태변경' : ''}
+                    modifyButtonText={checkedItems.length > 0 ? '상태변경' : '다운로드'}
                     onItemClick={handleOrderItemClick}
                     onCheckedItemChange={(v) => setCheckedItems(v)}
-                    onModifyButtonClick={() => setShowOrderStatusModal(true)}
+                    onModifyButtonClick={async () => {
+                        if (checkedItems.length > 0) {
+                            setShowOrderStatusModal(true);
+                        } else {
+                            await download(() => downloadOrders(searchQueries), 'orders');
+                        }
+                    }}
                 >
                     <OrdersSearchForm
                         initialValues={searchQueries}

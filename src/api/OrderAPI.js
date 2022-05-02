@@ -67,3 +67,35 @@ export const fetchOrderSchedules = ({ year, month }) => {
         })
         .then((res) => res.data);
 };
+
+export const downloadOrders = ({
+    createdStartAt,
+    createdEndAt,
+    reservedStartAt,
+    reservedEndAt,
+    adminName,
+    companyName,
+    clientName,
+    reservationStatus,
+    paymentStatus,
+    productName,
+    productType,
+}) => {
+    return api
+        .get('/orders/download', {
+            params: toQueryObject({
+                createdStartAt,
+                createdEndAt,
+                reservedStartAt,
+                reservedEndAt,
+                adminName,
+                companyName,
+                clientName,
+                reservationStatus,
+                paymentStatus,
+                productName,
+                productType,
+            }),
+        })
+        .then((res) => res.data);
+};
