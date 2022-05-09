@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import theme from '../../theme';
+import Button from './index';
 
 const ButtonWrapper = styled.div`
     display: flex;
@@ -33,15 +33,15 @@ const StyledButton = styled(Button)`
 function CreateButton({ children, full, color, ...props }) {
     return (
         <ButtonWrapper full={full}>
-            {children}
-            <StyledButton {...props}>
+            <Button inline small primary {...props}>
+                {children}
                 <PlusOutlined
                     style={{
-                        color: color || theme.color.primary,
+                        color: color || '#fff',
                         fontSize: theme.fontSize.xLarge,
                     }}
                 />
-            </StyledButton>
+            </Button>
         </ButtonWrapper>
     );
 }

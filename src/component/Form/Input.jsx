@@ -32,25 +32,12 @@ const StyledInput = styled(Input)`
 `;
 
 const TextInput = forwardRef((props, ref) => {
-    const [focused, setFocused] = useState(false);
     const { label, ...rest } = props;
 
     return (
         <InputWrapper>
-            <Label required={props.required} focused={focused}>
-                {label}
-            </Label>
-            <StyledInput
-                ref={ref}
-                autoComplete="off"
-                onFocus={() => {
-                    setFocused(true);
-                }}
-                onBlurCapture={() => {
-                    setFocused(false);
-                }}
-                {...rest}
-            />
+            <Label required={props.required}>{label}</Label>
+            <StyledInput ref={ref} autoComplete="off" {...rest} />
         </InputWrapper>
     );
 });

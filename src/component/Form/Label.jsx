@@ -1,14 +1,8 @@
 import styled from 'styled-components';
 
 const StyledLabel = styled.label`
-    color: ${({ theme }) => theme.color.light};
+    color: ${({ theme }) => theme.color.text};
     font-size: ${({ theme }) => theme.fontSize.small};
-
-    ${({ focused, theme }) =>
-        focused &&
-        `
-        color: ${theme.color.text}
-    `}
 `;
 
 const Required = styled.span`

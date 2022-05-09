@@ -9,6 +9,7 @@ import CommonButton from '../Button';
 const SearchFormWrapper = styled.div`
     width: 900px;
     padding: 50px 0;
+    margin: auto;
 `;
 
 const SummaryWrapper = styled.div`

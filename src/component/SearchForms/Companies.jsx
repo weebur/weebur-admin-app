@@ -1,7 +1,5 @@
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
-import SubmitButton from '../Form/SubmitButton';
-import CommonButton from '../Button';
 import { companyCategories } from '../../constants/company';
 import SelectBox from '../Form/SelectBox';
 import RangePicker from '../Form/DatePicker/RangePicker';

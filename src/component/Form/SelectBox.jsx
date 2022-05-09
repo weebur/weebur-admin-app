@@ -20,9 +20,9 @@ export const StyledSelect = styled(Select)`
         height: 44px;
 
         font-size: ${({ theme }) => theme.fontSize.large};
-        color: ${({ theme }) => theme.color.light};
+        color: ${({ theme }) => theme.color.text};
         border-radius: 3px;
-        border: solid 1px ${({ focused, theme }) => (focused ? theme.color.primary : theme.color.light)};
+        border: solid 1px ${({ theme }) => theme.color.light};
 
         .ant-select-selection-search {
             position: absolute !important;
@@ -40,21 +40,11 @@ export const StyledSelect = styled(Select)`
 `;
 
 function SelectBox({ options, label, onChange, ...props }) {
-    const [focused, setFocused] = useState(false);
-
     return (
         <InputWrapper>
-            <Label required={props.required} focused={focused}>
-                {label}
-            </Label>
+            <Label required={props.required}>{label}</Label>
             <StyledSelect
                 className="ant-select-customize-input"
-                onFocus={() => {
-                    setFocused(true);
-                }}
-                onBlurCapture={() => {
-                    setFocused(false);
-                }}
                 onChange={(v) => {
                     onChange(
                         props.name,

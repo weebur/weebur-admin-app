@@ -10,6 +10,7 @@ export const Form = styled.form`
         `
         width: ${width}px;
     `}
+    margin: auto;
 `;
 
 export const InputWrapper = styled.div`

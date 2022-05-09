@@ -18,7 +18,7 @@ const StyledRow = styled.div`
     height: 102px;
     padding: 25px 10px;
     border-bottom: 1px solid ${({ theme }) => theme.color.lightBorder};
-    font-size: ${({ theme }) => theme.fontSize.large};
+    font-size: ${({ theme }) => theme.fontSize.normal};
     transition: background 0.3s;
     cursor: pointer;
 
