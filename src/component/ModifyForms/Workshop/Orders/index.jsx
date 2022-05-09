@@ -119,7 +119,7 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
         <>
             <div>
                 <Row>
-                    <Typography.Title level={5}>주문 정보</Typography.Title>
+                    <Typography.Title level={5}>주문 정보 (총 {values.orders.length}건)</Typography.Title>
                 </Row>
                 <Row gutter={10} align="bottom" justify="space-between" style={{ height: 70 }}>
                     <Row gutter={10} align="bottom" style={{ paddingLeft: 30 }}>

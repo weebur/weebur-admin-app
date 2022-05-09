@@ -40,7 +40,7 @@ const tabs = [
 
 function PriceGenerator({ order, index, onChange, onValueChange }) {
     const formData = useOrdersStore((state) => state.formData);
-    const [current, setCurrent] = useState('personal');
+    const [current, setCurrent] = useState('');
 
     const { product } = formData;
     const { product: productPrices = [], delivery: productDelivery, option: productOptions } = product.prices || {};
@@ -49,7 +49,8 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
     const personalPrices = productPrices.filter((price) => price.type === productPriceTypes.PERSON.key);
     const sessionPrices = productPrices.filter((price) => price.type === productPriceTypes.SESSION.key);
 
-    const handleCreateButtonClick = () => {
+    const handleCreateButtonClick = (current) => {
+        setCurrent('');
         if (current === 'personal') {
             const target =
                 personalPrices.find(({ range }) => {
@@ -170,8 +171,8 @@ function PriceGenerator({ order, index, onChange, onValueChange }) {
     return (
         <>
             <TabHeader>
-                <Tab tabs={tabs} active={current} onChange={setCurrent} />
-                <CreateButton onClick={handleCreateButtonClick} color={theme.color.light} />
+                <Tab tabs={tabs} active={current} onChange={handleCreateButtonClick} />
+                {/*<CreateButton onClick={handleCreateButtonClick} color={theme.color.light} />*/}
             </TabHeader>
             <PriceArea>
                 {/* 인당 가격 */}

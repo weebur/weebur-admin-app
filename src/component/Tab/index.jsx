@@ -13,7 +13,7 @@ const StyledTab = styled.div`
     border-radius: 20px;
     font-weight: bold;
     cursor: pointer;
-    color: ${({ theme }) => theme.color.light};
+    color: ${({ theme }) => theme.color.text};
     font-size: ${({ theme }) => theme.fontSize.large};
     text-align: center;
     max-width: 240px;

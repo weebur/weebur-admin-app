@@ -9,6 +9,7 @@ import NumberInput from '../../Form/NumberInput';
 import styled from 'styled-components';
 import { paymentMethods } from '../../../constants/Workshop';
 import { reservationStatus } from '../../../constants/order';
+import TextArea from '../../Form/TextArea';
 
 const PaymentRequirements = styled.div`
     flex: 1;
@@ -50,26 +51,6 @@ function Payment({ values, onChange, onValueChange, salesTotal, initialValues })
                             />
                         </SalesTotal>
 
-                        <PaymentRequirements>
-                            <TextInput
-                                label="결제 요청사항"
-                                placeholder="워크샵 기본 정보와 다른 경우만 작성해주세요(날짜, 이메일주소, 금액, 항목)"
-                                name="paymentRequirements"
-                                value={values.paymentRequirements}
-                                onChange={onChange}
-                            />
-                        </PaymentRequirements>
-                        <CertificatedRegistration>
-                            <Checkbox
-                                label="사업자등록증"
-                                subLabel="등록"
-                                name="certificatedRegistration"
-                                checked={values.certificatedRegistration}
-                                onChange={onValueChange}
-                            />
-                        </CertificatedRegistration>
-                    </StyledFields>
-                    <StyledFields>
                         <SalesTotal>
                             <NumberInput
                                 label="워크샵 총합계"
@@ -108,6 +89,26 @@ function Payment({ values, onChange, onValueChange, salesTotal, initialValues })
                                 ]}
                             />
                         </SalesTotal>
+
+                        <CertificatedRegistration>
+                            <Checkbox
+                                label="사업자등록증"
+                                subLabel="등록"
+                                name="certificatedRegistration"
+                                checked={values.certificatedRegistration}
+                                onChange={onValueChange}
+                            />
+                        </CertificatedRegistration>
+                    </StyledFields>
+                    <StyledFields>
+                        <TextArea
+                            label="결제 요청사항"
+                            placeholder="워크샵 기본 정보와 다른 경우만 작성해주세요(날짜, 이메일주소, 금액, 항목)"
+                            name="paymentRequirements"
+                            value={values.paymentRequirements}
+                            onChange={onChange}
+                            rows={5}
+                        />
                     </StyledFields>
                 </FieldSection>
             )}
