@@ -44,6 +44,7 @@ function WorkshopDetail({ workshopId }) {
             updateOrdersByWorkshop(values, getTotalsByOrders(values.orders));
             message.success('저장이 완료되었습니다.');
         } catch (e) {
+            console.log(e);
             message.error('저장을 실패하였습니다.');
         }
     };

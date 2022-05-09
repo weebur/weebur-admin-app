@@ -3,6 +3,7 @@ import { fetchProduct, fetchProducts } from '../api/ProductAPI';
 import produce from 'immer';
 import { fetchSuppliers } from '../api/SupplierAPI';
 import { fetchOrders, updateOrderPaymentStatus, updateOrderReservationStatus } from '../api/OrderAPI';
+import { cloneDeep } from 'lodash-es';
 
 const useOrdersStore = create((set) => ({
     orders: {},
@@ -89,6 +90,28 @@ const useOrdersStore = create((set) => ({
             }),
         );
     },
+    addOrdersByWorkshop: (workshop, salesTotal) => {
+        const { _id, clientName, companyName, adminName, createdAt, paymentMethod } = workshop;
+        set(
+            produce((state) => {
+                const orders = cloneDeep(workshop.orders).map((order, i) => {
+                    order.salesTotal = salesTotal[i];
+                    order.workshop = {
+                        _id,
+                        clientName,
+                        companyName,
+                        adminName,
+                        createdAt,
+                        paymentMethod,
+                    };
+
+                    return order;
+                });
+                state.orders.result = [...orders, ...state.orders.result];
+                state.orders.result.sort((a, b) => a.contactedDate - b.contactedDate);
+            }),
+        );
+    },
     updateOrdersByWorkshop: (workshop, salesTotal) => {
         const { _id, clientName, companyName, adminName, createdAt, paymentMethod, orders } = workshop;
         set(
@@ -109,6 +132,7 @@ const useOrdersStore = create((set) => ({
                         target.participants = order.participants;
                         target.statusDetails = order.statusDetails;
                         target.salesTotal = salesTotal[i];
+                        target.contactedDate = workshop.createdAt;
                         target.workshop = {
                             _id,
                             clientName,
@@ -119,6 +143,8 @@ const useOrdersStore = create((set) => ({
                         };
                     }
                 });
+
+                state.orders.result?.sort((a, b) => a.contactedDate - b.contactedDate);
             }),
         );
     },
