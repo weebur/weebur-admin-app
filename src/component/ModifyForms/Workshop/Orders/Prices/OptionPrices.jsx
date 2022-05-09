@@ -129,7 +129,7 @@ function OptionPrices({ optionPrices, productOptions, name, onChange, onValueCha
                                 onChange={(_, fee) => {
                                     const newStatement = calculateOptionStatement({
                                         ...statement,
-                                        fee: fee / 100,
+                                        fee: statement.feeType === optionFeeTypes.PERCENTAGE.key ? fee / 100 : fee,
                                     });
                                     updateTotal(newStatement, i);
                                 }}
