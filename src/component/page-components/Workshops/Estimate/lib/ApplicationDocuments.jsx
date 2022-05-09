@@ -80,7 +80,7 @@ const ApplicationDocuments = ({ workshop }) => {
                                         <Text>{dayjs(order.reservationDate).format(COMMON_FORMAT)}</Text>
                                     </View>
                                     <View style={styles.orderTableCol1}>
-                                        <Text>{dayjs(order.reservationDate).format('HH:ss')}</Text>
+                                        <Text>{dayjs(order.reservationDate).format('HH:mm')}</Text>
                                     </View>
                                     <View style={styles.orderTableCol2}>
                                         <Text>{order.productName}</Text>

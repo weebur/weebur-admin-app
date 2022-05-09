@@ -1,4 +1,3 @@
-import fileDownload from 'js-file-download';
 import { message } from 'antd';
 
 export const download = async (fetcher, filename) => {
@@ -22,8 +21,6 @@ export const download = async (fetcher, filename) => {
                 document.body.removeChild(link);
             }
         }
-
-        // fileDownload(data, `${filename}.csv`);
     } catch (e) {
         message.error(JSON.stringify(e));
     }
