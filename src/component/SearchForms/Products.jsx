@@ -40,18 +40,18 @@ function ProductSearchForm({ initialValues = {}, onSubmit, onReset }) {
 
             <InputWrapper>
                 <Input
-                    allowClear
-                    name="supplierName"
-                    label="업체명"
-                    onChange={formik.handleChange}
-                    value={formik.values.supplierName}
-                />
-                <Input
                     name="name"
                     label="상품명"
                     onChange={formik.handleChange}
                     value={formik.values.name}
                     autoComplete="new-password"
+                />
+                <Input
+                    allowClear
+                    name="supplierName"
+                    label="업체명"
+                    onChange={formik.handleChange}
+                    value={formik.values.supplierName}
                 />
             </InputWrapper>
 

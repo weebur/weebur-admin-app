@@ -53,14 +53,14 @@ function OrdersSearchForm({ initialValues = {}, onSubmit, onReset }) {
                 />
             </InputWrapper>
             <InputWrapper>
-                <Input name="adminName" label="담당자" onChange={formik.handleChange} value={formik.values.adminName} />
+                <Input name="clientName" label="회원" onChange={formik.handleChange} value={formik.values.clientName} />
                 <Input
                     name="companyName"
                     label="회사"
                     onChange={formik.handleChange}
                     value={formik.values.companyName}
                 />
-                <Input name="clientName" label="회원" onChange={formik.handleChange} value={formik.values.clientName} />
+                <Input name="adminName" label="담당자" onChange={formik.handleChange} value={formik.values.adminName} />
             </InputWrapper>
             <InputWrapper>
                 <SelectBox

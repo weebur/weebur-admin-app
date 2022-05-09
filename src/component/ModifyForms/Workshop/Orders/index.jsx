@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { SubTitle } from '../styles';
-import { Col, Modal, Row, Typography } from 'antd';
+import { Checkbox, Col, Modal, Row, Typography } from 'antd';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
 import dayjs from 'dayjs';
 import CreateButton from '../../../Button/CreateButton';
@@ -80,6 +80,8 @@ const initialOrder = {
 
 function Orders({ onValueChange, values, onChange, initialValues, errors }) {
     const [checked, setChecked] = useState([]);
+    const [indeterminate, setIndeterminate] = useState(false);
+    const [checkAll, setCheckAll] = useState(false);
     const [modifyStatus, setModifyStatus] = useState({
         reservationStatus: '',
         paymentStatus: '',
@@ -99,56 +101,84 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
         });
     };
 
+    const handleCheckAllChange = (e) => {
+        const checked = e.target.checked;
+
+        setChecked(checked ? values.orders.map((_, i) => i) : []);
+        setIndeterminate(false);
+        setCheckAll(checked);
+    };
+
+    const handleCheckBoxChange = (v) => {
+        setChecked(v);
+        setIndeterminate(values.orders.length > v.length && v.length > 0);
+        setCheckAll(values.orders.length === v.length);
+    };
+
     return (
         <>
-            <SubTitle>
-                <Typography.Title level={5}>주문 정보</Typography.Title>
-                <Row gutter={10} align="middle" justify="end" style={{ flex: '0 0 500px' }}>
-                    {checked.length > 0 && (
-                        <Col flex={'0 0 310px'}>
-                            <Row gutter={10} align="bottom">
-                                <Col flex={'0 0 150px'}>
-                                    <SelectBox
-                                        label="예약상태"
-                                        name="reservationStatus"
-                                        value={modifyStatus.reservationStatus}
-                                        onChange={(_, v) => {
-                                            setModifyStatus((status) => ({
-                                                ...status,
-                                                reservationStatus: v,
-                                            }));
-                                            checked.forEach((i) => {
-                                                onValueChange(`orders.${i}.reservationStatus`, v);
-                                            });
-                                        }}
-                                        options={Object.values(reservationStatus)}
-                                    />
-                                </Col>
-                                <Col flex={'0 0 150px'}>
-                                    <SelectBox
-                                        label="결제상태"
-                                        name="paymentStatus"
-                                        value={modifyStatus.paymentStatus}
-                                        onChange={(_, v) => {
-                                            setModifyStatus((status) => ({
-                                                ...status,
-                                                paymentStatus: v,
-                                            }));
-                                            checked.forEach((i) => {
-                                                onValueChange(`orders.${i}.paymentStatus`, v);
-                                            });
-                                        }}
-                                        options={Object.values(paymentStatus)}
-                                    />
-                                </Col>
-                            </Row>
-                        </Col>
-                    )}
-                    <Col>
-                        <CreateButton onClick={() => onValueChange('orders', [...values.orders, initialOrder])} />
-                    </Col>
+            <div>
+                <Row>
+                    <Typography.Title level={5}>주문 정보</Typography.Title>
                 </Row>
-            </SubTitle>
+                <Row gutter={10} align="bottom" justify="space-between" style={{ height: 70 }}>
+                    <Row gutter={10} align="bottom" style={{ paddingLeft: 30 }}>
+                        <Col>
+                            <Checkbox
+                                indeterminate={indeterminate}
+                                onChange={handleCheckAllChange}
+                                checked={checkAll}
+                            />
+                        </Col>
+                        <Col>전체선택</Col>
+                    </Row>
+                    <Row align="bottom" justify="end" style={{ flex: '0 0 500px' }}>
+                        {checked.length > 0 && (
+                            <Col flex={'0 0 310px'}>
+                                <Row gutter={10} align="bottom">
+                                    <Col flex={'0 0 150px'}>
+                                        <SelectBox
+                                            label="예약상태"
+                                            name="reservationStatus"
+                                            value={modifyStatus.reservationStatus}
+                                            onChange={(_, v) => {
+                                                setModifyStatus((status) => ({
+                                                    ...status,
+                                                    reservationStatus: v,
+                                                }));
+                                                checked.forEach((i) => {
+                                                    onValueChange(`orders.${i}.reservationStatus`, v);
+                                                });
+                                            }}
+                                            options={Object.values(reservationStatus)}
+                                        />
+                                    </Col>
+                                    <Col flex={'0 0 150px'}>
+                                        <SelectBox
+                                            label="결제상태"
+                                            name="paymentStatus"
+                                            value={modifyStatus.paymentStatus}
+                                            onChange={(_, v) => {
+                                                setModifyStatus((status) => ({
+                                                    ...status,
+                                                    paymentStatus: v,
+                                                }));
+                                                checked.forEach((i) => {
+                                                    onValueChange(`orders.${i}.paymentStatus`, v);
+                                                });
+                                            }}
+                                            options={Object.values(paymentStatus)}
+                                        />
+                                    </Col>
+                                </Row>
+                            </Col>
+                        )}
+                        <Col>
+                            <CreateButton onClick={() => onValueChange('orders', [...values.orders, initialOrder])} />
+                        </Col>
+                    </Row>
+                </Row>
+            </div>
             {values.orders.map((order, index) => {
                 return (
                     <OrderItem
@@ -160,7 +190,7 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
                         removeItem={removeItem}
                         initialValues={initialValues}
                         checked={checked}
-                        onCheckedChange={(v) => setChecked(v)}
+                        onCheckedChange={handleCheckBoxChange}
                         errors={errors}
                     />
                 );
