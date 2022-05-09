@@ -108,7 +108,13 @@ const useOrdersStore = create((set) => ({
                     return order;
                 });
                 state.orders.result = [...orders, ...state.orders.result];
-                state.orders.result.sort((a, b) => a.contactedDate - b.contactedDate);
+                state.orders.result.sort((a, b) => {
+                    if (a.contactedDate > b.contactedDate) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
             }),
         );
     },
@@ -144,7 +150,13 @@ const useOrdersStore = create((set) => ({
                     }
                 });
 
-                state.orders.result?.sort((a, b) => a.contactedDate - b.contactedDate);
+                state.orders.result?.sort((a, b) => {
+                    if (a.contactedDate > b.contactedDate) {
+                        return -1;
+                    } else {
+                        return 1;
+                    }
+                });
             }),
         );
     },
