@@ -310,7 +310,7 @@ const ReceiptDocuments = ({ workshop }) => {
                                     <Text>공급가액</Text>
                                 </View>
                                 <View>
-                                    <Text>{(total - Math.round(total / 1.1)).toLocaleString() + '원'}</Text>
+                                    <Text>{Math.round(total / 1.1).toLocaleString() + '원'}</Text>
                                 </View>
                             </View>
                             <View style={styles.clientRow}>
@@ -318,7 +318,7 @@ const ReceiptDocuments = ({ workshop }) => {
                                     <Text>부가세</Text>
                                 </View>
                                 <View>
-                                    <Text>{Math.round(total / 1.1).toLocaleString() + '원'}</Text>
+                                    <Text>{(total - Math.round(total / 1.1)).toLocaleString() + '원'}</Text>
                                 </View>
                             </View>
                             <View style={{ ...styles.clientRow, fontWeight: 'bold' }}>
