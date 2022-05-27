@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { SubTitle } from '../styles';
 import { Checkbox, Col, Modal, Row, Typography } from 'antd';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
 import dayjs from 'dayjs';
@@ -8,7 +7,7 @@ import OrderItem from './OrderItem';
 import SelectBox from '../../../Form/SelectBox';
 
 const initialOrder = {
-    reservationStatus: reservationStatus.CONFIRM_SCHEDULE.key,
+    reservationStatus: reservationStatus.REQUIRED.key,
     latestReservationStatusUpdatedAt: dayjs().startOf('day').toISOString(),
     paymentStatus: paymentStatus.WAITING.key,
     latestPaymentStatusUpdatedAt: dayjs().startOf('day').toISOString(),
