@@ -1,6 +1,11 @@
 import nookies from 'nookies';
 
-export const withToken = (fn = () => {}) => {
+export const withToken = (
+    fn = () => {
+        {
+        }
+    },
+) => {
     return (ctx) => {
         const cookies = nookies.get(ctx);
         const accessToken = cookies['x-access-token'];
@@ -13,6 +18,7 @@ export const withToken = (fn = () => {}) => {
                 },
             };
         }
+
         return fn(ctx);
     };
 };
