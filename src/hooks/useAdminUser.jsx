@@ -19,6 +19,7 @@ function useAdminUser() {
     };
 
     useEffect(() => {
+        console.log(router.route);
         if (whiteList.includes(router.route)) {
             return;
         }

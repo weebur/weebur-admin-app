@@ -1,10 +1,9 @@
 import nookies from 'nookies';
 
 export const withToken = (
-    fn = () => {
-        {
-        }
-    },
+    fn = () => ({
+        props: {},
+    }),
 ) => {
     return (ctx) => {
         const cookies = nookies.get(ctx);
