@@ -9,6 +9,7 @@ import useAdminsStore from '../../stores/admins';
 import SearchList from '../../component/page-components/SearchList';
 import { adminRoles } from '../../constants/admin';
 import { Button, message } from 'antd';
+import { withToken } from '../../services/SsrService';
 
 function Admins({ name, email }) {
     const router = useRouter();
@@ -106,7 +107,7 @@ function Admins({ name, email }) {
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const { email = '', name = '' } = ctx.query;
     return {
         props: {
@@ -114,6 +115,6 @@ export const getServerSideProps = (ctx) => {
             name,
         },
     };
-};
+});
 
 export default Admins;

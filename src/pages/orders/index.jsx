@@ -16,6 +16,7 @@ import BasicModal from '../../component/Modal';
 import OrderStatusModifyForm from '../../component/ModifyForms/OrderStatus';
 import { download } from '../../services/FileDownloadService';
 import { downloadOrders } from '../../api/OrderAPI';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     { key: 'workshop.adminName', label: '담당자', span: 2 },
@@ -236,7 +237,7 @@ function Orders({
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const {
         createdStartAt = '',
         createdEndAt = '',
@@ -266,6 +267,6 @@ export const getServerSideProps = (ctx) => {
             productType,
         },
     };
-};
+});
 
 export default Orders;

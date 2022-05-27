@@ -14,6 +14,7 @@ import SelectBox from '../../Form/SelectBox';
 import { reservationStatus } from '../../../constants/order';
 import useFetchInitialOptions from '../../../hooks/useFetchInitialOptions';
 import { fetchSupplier, fetchSuppliers } from '../../../api/SupplierAPI';
+import CommonButton from '../../Button';
 
 const Header = styled.div`
     display: flex;
@@ -171,6 +172,11 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierI
                                         fetchOptions={fetchOptions}
                                         initialOptions={supplierOptions}
                                     />
+                                </SelectWrapper>
+                                <SelectWrapper>
+                                    <CommonButton inline small>
+                                        업체캘린더 링크복사
+                                    </CommonButton>
                                 </SelectWrapper>
                                 <SelectWrapper>
                                     <SelectBox

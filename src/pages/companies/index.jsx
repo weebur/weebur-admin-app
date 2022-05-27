@@ -12,6 +12,7 @@ import ModifyCompanyForm from '../../component/ModifyForms/Company';
 import { message } from 'antd';
 import { downloadCompanies } from '../../api/companyAPI';
 import { download } from '../../services/FileDownloadService';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     { key: 'name', label: '회사명', span: 8 },
@@ -173,7 +174,7 @@ function Companies() {
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const { name = '', category = '', from = '', to = '' } = ctx.query;
 
     return {
@@ -184,6 +185,6 @@ export const getServerSideProps = (ctx) => {
             to,
         },
     };
-};
+});
 
 export default Companies;

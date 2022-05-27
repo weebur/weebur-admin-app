@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import ContentLayout from '../../component/Layout/ContentLayout';
+import ContentLayout from '../../../component/Layout/ContentLayout';
 import { Typography } from 'antd';
-import useWorkshopsStore from '../../stores/workshop';
+import useWorkshopsStore from '../../../stores/workshop';
 import dayjs from 'dayjs';
-import WorkshopCalendar from '../../component/page-components/WorkshopCalendar';
+import WorkshopCalendar from '../../../component/page-components/WorkshopCalendar';
 import { useRouter } from 'next/router';
 
-function WorkshopCalendarPage({ currentDate }) {
+function WorkshopCalendarPage({ currentDate, supplierId }) {
     const router = useRouter();
 
     const now = dayjs(currentDate);
@@ -38,6 +38,7 @@ export const getServerSideProps = (ctx) => {
 
     return {
         props: {
+            supplierId: ctx.params.supplierId || '',
             currentDate,
         },
     };

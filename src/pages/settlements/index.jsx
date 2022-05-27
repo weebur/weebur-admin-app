@@ -9,6 +9,7 @@ import SettlementsSearchForm from '../../component/SearchForms/Settlements';
 import { useRouter } from 'next/router';
 import { toQueryObject } from '../../utils/queryString';
 import { message } from 'antd';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     {
@@ -156,7 +157,7 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const now = dayjs();
     const {
         year = now.year(),
@@ -170,6 +171,6 @@ export const getServerSideProps = (ctx) => {
     return {
         props: { supplierName, supplierType, isPaid, isCompleted, year, month },
     };
-};
+});
 
 export default SettlementsPage;

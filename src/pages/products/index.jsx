@@ -16,6 +16,7 @@ import BasicModal from '../../component/Modal';
 import ModifyProductForm from '../../component/ModifyForms/Product';
 import { downloadProducts } from '../../api/ProductAPI';
 import { download } from '../../services/FileDownloadService';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     {
@@ -206,7 +207,7 @@ function Products({ active, name, supplierName, type }) {
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const { active = '', name = '', type = '', supplierName = '' } = ctx.query;
 
     return {
@@ -217,6 +218,6 @@ export const getServerSideProps = (ctx) => {
             supplierName,
         },
     };
-};
+});
 
 export default Products;

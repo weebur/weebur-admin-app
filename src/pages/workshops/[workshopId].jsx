@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import SendEmailTemplate from '../../component/page-components/Workshops/SendEmailTemplate';
 import { sendReservationEmail } from '../../api/OrderAPI';
 import { sendEmail } from '../../api/EmailAPI';
+import { withToken } from '../../services/SsrService';
 
 const tabs = [
     { key: 'workshop', label: '워크샵' },
@@ -133,12 +134,12 @@ function WorkshopDetail({ workshopId }) {
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     return {
         props: {
             workshopId: ctx.params.workshopId || '',
         },
     };
-};
+});
 
 export default WorkshopDetail;

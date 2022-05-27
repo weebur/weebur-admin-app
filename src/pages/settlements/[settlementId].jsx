@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { Divider, message, Typography } from 'antd';
 import BasicModal from '../../component/Modal';
 import Settlement from '../../component/page-components/Workshops/Estimate/Settlement';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     {
@@ -131,14 +132,12 @@ function SettlementDetailPage({ settlementId, year, month }) {
     );
 }
 
-export const getServerSideProps = (ctx) => {
-    const now = dayjs();
-
+export const getServerSideProps = withToken((ctx) => {
     const { settlementId } = ctx.params;
 
     return {
         props: { settlementId },
     };
-};
+});
 
 export default SettlementDetailPage;

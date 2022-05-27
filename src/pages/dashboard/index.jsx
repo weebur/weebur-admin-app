@@ -18,6 +18,7 @@ import SalesByClientType from '../../component/page-components/Analytics/SalesBy
 import SalesByProduct from '../../component/page-components/Analytics/SalesByProduct';
 import SalesBySupplier from '../../component/page-components/Analytics/SalesBySupplier';
 import { debounce } from 'lodash-es';
+import { withToken } from '../../services/SsrService';
 
 function DashBoard() {
     const {
@@ -151,5 +152,7 @@ function DashBoard() {
         </ContentLayout>
     );
 }
+
+export const getServerSideProps = withToken();
 
 export default DashBoard;

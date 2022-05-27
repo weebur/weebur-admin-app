@@ -15,6 +15,7 @@ import BasicModal from '../../component/Modal';
 import ModifySupplierForm from '../../component/ModifyForms/Supplier';
 import { downloadSuppliers } from '../../api/SupplierAPI';
 import { download } from '../../services/FileDownloadService';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     {
@@ -225,7 +226,7 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const {
         from = '',
         to = '',
@@ -251,6 +252,6 @@ export const getServerSideProps = (ctx) => {
             teacherEmail,
         },
     };
-};
+});
 
 export default Suppliers;

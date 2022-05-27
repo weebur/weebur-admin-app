@@ -6,6 +6,7 @@ import { message, Typography } from 'antd';
 import { useRouter } from 'next/router';
 import useOrdersStore from '../../stores/order';
 import { getTotalsByOrders } from '../../services/OrderService';
+import { withToken } from '../../services/SsrService';
 
 function NewWorkshop() {
     const router = useRouter();
@@ -31,5 +32,7 @@ function NewWorkshop() {
         </ContentLayout>
     );
 }
+
+export const getServerSideProps = withToken();
 
 export default NewWorkshop;

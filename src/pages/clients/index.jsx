@@ -14,6 +14,7 @@ import ModifyClientForm from '../../component/ModifyForms/Client';
 import { message } from 'antd';
 import { downLoadClients } from '../../api/ClientAPI';
 import { download } from '../../services/FileDownloadService';
+import { withToken } from '../../services/SsrService';
 
 const headers = [
     {
@@ -189,7 +190,7 @@ function Client({ name, company, mobile, email, from, to }) {
     );
 }
 
-export const getServerSideProps = (ctx) => {
+export const getServerSideProps = withToken((ctx) => {
     const { name = '', company = '', mobile = '', email = '', from = '', to = '' } = ctx.query;
 
     return {
@@ -202,6 +203,6 @@ export const getServerSideProps = (ctx) => {
             to,
         },
     };
-};
+});
 
 export default Client;
