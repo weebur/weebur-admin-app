@@ -20,8 +20,8 @@ const useWorkshopsStore = create((set, get) => ({
         const newWorkshop = await updateWorkshop(workshopId, workshop);
         set({ workshop: newWorkshop });
     },
-    fetchOrderSchedules: async ({ year, month }) => {
-        const workshopSchedules = await fetchOrderSchedules({ year, month });
+    fetchOrderSchedules: async ({ year, month, supplierId }) => {
+        const workshopSchedules = await fetchOrderSchedules({ year, month, supplierId });
 
         set({ workshopSchedules });
     },

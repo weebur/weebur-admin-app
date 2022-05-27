@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DayjsCalendar from '../../Calendar/DayjsCalendar';
 import styled from 'styled-components';
 import dayjs from 'dayjs';
-import { Badge, Button } from 'antd';
+import { Badge, Button, message } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import theme from '../../../theme';
 import DateCell from './DateCell';
@@ -59,7 +59,7 @@ const SelectWrapper = styled.div`
     width: 200px;
 `;
 
-function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierId }) {
+function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierId, isPublished }) {
     const router = useRouter();
     const [selectedDate, setSelectedDate] = useState(null);
     const [selectedSchedule, setSelectedSchedule] = useState(null);
@@ -162,22 +162,38 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierI
                                 </FlexBox>
 
                                 <TodayButton onClick={() => onChange(dayjs())}>오늘</TodayButton>
+                                {!isPublished && (
+                                    <>
+                                        <SelectWrapper>
+                                            <AsyncSelectBox
+                                                allowClear
+                                                label="업체명"
+                                                onChange={(_, v) => setCurrentSupplier(v)}
+                                                value={currentSupplier}
+                                                fetchOptions={fetchOptions}
+                                                initialOptions={supplierOptions}
+                                            />
+                                        </SelectWrapper>
+                                        <SelectWrapper>
+                                            {currentSupplier && (
+                                                <CommonButton
+                                                    inline
+                                                    small
+                                                    onClick={() => {
+                                                        navigator.clipboard.writeText(
+                                                            `${process.env.NEXT_PUBLIC_HOST_URL}/workshops/calendar/${currentSupplier}`,
+                                                        );
 
-                                <SelectWrapper>
-                                    <AsyncSelectBox
-                                        allowClear
-                                        label="업체명"
-                                        onChange={(_, v) => setCurrentSupplier(v)}
-                                        value={currentSupplier}
-                                        fetchOptions={fetchOptions}
-                                        initialOptions={supplierOptions}
-                                    />
-                                </SelectWrapper>
-                                <SelectWrapper>
-                                    <CommonButton inline small>
-                                        업체캘린더 링크복사
-                                    </CommonButton>
-                                </SelectWrapper>
+                                                        message.success('클립보드에 복사되었습니다.');
+                                                    }}
+                                                >
+                                                    업체캘린더 링크복사
+                                                </CommonButton>
+                                            )}
+                                        </SelectWrapper>
+                                    </>
+                                )}
+
                                 <SelectWrapper>
                                     <SelectBox
                                         label="예약 상태"
@@ -225,6 +241,7 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierI
                 onItemClick={handleItemClick}
             />
             <ScheduleSummaryModal
+                isPublished={isPublished}
                 isOpen={!!selectedSchedule}
                 onClose={() => {
                     setSelectedSchedule(null);

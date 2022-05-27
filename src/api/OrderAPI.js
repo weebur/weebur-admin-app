@@ -57,12 +57,13 @@ export const updateOrderPaymentStatus = ({ orderIds, paymentStatus, latestPaymen
         .then((res) => res.data);
 };
 
-export const fetchOrderSchedules = ({ year, month }) => {
+export const fetchOrderSchedules = ({ year, month, supplierId }) => {
     return api
         .get('/orders/calendar', {
             params: toQueryObject({
                 year,
                 month,
+                supplierId,
             }),
         })
         .then((res) => res.data);

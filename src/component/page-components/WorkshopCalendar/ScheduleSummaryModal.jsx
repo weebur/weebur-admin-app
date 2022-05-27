@@ -25,7 +25,7 @@ const ButtonRow = styled.div`
     justify-content: flex-end;
 `;
 
-function ScheduleSummaryModal({ isOpen, onClose, currentDate, schedule, onDetailButtonClick }) {
+function ScheduleSummaryModal({ isOpen, onClose, currentDate, schedule, onDetailButtonClick, isPublished }) {
     if (!schedule) return null;
 
     const reservationDate = schedule.reservationDate || null;
@@ -138,11 +138,14 @@ function ScheduleSummaryModal({ isOpen, onClose, currentDate, schedule, onDetail
                     <Col>{`${schedule.totalSettlement.toLocaleString()}원`}</Col>
                 </Row>
             </BigRow>
-            <ButtonRow>
-                <Button light onClick={() => onDetailButtonClick(schedule)}>
-                    상세보기
-                </Button>
-            </ButtonRow>
+
+            {!isPublished && (
+                <ButtonRow>
+                    <Button light onClick={() => onDetailButtonClick(schedule)}>
+                        상세보기
+                    </Button>
+                </ButtonRow>
+            )}
         </BasicModal>
     );
 }

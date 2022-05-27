@@ -3,7 +3,7 @@ import useAdminsStore from '../stores/admins';
 import { message } from 'antd';
 import { useRouter } from 'next/router';
 
-const whiteList = ['/login', '/signup'];
+const whiteList = ['/login', '/signup', '/workshops/calendar/[supplierId]'];
 
 function useAdminUser() {
     const router = useRouter();
@@ -19,7 +19,7 @@ function useAdminUser() {
     };
 
     useEffect(() => {
-        if (whiteList.includes(router.pathname)) {
+        if (whiteList.includes(router.route)) {
             return;
         }
         fetchAdminUser();

@@ -1,6 +1,4 @@
 import axios from 'axios';
-import { message } from 'antd';
-import Router from 'next/router';
 
 const isServer = typeof window === 'undefined';
 
@@ -23,18 +21,5 @@ export const uploadApi = axios.create({
 });
 
 const api = isServer ? serverSideApi : clientSideApi;
-
-api.interceptors.response.use(
-    function (response) {
-        return response;
-    },
-    function (error) {
-        if (error.response.status === 401) {
-            message.warn('로그인이 필요합니다.');
-            Router.push('/login');
-        }
-        return Promise.reject(error);
-    },
-);
 
 export default api;

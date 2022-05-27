@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ContentLayout from '../../../component/Layout/ContentLayout';
-import { Typography } from 'antd';
+import { message, Typography } from 'antd';
 import useWorkshopsStore from '../../../stores/workshop';
 import dayjs from 'dayjs';
 import WorkshopCalendar from '../../../component/page-components/WorkshopCalendar';
@@ -36,7 +36,7 @@ function WorkshopCalendarPage({ currentDate }) {
 export const getServerSideProps = withToken((ctx) => {
     const now = dayjs();
     const { currentDate = now.toISOString() } = ctx.query;
-    console.log('cccccccccccc');
+
     return {
         props: {
             currentDate,

@@ -33,8 +33,8 @@ export const fetchSuppliers = ({
         .then((res) => res.data);
 };
 
-export const fetchSupplier = (id) => {
-    return api.get(`/suppliers/${id}`).then((res) => res.data);
+export const fetchSupplier = (id, withoutToken) => {
+    return api.get(`/suppliers/${id}`, { params: { withoutToken } }).then((res) => res.data);
 };
 
 export const fetchProductsBySupplier = (id) => {
