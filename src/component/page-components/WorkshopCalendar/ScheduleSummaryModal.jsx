@@ -130,6 +130,16 @@ function ScheduleSummaryModal({ isOpen, onClose, currentDate, schedule, onDetail
                     </Row>
                 </BigRow>
             )}
+            {schedule.onlineInfo.fileUrl && (
+                <BigRow>
+                    <Header>
+                        <Col>온라인 화상</Col>
+                    </Header>
+                    <Row>
+                        <Col>{schedule.onlineInfo.fileUrl}</Col>
+                    </Row>
+                </BigRow>
+            )}
             <BigRow>
                 <Header>
                     <Col>최종 정산액</Col>
