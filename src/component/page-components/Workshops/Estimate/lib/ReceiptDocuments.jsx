@@ -188,7 +188,12 @@ const ReceiptDocuments = ({ workshop }) => {
                                             return (
                                                 <View key={i} style={styles.orderTableRow2}>
                                                     <View style={styles.orderTableCol1}>
-                                                        <Text>{statement.region}</Text>
+                                                        <View>
+                                                            <Text>출장비</Text>
+                                                        </View>
+                                                        <View>
+                                                            <Text>({statement.region})</Text>
+                                                        </View>
                                                     </View>
                                                     <View style={styles.orderTableCol1}>
                                                         <Text>{'1'}</Text>

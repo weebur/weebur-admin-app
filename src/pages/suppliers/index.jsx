@@ -108,7 +108,7 @@ function Suppliers({ from, to, active, name, teacher, type, product, teacherMobi
                     if (_id.startsWith('newTeacher-')) {
                         return teacher;
                     }
-                    return { _id, teacher };
+                    return { _id, ...teacher };
                 }),
             };
             if (createMode) {

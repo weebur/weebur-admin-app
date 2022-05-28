@@ -31,19 +31,7 @@ const useSuppliersStore = create((set) => ({
     loading: false,
     error: null,
     fetchSuppliers: async (
-        {
-            from,
-            to,
-            active,
-            name,
-            teacher,
-            type,
-            product,
-            teacherMobile,
-            teacherEmail,
-            page,
-            limit,
-        },
+        { from, to, active, name, teacher, type, product, teacherMobile, teacherEmail, page, limit },
         loadMore,
     ) => {
         try {
@@ -67,10 +55,7 @@ const useSuppliersStore = create((set) => ({
                 set((state) => ({
                     suppliers: {
                         ...suppliers,
-                        result: [
-                            ...(state.suppliers?.result || []),
-                            ...suppliers.result,
-                        ],
+                        result: [...(state.suppliers?.result || []), ...suppliers.result],
                     },
                 }));
             } else {
@@ -163,9 +148,7 @@ const useSuppliersStore = create((set) => ({
         set({ supplier });
         set(
             produce((state) => {
-                const index = state.suppliers.result.findIndex(
-                    (item) => item._id === supplier._id,
-                );
+                const index = state.suppliers.result.findIndex((item) => item._id === supplier._id);
                 state.suppliers.result[index] = supplier;
             }),
         );

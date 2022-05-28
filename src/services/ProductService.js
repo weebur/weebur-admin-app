@@ -53,7 +53,7 @@ ${workshop.clientMobile} / ${workshop.clientEmail}
 
 3. 예약정보 
 ${order.productName} (${order.supplierName}) 
-진행일시: ${dayjs(order.reservationDate).format('YY-MM-DD, HH:ss')}
+진행일시: ${dayjs(order.reservationDate).format('YY-MM-DD, HH:mm')}
 인원: ${order.participants}명 
 
 4. 워크샵정보

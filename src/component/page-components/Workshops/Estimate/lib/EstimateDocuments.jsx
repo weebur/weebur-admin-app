@@ -188,13 +188,18 @@ const EstimateDocuments = ({ workshop }) => {
                                             return (
                                                 <View key={i} style={styles.orderTableRow2}>
                                                     <View style={styles.orderTableCol1}>
-                                                        <Text>프로그램(회당)</Text>
+                                                        <View>
+                                                            <Text>출장비</Text>
+                                                        </View>
+                                                        <View>
+                                                            <Text>({statement.region})</Text>
+                                                        </View>
                                                     </View>
                                                     <View style={styles.orderTableCol1}>
                                                         <Text>{'1'}</Text>
                                                     </View>
                                                     <View style={styles.orderTableCol1}>
-                                                        <Text>인</Text>
+                                                        <Text>회</Text>
                                                     </View>
                                                     <View style={styles.orderTableCol1}>
                                                         <Text>{statement.price.toLocaleString()}</Text>
