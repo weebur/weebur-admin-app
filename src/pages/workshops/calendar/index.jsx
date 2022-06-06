@@ -39,6 +39,7 @@ export const getServerSideProps = withToken((ctx) => {
 
     return {
         props: {
+            wide: true,
             currentDate,
         },
     };

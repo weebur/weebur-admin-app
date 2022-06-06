@@ -8,6 +8,10 @@ const StyledLayout = styled(Layout)``;
 const StyledContentLayout = styled(Layout)`
     min-height: 100vh;
     margin-left: 200px;
+
+    @media only screen and (max-width: 768px) {
+        margin: 0;
+    }
 `;
 
 const CenteredLayout = styled(Layout)`
@@ -24,6 +28,13 @@ const StyledContent = styled(Content)`
     width: 100%;
     max-width: 1600px;
     overflow: initial;
+
+    ${({ wide }) =>
+        wide &&
+        `
+        max-width: none;
+        margin: 24px 10px 0;
+  `}
 `;
 
 const LayoutBackground = styled.div`
@@ -31,7 +42,7 @@ const LayoutBackground = styled.div`
     flex-direction: column;
 `;
 
-function AppLayout({ children, withoutSidebar, me }) {
+function AppLayout({ children, withoutSidebar, me, wide }) {
     if (withoutSidebar) {
         return (
             <StyledLayout>
@@ -44,7 +55,7 @@ function AppLayout({ children, withoutSidebar, me }) {
         <StyledLayout>
             <SideBar user={me} />
             <StyledContentLayout>
-                <StyledContent>
+                <StyledContent wide={wide}>
                     <LayoutBackground>{children}</LayoutBackground>
                 </StyledContent>
             </StyledContentLayout>

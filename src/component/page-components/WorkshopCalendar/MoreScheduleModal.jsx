@@ -26,6 +26,30 @@ const ScheduleSummary = styled.div`
         background-color: ${({ theme }) => theme.color.background};
     }
     cursor: pointer;
+
+    @media only screen and (max-width: 768px) {
+        font-size: ${({ theme }) => theme.fontSize.normal};
+    }
+`;
+
+const Column = styled(Col)`
+    ${({ onlyDesktop }) =>
+        onlyDesktop &&
+        `
+      @media only screen and (max-width: 768px) {
+        display: none;
+    }
+  `}
+    ${({ onlyMobile }) =>
+        onlyMobile &&
+        `
+        display: none;
+
+        @media only screen and (max-width: 768px) {
+            display: flex;
+            justify-content: flex-start;
+        }
+  `}
 `;
 
 function MoreScheduleModal({ isOpen, onClose, currentDate, moreSchedules, onItemClick }) {
@@ -44,27 +68,49 @@ function MoreScheduleModal({ isOpen, onClose, currentDate, moreSchedules, onItem
                         }}
                         status={schedule.reservationStatus}
                     >
-                        <Col span={2}>{dayjs(schedule.reservationDate).format('HH:mm')}</Col>
-                        <Col span={1}>|</Col>
-                        <Col span={9}>
+                        <Column onlyMobile span={6}>
+                            {dayjs(schedule.reservationDate).format('HH:mm')}
+                        </Column>
+                        <Column onlyMobile span={16}>
+                            {schedule.companyName}
+                        </Column>
+
+                        <Column onlyDesktop span={2}>
+                            {dayjs(schedule.reservationDate).format('HH:mm')}
+                        </Column>
+                        <Column onlyDesktop span={5}>
+                            <Centered>
+                                <Ellipsis>{schedule.companyName}</Ellipsis>
+                            </Centered>
+                        </Column>
+                        <Column onlyDesktop span={1}>
+                            <Centered>|</Centered>
+                        </Column>
+                        <Column onlyDesktop span={6}>
                             <Centered>
                                 <Ellipsis>{schedule.productName}</Ellipsis>
                             </Centered>
-                        </Col>
-                        <Col span={1}>|</Col>
-                        <Col span={4}>
+                        </Column>
+                        <Column onlyDesktop span={1}>
+                            <Centered>|</Centered>
+                        </Column>
+                        <Column onlyDesktop span={2}>
                             <Centered>
                                 <Ellipsis>{schedule.clientName}</Ellipsis>
                             </Centered>
-                        </Col>
-                        <Col span={1}>|</Col>
-                        <Col span={2}>
+                        </Column>
+                        <Column onlyDesktop span={1}>
+                            <Centered>|</Centered>
+                        </Column>
+                        <Column onlyDesktop span={2}>
                             <Ellipsis>{schedule.adminName}</Ellipsis>
-                        </Col>
-                        <Col span={1}>|</Col>
-                        <Col span={2}>
+                        </Column>
+                        <Column onlyDesktop span={1}>
+                            <Centered>|</Centered>
+                        </Column>
+                        <Column onlyDesktop span={2}>
                             <Ellipsis>{productTypes[schedule.productType].label}</Ellipsis>
-                        </Col>
+                        </Column>
                     </ScheduleSummary>
                 );
             })}

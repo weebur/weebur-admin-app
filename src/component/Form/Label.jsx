@@ -3,6 +3,10 @@ import styled from 'styled-components';
 const StyledLabel = styled.label`
     color: ${({ theme }) => theme.color.text};
     font-size: ${({ theme }) => theme.fontSize.small};
+
+    @media only screen and (max-width: 768px) {
+        font-size: ${({ theme }) => theme.fontSize.xSmall};
+    }
 `;
 
 const Required = styled.span`

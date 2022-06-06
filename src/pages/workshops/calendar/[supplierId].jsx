@@ -1,11 +1,20 @@
 import React, { useEffect } from 'react';
 import ContentLayout from '../../../component/Layout/ContentLayout';
-import { Typography } from 'antd';
 import useWorkshopsStore from '../../../stores/workshop';
 import dayjs from 'dayjs';
 import WorkshopCalendar from '../../../component/page-components/WorkshopCalendar';
 import { useRouter } from 'next/router';
 import { fetchSupplier } from '../../../api/SupplierAPI';
+import styled from 'styled-components';
+
+const Title = styled.span`
+    font-size: 20px;
+    font-weight: 600;
+    @media only screen and (max-width: 768px) {
+        font-size: 16px;
+        margin-bottom: 0px;
+    }
+`;
 
 function WorkshopCalendarPage({ currentDate, supplierId, supplier }) {
     const router = useRouter();
@@ -23,9 +32,10 @@ function WorkshopCalendarPage({ currentDate, supplierId, supplier }) {
 
     return (
         <ContentLayout>
-            <Typography.Title level={4}>
+            <Title>
                 {supplier?.name || ''} {'워크샵 캘린더'}
-            </Typography.Title>
+            </Title>
+
             <WorkshopCalendar
                 isPublished
                 initialDate={dayjs(currentDate)}
@@ -51,10 +61,10 @@ export const getServerSideProps = async (ctx) => {
                 supplier,
                 currentDate,
                 withoutSidebar: true,
+                wide: true,
             },
         };
     } catch (e) {
-        console.log(e);
         return {
             redirect: {
                 destination: '/login',

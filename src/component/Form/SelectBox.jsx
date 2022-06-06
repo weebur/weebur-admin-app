@@ -36,6 +36,11 @@ export const StyledSelect = styled(Select)`
         .ant-select-selection-item {
             padding-left: 5px;
         }
+
+        @media only screen and (max-width: 768px) {
+            height: 20px;
+            font-size: 13px;
+        }
     }
 `;
 

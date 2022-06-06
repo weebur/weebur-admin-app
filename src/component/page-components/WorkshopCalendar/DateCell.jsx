@@ -3,8 +3,6 @@ import styled from 'styled-components';
 import dayjs from 'dayjs';
 import { mapStatusToBadgeColor } from '../../../services/CalendarService';
 import { productTypes } from '../../../constants/product';
-import Ellipsis from '../../Text/Ellipsis';
-import { Col } from 'antd';
 
 const DateCellContent = styled.ul`
     text-align: center;
@@ -29,16 +27,71 @@ const DateCellRow = styled.div`
     display: flex;
     gap: 3px;
     width: 100%;
+    ${({ onlyDesktop }) =>
+        onlyDesktop &&
+        `
+      @media only screen and (max-width: 768px) {
+        display: none;
+    };
+  `}
+
+    @media only screen and (max-width: 768px) {
+        flex-wrap: wrap;
+        font-size: ${({ theme }) => theme.fontSize.xSmall};
+    }
 `;
 
 const DateCellColumn = styled.div`
     line-height: 1.3;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: left;
+    min-width: 30px;
+
+    ${({ divider }) =>
+        divider &&
+        `
+        min-width: 0;
+  `}
+    ${({ maxWidth }) =>
+        maxWidth &&
+        `
+        flex: 1 0 50%;
+    max-width: 150px;
+  `}
+
+    ${({ onlyDesktop }) =>
+        onlyDesktop &&
+        `
+      @media only screen and (max-width: 768px) {
+        display: none;
+    }
+  `}
+
+    @media only screen and (max-width: 768px;) {
+        font-size: ${({ theme }) => theme.fontSize.xSmall};
+    }
+`;
+
+const ProductName = styled.span`
+    @media only screen and (max-width: 768px) {
+        display: none;
+    }
 `;
 
 const More = styled.div`
     text-align: right;
     font-size: ${({ theme }) => theme.fontSize.large};
     font-weight: bold;
+
+    @media only screen and (max-width: 768px) {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #313131;
+        color: #fff;
+    }
 `;
 
 function DateCell({ schedules, currentDate, onItemClick, onMoreClick }) {
@@ -51,37 +104,34 @@ function DateCell({ schedules, currentDate, onItemClick, onMoreClick }) {
 
     return (
         <DateCellContent>
-            {viewData.map((item) => (
-                <ScheduleSummary
-                    key={item._id}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        onItemClick(item);
-                    }}
-                    status={item.reservationStatus}
-                >
-                    <DateCellRow>
-                        <DateCellColumn>{dayjs(item.reservationDate).format('HH:mm')}</DateCellColumn>
-                        <DateCellColumn>
-                            <Ellipsis>{item.productName}</Ellipsis>
-                        </DateCellColumn>
-                    </DateCellRow>
-                    <DateCellRow>
-                        <Col flex={'30px'} />
-                        <DateCellColumn>
-                            <Ellipsis>{item.clientName}</Ellipsis>
-                        </DateCellColumn>
-                        <DateCellColumn>|</DateCellColumn>
-                        <DateCellColumn>
-                            <Ellipsis>{item.adminName}</Ellipsis>
-                        </DateCellColumn>
-                        <DateCellColumn>|</DateCellColumn>
-                        <DateCellColumn>
-                            <Ellipsis>{productTypes[item.productType].label}</Ellipsis>
-                        </DateCellColumn>
-                    </DateCellRow>
-                </ScheduleSummary>
-            ))}
+            {viewData.map(
+                (item) =>
+                    console.log(item) || (
+                        <ScheduleSummary
+                            key={item._id}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onItemClick(item);
+                            }}
+                            status={item.reservationStatus}
+                        >
+                            <DateCellRow>
+                                <DateCellColumn>{dayjs(item.reservationDate).format('HH:mm')}</DateCellColumn>
+                                <DateCellColumn>
+                                    {item.companyName}
+                                    <ProductName> | {item.productName}</ProductName>
+                                </DateCellColumn>
+                            </DateCellRow>
+                            <DateCellRow onlyDesktop>
+                                <DateCellColumn>{item.clientName}</DateCellColumn>
+                                <DateCellColumn divider>|</DateCellColumn>
+                                <DateCellColumn>{item.adminName}</DateCellColumn>
+                                <DateCellColumn divider>|</DateCellColumn>
+                                <DateCellColumn>{productTypes[item.productType].label}</DateCellColumn>
+                            </DateCellRow>
+                        </ScheduleSummary>
+                    ),
+            )}
             {listData.length > 2 && (
                 <More onClick={() => onMoreClick({ currentDate, listData })}>{`+${listData.length - 2}`}</More>
             )}

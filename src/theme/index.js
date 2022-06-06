@@ -20,6 +20,7 @@ const theme = {
         },
     },
     fontSize: {
+        xSmall: '10px',
         small: '12px',
         normal: '14px',
         large: '16px',

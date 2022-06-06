@@ -31,6 +31,10 @@ const StyledSider = styled(Sider)`
     left: 0;
     background: #ffffff;
     border-right: none;
+
+    @media only screen and (max-width: 768px) {
+        display: none;
+    }
 `;
 
 const StyledMenu = styled(Menu)`

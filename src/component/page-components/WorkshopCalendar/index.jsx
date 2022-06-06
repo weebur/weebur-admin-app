@@ -21,6 +21,11 @@ const Header = styled.div`
     justify-content: space-between;
     background: ${({ theme }) => theme.color.background};
     padding: 20px 0;
+
+    @media only screen and (max-width: 768px) {
+        flex-wrap: wrap;
+        padding: 10px 0;
+    }
 `;
 const FlexBox = styled.div`
     display: flex;
@@ -29,6 +34,18 @@ const FlexBox = styled.div`
         gap &&
         `
     gap: ${gap}px;
+    
+    @media only screen and (max-width: 768px) {
+        gap: ${gap / 2}px;
+    }
+  `}
+
+    ${({ onlyDesktop }) =>
+        onlyDesktop &&
+        `
+      @media only screen and (max-width: 768px) {
+        display: none;
+    }
   `}
 `;
 const ArrowWrapper = styled.div`
@@ -38,25 +55,62 @@ const ArrowWrapper = styled.div`
         justify-content: center;
         width: 36px;
         height: 36px;
+        padding: 0;
+        @media only screen and (max-width: 768px) {
+            width: 20px;
+            height: 20px;
+        }
+    }
+
+    .arrow {
+        font-size: 16px;
+        color: ${({ theme }) => theme.color.light};
+        @media only screen and (max-width: 768px) {
+            font-size: 8px;
+        }
     }
 `;
 const YearMonthLabel = styled.div`
     flex: 0 0 75px;
     font-size: ${({ theme }) => theme.fontSize.xxLarge};
+
+    @media only screen and (max-width: 768px) {
+        font-size: ${({ theme }) => theme.fontSize.large};
+        flex: 0 0 auto;
+    }
 `;
 
 const TodayButton = styled(Button)`
     height: 36px;
+
+    @media only screen and (max-width: 768px) {
+        font-size: ${({ theme }) => theme.fontSize.xSmall};
+        height: 20px;
+        padding: 0 9px;
+    }
 `;
 
 const Caption = styled.div`
     ${({ theme, type }) => `
         color: ${theme.color.calendar[type]};
     `}
+
+    & > span {
+        @media only screen and (max-width: 768px) {
+            display: none;
+        }
+    }
+
+    @media only screen and (max-width: 768px) {
+        font-size: ${({ theme }) => theme.fontSize.xSmall};
+    }
 `;
 
 const SelectWrapper = styled.div`
     width: 200px;
+    @media only screen and (max-width: 768px) {
+        width: 80px;
+    }
 `;
 
 function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierId, isPublished }) {
@@ -145,7 +199,7 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierI
                                                 onYearMonthChange(newNow.toISOString());
                                             }}
                                         >
-                                            <LeftOutlined style={{ fontSize: 16, color: theme.color.light }} />
+                                            <LeftOutlined className="arrow" />
                                         </Button>
                                     </ArrowWrapper>
                                     <ArrowWrapper>
@@ -156,7 +210,7 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierI
                                                 onYearMonthChange(newNow.toISOString());
                                             }}
                                         >
-                                            <RightOutlined style={{ fontSize: 16, color: theme.color.light }} />
+                                            <RightOutlined className="arrow" />
                                         </Button>
                                     </ArrowWrapper>
                                 </FlexBox>

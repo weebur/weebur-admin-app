@@ -15,11 +15,11 @@ function useAdminUser() {
             await fetchMe();
         } catch (e) {
             message.error('유저 정보를 불러오지 못했습니다.');
+            router.replace('/login');
         }
     };
 
     useEffect(() => {
-        console.log(router.route);
         if (whiteList.includes(router.route)) {
             return;
         }

@@ -170,3 +170,14 @@
 .ant-picker-calendar-rtl.ant-picker-calendar-full .ant-picker-panel .ant-picker-calendar-date-content {
   text-align: right;
 }
+
+@media only screen and (max-width: 768px) {
+  .ant-picker-calendar{
+    font-size: 10px;
+    margin-bottom: 0px;
+  }
+
+  .ant-picker-calendar-date-content {
+    position: relative;
+  }
+}
