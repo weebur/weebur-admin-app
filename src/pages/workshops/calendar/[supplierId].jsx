@@ -38,8 +38,8 @@ function WorkshopCalendarPage({ currentDate, supplierId, supplier }) {
         <>
             <Head>
                 <title>{title}</title>
-                <meta property="og:title" content={title} />
-                <meta property="og:description" content={`${supplierName}의 일정 캘린더입니다.`} />
+                <meta property="og:title" content={title} key="title" />
+                <meta property="og:description" content={`${supplierName}의 일정 캘린더입니다.`} key="description" />
             </Head>
 
             <ContentLayout>
