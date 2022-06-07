@@ -38,7 +38,7 @@ function App({ Component, pageProps }) {
             <Head>
                 <link rel="shortcut icon" href="/favicon.ico" />
                 <title>WEEBUR BACKOFFICE 2.0</title>
-                <meta property="og:image" content="/images/full_logo.png" />
+                <meta property="og:image" content="/images/og-image.jpeg" />
                 <meta property="og:title" content="Weebur Back-office" key="title" />
                 <meta property="og:description" content="위버 어드민 사이트" key="description" />
             </Head>
