@@ -6,6 +6,7 @@ import WorkshopCalendar from '../../../component/page-components/WorkshopCalenda
 import { useRouter } from 'next/router';
 import { fetchSupplier } from '../../../api/SupplierAPI';
 import styled from 'styled-components';
+import Head from 'next/head';
 
 const Title = styled.span`
     font-size: 20px;
@@ -26,25 +27,34 @@ function WorkshopCalendarPage({ currentDate, supplierId, supplier }) {
     const fetchOrderSchedules = useWorkshopsStore((state) => state.fetchOrderSchedules);
     const workshopSchedules = useWorkshopsStore((state) => state.workshopSchedules);
 
+    const supplierName = supplier?.name || '';
+    const title = `${supplierName} 워크샵 캘린더`;
+
     useEffect(() => {
         fetchOrderSchedules({ year, month, supplierId });
     }, [year, month, supplierId]);
 
     return (
-        <ContentLayout>
-            <Title>
-                {supplier?.name || ''} {'워크샵 캘린더'}
-            </Title>
+        <>
+            <Head>
+                <title>{title}</title>
+                <meta property="og:title" content={title} />
+                <meta property="og:description" content={`${supplierName}의 일정 캘린더입니다.`} />
+            </Head>
 
-            <WorkshopCalendar
-                isPublished
-                initialDate={dayjs(currentDate)}
-                schedules={workshopSchedules}
-                onYearMonthChange={(currentDate) =>
-                    router.replace(`/workshops/calendar/${supplierId}?currentDate=${currentDate}`)
-                }
-            />
-        </ContentLayout>
+            <ContentLayout>
+                <Title>{title}</Title>
+
+                <WorkshopCalendar
+                    isPublished
+                    initialDate={dayjs(currentDate)}
+                    schedules={workshopSchedules}
+                    onYearMonthChange={(currentDate) =>
+                        router.replace(`/workshops/calendar/${supplierId}?currentDate=${currentDate}`)
+                    }
+                />
+            </ContentLayout>
+        </>
     );
 }
 

@@ -31,10 +31,20 @@ export const StyledSelect = styled(Select)`
             display: flex;
             align-items: center;
             padding: 9px 6px 10px 10px;
+            ${({ disabled, theme }) =>
+                disabled &&
+                `
+                  background-color: ${theme.color.lightBackground};
+              `}
         }
 
         .ant-select-selection-item {
             padding-left: 5px;
+            ${({ disabled, theme }) =>
+                disabled &&
+                `
+                  color: ${theme.color.light};
+              `}
         }
 
         @media only screen and (max-width: 768px) {

@@ -15,8 +15,8 @@ export const reservationStatus = {
         key: 'CANCEL_RESERVATION',
         label: '예약취소',
     },
-    FINAL_CHANGE: { key: 'FINAL_CHANGE', label: '최종변경' },
-    FINAL_COMPLETE: { key: 'FINAL_COMPLETE', label: '최종완료' },
+    // FINAL_CHANGE: { key: 'FINAL_CHANGE', label: '최종변경' },
+    // FINAL_COMPLETE: { key: 'FINAL_COMPLETE', label: '최종완료' },
     UNKNOWN: { key: 'UNKNOWN', label: '미정' },
 };
 

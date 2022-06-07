@@ -61,28 +61,10 @@ function Payment({ values, onChange, onValueChange, salesTotal, initialValues })
                         </SalesTotal>
                         <SalesTotal>
                             <SelectBox
+                                disabled
                                 label="워크샵 취소"
                                 name="isCanceled"
                                 value={values.isCanceled ? 1 : 0}
-                                onChange={(name, v) => {
-                                    if (v) {
-                                        values.orders.forEach((_, i) => {
-                                            onValueChange(
-                                                `orders.${i}.reservationStatus`,
-                                                reservationStatus.CANCEL_RESERVATION.key,
-                                            );
-                                        });
-                                        onValueChange(name, true);
-                                        return;
-                                    }
-                                    values.orders.forEach((_, i) => {
-                                        onValueChange(
-                                            `orders.${i}.reservationStatus`,
-                                            initialValues.orders[i].reservationStatus,
-                                        );
-                                    });
-                                    onValueChange(name, false);
-                                }}
                                 options={[
                                     { key: 1, value: 1, label: '취소' },
                                     { key: 0, value: 0, label: '정상' },

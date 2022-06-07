@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Checkbox, Col, Modal, Row, Typography } from 'antd';
 import { paymentStatus, reservationStatus } from '../../../../constants/order';
 import dayjs from 'dayjs';
@@ -113,6 +113,14 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
         setIndeterminate(values.orders.length > v.length && v.length > 0);
         setCheckAll(values.orders.length === v.length);
     };
+
+    useEffect(() => {
+        const isCanceled = values.orders.every(
+            (order) => order.reservationStatus === reservationStatus.CANCEL_RESERVATION.key,
+        );
+
+        onValueChange(`isCanceled`, isCanceled);
+    }, [values.orders]);
 
     return (
         <>
