@@ -268,7 +268,7 @@ function WorkshopCalendar({ initialDate, schedules, onYearMonthChange, supplierI
                                 </Caption>
                                 <Caption type={'complete'}>
                                     <Badge color={theme.color.calendar.complete} />
-                                    예약완료 | 최종변경 | 최종완료
+                                    예약완료
                                 </Caption>
                                 <Caption type={'cancel'}>
                                     <Badge color={theme.color.calendar.cancel} />
