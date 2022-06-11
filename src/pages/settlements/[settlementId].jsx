@@ -39,7 +39,7 @@ const headers = [
         key: 'reservationDate',
         label: '진행일',
         span: 4,
-        render: (reservationDate) => dayjs(reservationDate).format('YYYY-MM-DD HH:ss'),
+        render: (reservationDate) => dayjs(reservationDate).format('YYYY-MM-DD HH:mm'),
     },
     {
         key: 'totalIncome',
