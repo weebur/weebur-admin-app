@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../../../constants/date';
 import { productDeliveryTypes, productTypes } from '../../../../../constants/product';
 import { viewKorean } from '../../../../../utils/price';
+import { address } from '../../../../../constants';
 
 Font.register({
     family: 'malgun',
@@ -59,7 +60,7 @@ const EstimateDocuments = ({ workshop }) => {
                                     <Text>주소</Text>
                                 </View>
                                 <View>
-                                    <Text>{'서울시 마포구 양화로 15길12,401'}</Text>
+                                    <Text>{address}</Text>
                                 </View>
                             </View>
                         </View>

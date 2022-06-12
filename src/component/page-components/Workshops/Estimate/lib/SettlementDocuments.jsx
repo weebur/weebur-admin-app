@@ -6,6 +6,7 @@ import { COMMON_FORMAT } from '../../../../../constants/date';
 import { productDeliveryTypes, productTypes } from '../../../../../constants/product';
 import { viewKorean } from '../../../../../utils/price';
 import { supplierTypes } from '../../../../../constants/supplier';
+import { address } from '../../../../../constants';
 
 Font.register({
     family: 'malgun',
@@ -74,7 +75,7 @@ const SettlementDocuments = ({ settlement }) => {
                                     <Text>주소</Text>
                                 </View>
                                 <View>
-                                    <Text>{'서울시 마포구 양화로 15길12,401'}</Text>
+                                    <Text>{address}</Text>
                                 </View>
                             </View>
                         </View>
