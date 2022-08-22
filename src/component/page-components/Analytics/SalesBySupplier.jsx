@@ -18,10 +18,6 @@ function SalesBySupplier({ data, title, onChange, onDownloadClick, ...props }) {
     const [from, setFrom] = useState(props.from);
     const [to, setTo] = useState(props.to);
 
-    useEffect(() => {
-        onChange(from, to);
-    }, [from, to]);
-
     return (
         <TableWrapper>
             <Table
@@ -50,6 +46,11 @@ function SalesBySupplier({ data, title, onChange, onDownloadClick, ...props }) {
                                 fromName={'from'}
                                 toName={'to'}
                             />
+                        </Col>
+                        <Col>
+                            <Button small inline onClick={() => onChange(from, to)}>
+                                불러오기
+                            </Button>
                         </Col>
                         <Col>
                             <Button small inline onClick={() => onDownloadClick(from, to)}>

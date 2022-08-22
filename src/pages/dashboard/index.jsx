@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import { message, Table, Typography } from 'antd';
 import {
@@ -7,6 +7,7 @@ import {
     getSalesBySupplier,
     getSalesByClientType,
     getSalesByCompanyCategory,
+    getBuyers,
 } from '../../api/AnalyticsAPI';
 import dayjs from 'dayjs';
 import Button from '../../component/Button';
@@ -19,20 +20,26 @@ import SalesByProduct from '../../component/page-components/Analytics/SalesByPro
 import SalesBySupplier from '../../component/page-components/Analytics/SalesBySupplier';
 import { debounce } from 'lodash-es';
 import { withToken } from '../../services/SsrService';
+import Buyers from '../../component/page-components/Analytics/Buyers';
 
 function DashBoard() {
+    const loader = useRef();
+
     const {
         salesByRange,
         salesByCompanyCategory,
         salesByClientType,
         salesByProduct,
         salesBySupplier,
+        buyers,
         initialFactors,
         fetchSalesByRange,
         fetchSalesByCompanyCategory,
         fetchSalesByClientType,
         fetchSalesByProduct,
         fetchSalesBySupplier,
+        fetchBuyers,
+        isLoading,
     } = useAnalyticsStore((state) => state);
     const { from, to, companyCategory, clientType, fromMonth, toMonth } = initialFactors;
 
@@ -81,13 +88,30 @@ function DashBoard() {
             message.error(JSON.stringify(e));
         }
     };
+
+    const handleChangeBuyers = async (from, to) => {
+        try {
+            await fetchBuyers(from, to);
+            handleSuccess();
+        } catch (e) {
+            message.error(JSON.stringify(e));
+        }
+    };
+
     useEffect(() => {
-        // fetchSalesByRange(from, to);
-        // fetchSalesByCompanyCategory(from, to, companyCategory);
-        // fetchSalesByClientType(from, to, clientType);
-        // fetchSalesByProduct(fromMonth, toMonth);
-        // fetchSalesBySupplier(fromMonth, toMonth);
-    }, []);
+        if (!isLoading) {
+            loader?.current?.();
+            loader.current = null;
+            return;
+        }
+        if (isLoading && loader) {
+            if (loader.current) {
+                return;
+            }
+            loader.current = message.loading('데이터를 불러오는 중입니다.', 0);
+        }
+    }, [isLoading]);
+
     return (
         <ContentLayout>
             <Typography.Title level={4}>대시보드</Typography.Title>
@@ -147,6 +171,18 @@ function DashBoard() {
                 onDownloadClick={async (from, to) => {
                     const data = await getSalesBySupplier(from, to, true);
                     fileDownload(data, 'sales.csv');
+                }}
+            />
+
+            <Buyers
+                data={buyers}
+                from={from}
+                to={to}
+                onChange={handleChangeBuyers}
+                title="신규, 재구매자수"
+                onDownloadClick={async (from, to) => {
+                    const data = await getBuyers(from, to, true);
+                    fileDownload(data, 'buyers.csv');
                 }}
             />
         </ContentLayout>

@@ -1,22 +1,68 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row, Table, Typography } from 'antd';
-import { defaultColumns } from './lib/column';
 import RangePicker from '../../Form/DatePicker/RangePicker';
 import Button from '../../Button';
-import SelectBox from '../../Form/SelectBox';
-import { companyCategories } from '../../../constants/company';
 import { TableWrapper } from './lib/styles';
 
-function SalesByCompanyCategory({ data, title, onChange, onDownloadClick, ...props }) {
+const columns = [
+    {
+        title: '년-월',
+        dataIndex: '_id',
+        key: '_id',
+    },
+    {
+        title: '구매자수',
+        dataIndex: 'totalBuyers',
+        key: 'totalBuyers',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '신규구매자수',
+        dataIndex: 'newBuyers',
+        key: 'newBuyers',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '재구매자수',
+        dataIndex: 'repeatBuyers',
+        key: 'repeatBuyers',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '구매기업수',
+        dataIndex: 'newCompanies',
+        key: 'newCompanies',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '신규구매기업수',
+        dataIndex: 'newCompanies',
+        key: 'newCompanies',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '재구매기업수',
+        dataIndex: 'repeatCompanies',
+        key: 'repeatCompanies',
+        align: 'right',
+        render: (text) => text,
+    },
+];
+
+function Buyers({ data, title, onChange, onDownloadClick, ...props }) {
     const [from, setFrom] = useState(props.from);
     const [to, setTo] = useState(props.to);
-    const [companyCategory, setCompanyCategory] = useState(props.companyCategory);
 
     return (
         <TableWrapper>
             <Table
                 pagination={false}
-                columns={defaultColumns}
+                columns={columns}
                 dataSource={data}
                 title={() => (
                     <Row align={'middle'} gutter={40}>
@@ -42,21 +88,13 @@ function SalesByCompanyCategory({ data, title, onChange, onDownloadClick, ...pro
                                 toName={'to'}
                             />
                         </Col>
-                        <Col flex={'0 0 200px'}>
-                            <SelectBox
-                                name="type"
-                                onChange={(_, v) => setCompanyCategory(v)}
-                                value={companyCategory}
-                                options={Object.values(companyCategories)}
-                            />
-                        </Col>
                         <Col>
-                            <Button small inline onClick={() => onChange(from, to, companyCategory)}>
+                            <Button small inline onClick={() => onChange(from, to)}>
                                 불러오기
                             </Button>
                         </Col>
                         <Col>
-                            <Button small inline onClick={() => onDownloadClick(from, to, companyCategory)}>
+                            <Button small inline onClick={() => onDownloadClick(from, to)}>
                                 엑셀 다운로드
                             </Button>
                         </Col>
@@ -67,4 +105,4 @@ function SalesByCompanyCategory({ data, title, onChange, onDownloadClick, ...pro
     );
 }
 
-export default SalesByCompanyCategory;
+export default Buyers;

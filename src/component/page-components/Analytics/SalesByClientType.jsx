@@ -13,10 +13,6 @@ function SalesByClientType({ data, title, onChange, onDownloadClick, ...props })
     const [to, setTo] = useState(props.to);
     const [clientType, setClientType] = useState(props.clientType);
 
-    useEffect(() => {
-        onChange(from, to, clientType);
-    }, [from, to, clientType]);
-
     return (
         <TableWrapper>
             <Table
@@ -54,6 +50,11 @@ function SalesByClientType({ data, title, onChange, onDownloadClick, ...props })
                                 value={clientType}
                                 options={Object.values(clientsTypes)}
                             />
+                        </Col>
+                        <Col>
+                            <Button small inline onClick={() => onChange(from, to, clientType)}>
+                                불러오기
+                            </Button>
                         </Col>
                         <Col>
                             <Button small inline onClick={() => onDownloadClick(from, to, clientType)}>

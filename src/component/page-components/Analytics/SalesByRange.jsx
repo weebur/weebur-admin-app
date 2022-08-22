@@ -5,19 +5,41 @@ import RangePicker from '../../Form/DatePicker/RangePicker';
 import Button from '../../Button';
 import { TableWrapper } from './lib/styles';
 
+const columns = [
+    defaultColumns[0],
+    {
+        title: '문의수',
+        dataIndex: 'visits',
+        key: 'visits',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '구매수',
+        dataIndex: 'conversion',
+        key: 'conversion',
+        align: 'right',
+        render: (text) => text,
+    },
+    {
+        title: '구매전환율',
+        dataIndex: 'conversionRate',
+        key: 'conversionRate',
+        align: 'right',
+        render: (text) => (text ? `${text}%` : ''),
+    },
+    ...defaultColumns.slice(1),
+];
+
 function SalesByRange({ data, title, onChange, onDownloadClick, ...props }) {
     const [from, setFrom] = useState(props.from);
     const [to, setTo] = useState(props.to);
-
-    useEffect(() => {
-        onChange(from, to);
-    }, [from, to]);
 
     return (
         <TableWrapper>
             <Table
                 pagination={false}
-                columns={defaultColumns}
+                columns={columns}
                 dataSource={data}
                 title={() => (
                     <Row align={'middle'} gutter={40}>
@@ -42,6 +64,11 @@ function SalesByRange({ data, title, onChange, onDownloadClick, ...props }) {
                                 fromName={'from'}
                                 toName={'to'}
                             />
+                        </Col>
+                        <Col>
+                            <Button small inline onClick={() => onChange(from, to)}>
+                                불러오기
+                            </Button>
                         </Col>
                         <Col>
                             <Button small inline onClick={() => onDownloadClick(from, to)}>

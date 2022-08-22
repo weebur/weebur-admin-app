@@ -5,13 +5,6 @@ export const defaultColumns = [
         key: '_id',
     },
     {
-        title: '참여자수',
-        dataIndex: 'participants',
-        key: 'participants',
-        align: 'right',
-        render: (text) => text.toLocaleString(),
-    },
-    {
         title: '주문수',
         dataIndex: 'orderCount',
         key: 'orderCount',
