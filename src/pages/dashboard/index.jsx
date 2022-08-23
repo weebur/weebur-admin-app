@@ -120,12 +120,25 @@ function DashBoard() {
                 from={from}
                 to={to}
                 onChange={handleChangeSalesByRange}
-                title="전체 매출 요약"
+                title="매출내역"
                 onDownloadClick={async (from, to) => {
                     const data = await getSalesByRange(from, to, true);
                     fileDownload(data, 'sales.csv');
                 }}
             />
+
+            <Buyers
+                data={buyers}
+                from={from}
+                to={to}
+                onChange={handleChangeBuyers}
+                title="문의내역"
+                onDownloadClick={async (from, to) => {
+                    const data = await getBuyers(from, to, true);
+                    fileDownload(data, 'buyers.csv');
+                }}
+            />
+
             <SalesByCompanyCategory
                 data={salesByCompanyCategory}
                 from={from}
@@ -171,18 +184,6 @@ function DashBoard() {
                 onDownloadClick={async (from, to) => {
                     const data = await getSalesBySupplier(from, to, true);
                     fileDownload(data, 'sales.csv');
-                }}
-            />
-
-            <Buyers
-                data={buyers}
-                from={from}
-                to={to}
-                onChange={handleChangeBuyers}
-                title="신규, 재구매자수"
-                onDownloadClick={async (from, to) => {
-                    const data = await getBuyers(from, to, true);
-                    fileDownload(data, 'buyers.csv');
                 }}
             />
         </ContentLayout>

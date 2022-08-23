@@ -19,6 +19,6 @@ export const getSalesByProduct = (from, to, toCsv) => {
 export const getSalesBySupplier = (from, to, toCsv) => {
     return api.get('/analytics/sales/supplier', { params: { from, to, toCsv } }).then((res) => res.data);
 };
-export const getBuyers = (from, to, toCsv) => {
-    return api.get('/analytics/buyers', { params: { from, to, toCsv } }).then((res) => res.data);
+export const getBuyers = (from, to, toCsv, dateKey) => {
+    return api.get('/analytics/buyers', { params: { from, to, toCsv, dateKey } }).then((res) => res.data);
 };

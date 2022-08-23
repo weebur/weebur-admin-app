@@ -28,7 +28,7 @@ const useAnalyticsStore = create((set, get) => ({
     isLoading: false,
     fetchSalesByRange: async (from, to) => {
         set({ isLoading: true });
-        const salesByRange = await getSalesByRange(from, to);
+        const salesByRange = await getBuyers(from, to, false, 'reservationDate');
         set({ salesByRange, isLoading: false });
     },
     fetchSalesByCompanyCategory: async (from, to, companyCategory) => {
