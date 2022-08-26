@@ -122,7 +122,7 @@ function DashBoard() {
                 onChange={handleChangeSalesByRange}
                 title="매출내역"
                 onDownloadClick={async (from, to) => {
-                    const data = await getSalesByRange(from, to, true);
+                    const data = await getBuyers(from, to, true, 'reservationDate');
                     fileDownload(data, 'sales.csv');
                 }}
             />
