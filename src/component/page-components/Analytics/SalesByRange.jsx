@@ -4,6 +4,7 @@ import { defaultColumns } from './lib/column';
 import RangePicker from '../../Form/DatePicker/RangePicker';
 import Button from '../../Button';
 import { TableWrapper } from './lib/styles';
+import dayjs from 'dayjs';
 
 const columns = [
     {
@@ -93,7 +94,7 @@ const columns = [
 function SalesByRange({ data, title, onChange, onDownloadClick, ...props }) {
     const [from, setFrom] = useState(props.from);
     const [to, setTo] = useState(props.to);
-
+    console.log(from);
     return (
         <TableWrapper>
             <Table
@@ -112,10 +113,10 @@ function SalesByRange({ data, title, onChange, onDownloadClick, ...props }) {
                                 format={'YYYY-MM'}
                                 onChange={(name, v) => {
                                     if (name === 'from') {
-                                        setFrom(v);
+                                        setFrom(dayjs(v).endOf('month').toISOString());
                                     }
                                     if (name === 'to') {
-                                        setTo(v);
+                                        setTo(dayjs(v).endOf('month').toISOString());
                                     }
                                 }}
                                 from={from}
