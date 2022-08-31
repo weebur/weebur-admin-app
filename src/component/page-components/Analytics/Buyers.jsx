@@ -3,6 +3,7 @@ import { Col, Row, Table, Typography } from 'antd';
 import RangePicker from '../../Form/DatePicker/RangePicker';
 import Button from '../../Button';
 import { TableWrapper } from './lib/styles';
+import dayjs from 'dayjs';
 
 const columns = [
     {
@@ -104,10 +105,10 @@ function Buyers({ data, title, onChange, onDownloadClick, ...props }) {
                                 format={'YYYY-MM'}
                                 onChange={(name, v) => {
                                     if (name === 'from') {
-                                        setFrom(v);
+                                        setFrom(dayjs(v).endOf('month').toISOString());
                                     }
                                     if (name === 'to') {
-                                        setTo(v);
+                                        setTo(dayjs(v).endOf('month').toISOString());
                                     }
                                 }}
                                 from={from}
