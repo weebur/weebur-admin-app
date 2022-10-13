@@ -197,11 +197,11 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
                                             if (v === 'RESERVATION_DESC') {
                                                 return new Date(b.reservationDate) - new Date(a.reservationDate);
                                             }
-                                            if (v === 'CREATED_ASC') {
-                                                return new Date(a.createdAt) - new Date(b.createdAt);
+                                            if (v === 'SALES_ASC') {
+                                                return a.payment.summary.total - b.payment.summary.total;
                                             }
-                                            if (v === 'CREATED_DESC') {
-                                                return new Date(b.createdAt) - new Date(a.createdAt);
+                                            if (v === 'SALES_DESC') {
+                                                return b.payment.summary.total - a.payment.summary.total;
                                             }
                                             return 0;
                                         });
@@ -210,10 +210,10 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
                                         setSortType(v);
                                     }}
                                     options={[
-                                        { label: '진행일 오름차순', value: 'RESERVATION_ASC' },
                                         { label: '진행일 내림차순', value: 'RESERVATION_DESC' },
-                                        { label: '생성일 오름차순', value: 'CREATED_ASC' },
-                                        { label: '생성일 내림차순', value: 'CREATED_DESC' },
+                                        { label: '진행일 오름차순', value: 'RESERVATION_ASC' },
+                                        { label: '판매가 내림차순', value: 'SALES_DESC' },
+                                        { label: '판매가 오름차순', value: 'SALES_ASC' },
                                     ]}
                                 />
                                 <CreateButton
