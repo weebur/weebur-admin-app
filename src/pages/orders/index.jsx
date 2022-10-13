@@ -26,7 +26,7 @@ const headers = [
         span: 2,
         render: (order) => (
             <Tooltip title={dayjs(order.latestReservationStatusUpdatedAt).format(COMMON_FORMAT)}>
-                <u>{reservationStatus[order.reservationStatus].label}</u>
+                <u>{reservationStatus[order.reservationStatus]?.label}</u>
             </Tooltip>
         ),
     },

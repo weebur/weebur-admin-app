@@ -107,7 +107,7 @@ const useOrdersStore = create((set) => ({
 
                     return order;
                 });
-                state.orders.result = [...orders, ...state.orders.result];
+                state.orders.result = [...orders, ...(state.orders.result || [])];
                 state.orders.result.sort((a, b) => {
                     if (a.contactedDate > b.contactedDate) {
                         return -1;
