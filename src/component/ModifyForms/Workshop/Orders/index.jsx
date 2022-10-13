@@ -5,6 +5,8 @@ import dayjs from 'dayjs';
 import CreateButton from '../../../Button/CreateButton';
 import OrderItem from './OrderItem';
 import SelectBox from '../../../Form/SelectBox';
+import Button from '../../../Button';
+import styled from 'styled-components';
 
 const initialOrder = {
     reservationStatus: reservationStatus.REQUIRED.key,
@@ -81,6 +83,7 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
     const [checked, setChecked] = useState([]);
     const [indeterminate, setIndeterminate] = useState(false);
     const [checkAll, setCheckAll] = useState(false);
+    const [sortType, setSortType] = useState('');
     const [modifyStatus, setModifyStatus] = useState({
         reservationStatus: '',
         paymentStatus: '',
@@ -181,7 +184,42 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
                             </Col>
                         )}
                         <Col>
-                            <CreateButton onClick={() => onValueChange('orders', [...values.orders, initialOrder])} />
+                            <OrderActions>
+                                <SelectBox
+                                    label="정렬"
+                                    name="sort"
+                                    value={sortType}
+                                    onChange={(_, v) => {
+                                        const sorted = values.orders.slice().sort((a, b) => {
+                                            if (v === 'RESERVATION_ASC') {
+                                                return new Date(a.reservationDate) - new Date(b.reservationDate);
+                                            }
+                                            if (v === 'RESERVATION_DESC') {
+                                                return new Date(b.reservationDate) - new Date(a.reservationDate);
+                                            }
+                                            if (v === 'CREATED_ASC') {
+                                                return new Date(a.createdAt) - new Date(b.createdAt);
+                                            }
+                                            if (v === 'CREATED_DESC') {
+                                                return new Date(b.createdAt) - new Date(a.createdAt);
+                                            }
+                                            return 0;
+                                        });
+
+                                        onValueChange('orders', sorted);
+                                        setSortType(v);
+                                    }}
+                                    options={[
+                                        { label: '진행일 오름차순', value: 'RESERVATION_ASC' },
+                                        { label: '진행일 내림차순', value: 'RESERVATION_DESC' },
+                                        { label: '생성일 오름차순', value: 'CREATED_ASC' },
+                                        { label: '생성일 내림차순', value: 'CREATED_DESC' },
+                                    ]}
+                                />
+                                <CreateButton
+                                    onClick={() => onValueChange('orders', [initialOrder, ...values.orders])}
+                                />
+                            </OrderActions>
                         </Col>
                     </Row>
                 </Row>
@@ -205,5 +243,15 @@ function Orders({ onValueChange, values, onChange, initialValues, errors }) {
         </>
     );
 }
+
+const OrderActions = styled.div`
+    display: flex;
+    gap: 8px;
+    align-items: flex-end;
+    width: 400px;
+    & span {
+        font-size: ${({ theme }) => theme.fontSize.normal};
+    }
+`;
 
 export default Orders;
