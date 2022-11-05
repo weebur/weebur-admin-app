@@ -2,7 +2,7 @@ import create from 'zustand';
 import { approveAdmin, fetchAdmins, fetchMe, login, logout, signup, updateAdmin } from '../api/AdminAPI';
 import produce from 'immer';
 
-const useAdminsStore = create((set) => ({
+const useAdminsStore = create((set, get) => ({
     admins: {},
     me: null,
     loading: false,
@@ -74,6 +74,7 @@ const useAdminsStore = create((set) => ({
             produce((state) => {
                 const index = state.admins.result.findIndex((item) => item._id === adminId);
                 state.admins.result[index] = admin;
+                state.me = admin;
             }),
         );
     },
