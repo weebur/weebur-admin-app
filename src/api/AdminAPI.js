@@ -9,8 +9,8 @@ export const login = ({ email, password }) => {
     return api.post('/admins/login', { email, password }).then((res) => res.data);
 };
 
-export const signup = ({ email, password, name }) => {
-    return api.post('/admins/register', { email, password, name }).then((res) => res.data);
+export const signup = ({ email, password, name, mobile }) => {
+    return api.post('/admins/register', { email, password, name, mobile }).then((res) => res.data);
 };
 
 export const logout = () => {
@@ -23,4 +23,8 @@ export const fetchMe = () => {
 
 export const approveAdmin = (adminId) => {
     return api.put(`/admins/approve/${adminId}`).then((res) => res.data);
+};
+
+export const updateAdmin = (adminId, { name, email, mobile }) => {
+    return api.put(`/admins/${adminId}`, { name, email, mobile }).then((res) => res.data);
 };

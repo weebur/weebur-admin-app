@@ -1,5 +1,5 @@
 import create from 'zustand';
-import { approveAdmin, fetchAdmins, fetchMe, login, logout, signup } from '../api/AdminAPI';
+import { approveAdmin, fetchAdmins, fetchMe, login, logout, signup, updateAdmin } from '../api/AdminAPI';
 import produce from 'immer';
 
 const useAdminsStore = create((set) => ({
@@ -40,8 +40,8 @@ const useAdminsStore = create((set) => ({
 
         return admin;
     },
-    signup: async ({ email, password, name }) => {
-        const { accessToken } = await signup({ email, password, name });
+    signup: async ({ email, password, name, mobile }) => {
+        const { accessToken } = await signup({ email, password, name, mobile });
 
         return { accessToken };
     },
@@ -59,6 +59,16 @@ const useAdminsStore = create((set) => ({
     },
     approveAdmin: async (adminId) => {
         const admin = await approveAdmin(adminId);
+
+        set(
+            produce((state) => {
+                const index = state.admins.result.findIndex((item) => item._id === adminId);
+                state.admins.result[index] = admin;
+            }),
+        );
+    },
+    updateAdmin: async (adminId, { name, email, mobile }) => {
+        const admin = await updateAdmin(adminId, { name, email, mobile });
 
         set(
             produce((state) => {

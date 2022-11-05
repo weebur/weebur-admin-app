@@ -27,19 +27,19 @@ export const menu = [
     },
     {
         key: 'clients',
-        name: '회원 관리(ok)',
+        name: '회원 관리',
         path: '/clients',
         Icon: UserOutlined,
     },
     {
         key: 'companies',
-        name: '회사 관리(ok)',
+        name: '회사 관리',
         path: '/companies',
         Icon: GlobalOutlined,
     },
     {
         key: 'products',
-        name: '상품 관리(ok)',
+        name: '상품 관리',
         path: '/products',
         Icon: SkinOutlined,
     },
@@ -57,7 +57,7 @@ export const menu = [
     },
     {
         key: 'admins',
-        name: '어드민(ok)',
+        name: '어드민',
         path: '/admins',
         Icon: SettingOutlined,
     },

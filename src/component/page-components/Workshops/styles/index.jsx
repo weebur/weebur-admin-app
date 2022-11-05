@@ -4,7 +4,8 @@ export const FieldSection = styled.div`
     width: 100%;
     display: flex;
     margin-top: 30px;
-    align-items: flex-end;
+    align-items: ${({ align }) => align || 'flex-end'};
+    justify-content: ${({ justify }) => justify || 'flex-start'};
     padding: 33px 42px 44px 38px;
     background: #ffffff;
     gap: 20px;

@@ -32,6 +32,7 @@ function SignUp() {
         initialValues: {
             email: '',
             password: '',
+            mobile: '',
             confirm: '',
             name: '',
         },
@@ -76,6 +77,7 @@ function SignUp() {
                 </div>
 
                 <TextInput name="name" onChange={formik.handleChange} label="이름" />
+                <TextInput name="mobile" onChange={formik.handleChange} label="모바일" />
 
                 <SubmitButton primary text="가입하기" />
 

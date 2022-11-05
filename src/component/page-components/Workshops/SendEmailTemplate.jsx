@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FieldSection, PaymentEmailTemplate, TemplateContainer } from './styles';
-import { Divider, List, Tabs, Descriptions } from 'antd';
+import { Divider, Tabs, Descriptions } from 'antd';
 import dayjs from 'dayjs';
 import ProductService from '../../../services/ProductService';
 import TextArea from '../../Form/TextArea';
@@ -9,12 +9,15 @@ import styled from 'styled-components';
 import CommonButton from '../../Button';
 import useAdminsStore from '../../../stores/admins';
 import AttachList from './lib/AttachList';
+import SendMessageTemplate from './lib/SendMessageTemplate';
 
-const EmailAccounts = styled.div`
-    flex: 0 0 50%;
+const AdminAccount = styled.div`
+    flex: 1;
+
     display: flex;
-    align-items: flex-end;
-    gap: 10px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
 `;
 
 const { TabPane } = Tabs;
@@ -56,33 +59,42 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
         });
     };
 
-    console.log(notAttachedEstimates);
-
     useEffect(() => {
         setReservationEmail(ProductService.getEmailTextByOrder(workshop));
     }, []);
 
     return (
         <>
-            <FieldSection>
-                <EmailAccounts>
-                    <TextInput
-                        disabled
-                        name="email"
-                        value={emailAccount.email}
-                        onChange={handleEmailAccountChange}
-                        label="웍스 모바일 이메일"
-                    />
-
-                    <TextInput
-                        type="password"
-                        label="비밀번호"
-                        name="password"
-                        value={emailAccount.password}
-                        onChange={handleEmailAccountChange}
-                    />
+            <FieldSection align={'stretch'}>
+                <AdminAccount>
+                    <Descriptions size={'small'} bordered title="메일 발송" column={1}>
+                        <Descriptions.Item label={'보내는 사람'}>
+                            <Descriptions.Item>
+                                <TextInput
+                                    disabled
+                                    name="email"
+                                    value={emailAccount.email}
+                                    onChange={handleEmailAccountChange}
+                                    label="웍스 모바일 이메일"
+                                />
+                            </Descriptions.Item>
+                            <Descriptions.Item>
+                                <TextInput
+                                    type="password"
+                                    label="웍스 모바일 비밀번호"
+                                    name="password"
+                                    value={emailAccount.password}
+                                    onChange={handleEmailAccountChange}
+                                />
+                            </Descriptions.Item>
+                        </Descriptions.Item>
+                        <Descriptions.Item label={'받는 사람'}>
+                            <TextInput disabled name="clientEmail" value={workshop.clientEmail} label="고객 이메일" />
+                        </Descriptions.Item>
+                    </Descriptions>
 
                     <CommonButton
+                        xSmall
                         disabled={
                             !emailAccount.email ||
                             !emailAccount.password ||
@@ -118,10 +130,10 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                     >
                         메일발송
                     </CommonButton>
-                </EmailAccounts>
-                <Descriptions bordered title="받는 사람">
-                    <Descriptions.Item label="Email">{workshop.clientEmail}</Descriptions.Item>
-                </Descriptions>
+                </AdminAccount>
+                <AdminAccount>
+                    <SendMessageTemplate clientMobile={workshop.clientMobile} />
+                </AdminAccount>
             </FieldSection>
             <TemplateContainer>
                 <div>

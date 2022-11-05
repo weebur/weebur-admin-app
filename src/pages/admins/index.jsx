@@ -10,6 +10,8 @@ import SearchList from '../../component/page-components/SearchList';
 import { adminRoles } from '../../constants/admin';
 import { Button, message } from 'antd';
 import { withToken } from '../../services/SsrService';
+import Input from '../../component/Form/Input';
+import InlineUpdateInput from '../../component/InlineUpdateInput';
 
 function Admins({ name, email }) {
     const router = useRouter();
@@ -17,19 +19,51 @@ function Admins({ name, email }) {
     const searchQueries = { name, email };
     const fetchAdmins = useAdminsStore((state) => state.fetchAdmins);
     const resetAdmins = useAdminsStore((state) => state.resetAdmins);
+    const updateAdmin = useAdminsStore((state) => state.updateAdmin);
     const admins = useAdminsStore((state) => state.admins);
     const me = useAdminsStore((state) => state.me);
     const approveAdmin = useAdminsStore((state) => state.approveAdmin);
     const { hasNext, totalResults, result, page, next } = admins;
 
     const headers = [
-        { key: 'name', label: '이름', span: 7 },
+        {
+            key: 'name',
+            label: '이름',
+            span: 6,
+            render: ({ _id, name, email, mobile }) => (
+                <InlineUpdateInput
+                    value={name}
+                    editable={me?.role === 'MASTER'}
+                    onSave={(v) => {
+                        return updateAdmin(_id, { name: v, email, mobile });
+                    }}
+                />
+            ),
+        },
         { key: 'role', label: '등급', span: 3, render: ({ role }) => adminRoles[role].label },
-        { key: 'email', label: '이메일', span: 8 },
+        {
+            key: 'email',
+            label: '이메일',
+            span: 5,
+        },
+        {
+            key: 'mobile',
+            label: '모바일',
+            span: 7,
+            render: ({ _id, name, email, mobile }) => (
+                <InlineUpdateInput
+                    value={mobile}
+                    editable={me?.role === 'MASTER'}
+                    onSave={(v) => {
+                        return updateAdmin(_id, { name, email, mobile: v });
+                    }}
+                />
+            ),
+        },
         {
             key: 'approved',
             label: '승인여부',
-            span: 3,
+            span: 2,
             render: ({ _id, approved }) => {
                 if (!approved) {
                     return (
