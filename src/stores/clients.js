@@ -86,6 +86,9 @@ const useClientsStore = create((set) => ({
         set({ client });
         set(
             produce((state) => {
+                if (!state?.clients?.result) {
+                    return;
+                }
                 const index = state.clients.result.findIndex((item) => item._id === client._id);
 
                 state.clients.result[index] = {

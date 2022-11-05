@@ -132,7 +132,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                     </CommonButton>
                 </AdminAccount>
                 <AdminAccount>
-                    <SendMessageTemplate clientMobile={workshop.clientMobile} />
+                    <SendMessageTemplate clientMobile={workshop.clientMobile} clientId={workshop.clientId} />
                 </AdminAccount>
             </FieldSection>
             <TemplateContainer>

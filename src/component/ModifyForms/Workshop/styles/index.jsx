@@ -8,7 +8,9 @@ export const SubTitle = styled.div`
 `;
 
 export const ClientSelectBox = styled.div`
-    width: 480px;
+    display: flex;
+    gap: 10px;
+    width: 520px;
 `;
 
 export const FieldSection = styled.div`

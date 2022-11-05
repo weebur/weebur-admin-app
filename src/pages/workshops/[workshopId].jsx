@@ -10,7 +10,6 @@ import OrderClipboard from '../../component/page-components/Workshops/OrderClipb
 import { removeWorkshop } from '../../api/WorkshopAPI';
 import { useRouter } from 'next/router';
 import SendEmailTemplate from '../../component/page-components/Workshops/SendEmailTemplate';
-import { sendReservationEmail } from '../../api/OrderAPI';
 import { sendEmail } from '../../api/EmailAPI';
 import { withToken } from '../../services/SsrService';
 

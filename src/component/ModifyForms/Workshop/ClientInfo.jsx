@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
-import { Typography } from 'antd';
+import { Typography, Col, message } from 'antd';
 import AsyncSelectBox from '../../Form/AsyncSelectBox';
-import { fetchClients } from '../../../api/ClientAPI';
+import { fetchClient, fetchClients } from '../../../api/ClientAPI';
 import TextInput from '../../Form/Input';
 import DatePicker from '../../Form/DatePicker';
 import TextArea from '../../Form/TextArea';
 import { ClientSelectBox, Fields, FieldSection, SubTitle } from './styles';
 import useAdminsStore from '../../../stores/admins';
 import SelectBox from '../../Form/SelectBox';
+import Button from '../../Button';
 
 function ClientInfo({ onValueChange, values, onChange, errors }) {
     const admins = useAdminsStore((state) => state.admins);
@@ -59,6 +60,15 @@ function ClientInfo({ onValueChange, values, onChange, errors }) {
         }
     };
 
+    const setClientValue = (value) => {
+        onValueChange('clientName', value.clientName);
+        onValueChange('clientEmail', value.clientEmail);
+        onValueChange('clientMobile', value.clientMobile);
+        onValueChange('companyId', value.companyId);
+        onValueChange('companyName', value.companyName);
+        onValueChange('clientId', value.clientId);
+    };
+
     useEffect(() => {
         if (result.length > 0) {
             return;
@@ -71,37 +81,61 @@ function ClientInfo({ onValueChange, values, onChange, errors }) {
             <SubTitle>
                 <Typography.Title level={5}>회원 정보</Typography.Title>
                 <ClientSelectBox>
-                    <AsyncSelectBox
-                        placeholder="회원명을 입력해주세요"
-                        name={'clientId'}
-                        onChange={(name, v, option) => {
-                            const value = option.data;
-                            onValueChange('clientName', value.clientName);
-                            onValueChange('clientEmail', value.clientEmail);
-                            onValueChange('clientMobile', value.clientMobile);
-                            onValueChange('companyId', value.companyId);
-                            onValueChange('companyName', value.companyName);
-                            onValueChange('clientId', value.clientId);
-                        }}
-                        value={values.clientId}
-                        fetchOptions={fetchClientOptions}
-                        initialOptions={[
-                            {
-                                key: values.clientId,
-                                value: values.clientId,
-                                label: values.clientName ? `${values.clientName}(${values.companyName})` : '',
-                                data: {
-                                    clientId: values.clientId,
-                                    clientName: values.clientName,
-                                    clientEmail: values.clientEmail,
-                                    clientMobile: values.clientMobile,
-                                    companyId: values.companyId,
-                                    companyName: values.companyName,
+                    <Col flex={'0 0 240px'}>
+                        {values.clientId && (
+                            <Button
+                                inline
+                                onClick={async () => {
+                                    try {
+                                        const client = await fetchClient(values.clientId);
+
+                                        setClientValue({
+                                            clientName: client.name,
+                                            clientEmail: client.email,
+                                            clientMobile: client.mobile,
+                                            companyId: client.company,
+                                            companyName: client.companyName,
+                                            clientId: client._id,
+                                        });
+
+                                        message.success('고객정보를 갱신하였습니다.');
+                                    } catch (e) {
+                                        console.log(e);
+                                    }
+                                }}
+                            >
+                                고객정보 갱신
+                            </Button>
+                        )}
+                    </Col>
+                    <Col flex={1}>
+                        <AsyncSelectBox
+                            placeholder="회원명을 입력해주세요"
+                            name={'clientId'}
+                            onChange={(name, v, option) => {
+                                const value = option.data;
+                                setClientValue(value);
+                            }}
+                            value={values.clientId}
+                            fetchOptions={fetchClientOptions}
+                            initialOptions={[
+                                {
+                                    key: values.clientId,
+                                    value: values.clientId,
+                                    label: values.clientName ? `${values.clientName}(${values.companyName})` : '',
+                                    data: {
+                                        clientId: values.clientId,
+                                        clientName: values.clientName,
+                                        clientEmail: values.clientEmail,
+                                        clientMobile: values.clientMobile,
+                                        companyId: values.companyId,
+                                        companyName: values.companyName,
+                                    },
                                 },
-                            },
-                        ]}
-                    />
-                    {errors.clientId && <Typography.Text type="danger">{errors.clientId}</Typography.Text>}
+                            ]}
+                        />
+                        {errors.clientId && <Typography.Text type="danger">{errors.clientId}</Typography.Text>}
+                    </Col>
                 </ClientSelectBox>
             </SubTitle>
 

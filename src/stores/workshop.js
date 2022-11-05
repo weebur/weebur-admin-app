@@ -33,6 +33,13 @@ const useWorkshopsStore = create((set, get) => ({
             }),
         );
     },
+    updateClientMobile: (mobile) => {
+        set(
+            produce((state) => {
+                state.workshop.clientMobile = mobile;
+            }),
+        );
+    },
 }));
 
 export default useWorkshopsStore;
