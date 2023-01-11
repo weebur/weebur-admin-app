@@ -1,6 +1,7 @@
 import 'antd/dist/antd.variable.min.css';
 import '../styles/globals.css';
 import '../styles/Calendar.css';
+import '../styles/ReactDatePicker.css';
 
 import React from 'react';
 import { ConfigProvider } from 'antd';

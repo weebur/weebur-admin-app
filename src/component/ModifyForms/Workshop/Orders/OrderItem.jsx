@@ -19,6 +19,7 @@ import useOrdersStore from '../../../../stores/order';
 import CommonButton from '../../../Button';
 import { productTypes } from '../../../../constants/product';
 import TextArea from '../../../Form/TextArea';
+import ReactDatePicker from '../../../Form/DatePicker/ReactDatePicker';
 
 const Order = styled.div`
     width: 100%;
@@ -233,13 +234,10 @@ function OrderItem({
                     />
 
                     <StyledFields>
-                        <DatePicker
-                            showTime
+                        <ReactDatePicker
                             label="진행일시"
-                            name={`orders.${index}.reservationDate`}
-                            format={'YYYY-MM-DD HH:mm'}
-                            value={order.reservationDate}
-                            onChange={onValueChange}
+                            value={order.reservationDate ? new Date(order.reservationDate) : null}
+                            onChange={(v) => onValueChange(`orders.${index}.reservationDate`, v)}
                         />
                         <NumberInput
                             suffix="명"
