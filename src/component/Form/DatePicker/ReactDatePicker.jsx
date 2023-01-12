@@ -4,11 +4,14 @@ import Label from '../Label';
 import { CalendarOutlined } from '@ant-design/icons';
 
 const InputWrapper = styled.div`
-    position: relative;
     display: flex;
     flex-direction: column;
     width: 100%;
     min-width: 210px;
+`;
+
+const IconWrapper = styled.div`
+    position: relative;
 `;
 
 const Icon = styled.span`
@@ -25,18 +28,21 @@ function ReactDatePicker({ value, onChange, label, ...props }) {
     return (
         <InputWrapper>
             <Label>{label}</Label>
+
             <DatePicker
                 showTimeSelect
                 selected={value}
                 onChange={handleChange}
                 dateFormat={'yyyy-MM-dd HH:mm'}
-                timeIntervals={15}
+                timeIntervals={5}
                 timeFormat="HH:mm"
                 {...props}
             />
-            <Icon>
-                <CalendarOutlined />
-            </Icon>
+            <IconWrapper>
+                <Icon>
+                    <CalendarOutlined />
+                </Icon>
+            </IconWrapper>
         </InputWrapper>
     );
 }
