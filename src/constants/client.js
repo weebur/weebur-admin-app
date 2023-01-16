@@ -9,4 +9,5 @@ export const clientInflowPath = [
     { key: '포털', label: '포털' },
     { key: '지인추천', label: '지인추천' },
     { key: 'SNS', label: 'SNS' },
+    { key: '아웃바운드', label: '아웃바운드' },
 ];

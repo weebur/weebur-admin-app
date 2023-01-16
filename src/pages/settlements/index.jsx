@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import dayjs from 'dayjs';
 import useSettlementStore from '../../stores/settlement';
 import ContentLayout from '../../component/Layout/ContentLayout';
 import SearchList from '../../component/page-components/SearchList';
-import { get } from 'lodash-es';
+import { get, omit } from 'lodash-es';
 import { supplierTypes } from '../../constants/supplier';
 import SettlementsSearchForm from '../../component/SearchForms/Settlements';
 import { useRouter } from 'next/router';
 import { toQueryObject } from '../../utils/queryString';
-import { message } from 'antd';
+import { Button, message } from 'antd';
 import { withToken } from '../../services/SsrService';
+import ModifyClientForm from '../../component/ModifyForms/Client';
+import BasicModal from '../../component/Modal';
+import SettlementModifyForm from '../../component/ModifyForms/Settlement';
+import Settlement from '../../component/page-components/Workshops/Estimate/Settlement';
 
-const headers = [
+const headers = (onClick) => [
     {
         key: 'supplier.name',
         label: '업체명',
@@ -44,8 +48,18 @@ const headers = [
     {
         key: 'latestPayment',
         label: '정산확인금액',
-        span: 2,
-        render: (latestPayment) => latestPayment.toLocaleString(),
+        span: 3,
+        render: (latestPayment, data) => (
+            <Button
+                type={'secondary'}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(data);
+                }}
+            >
+                {latestPayment.toLocaleString()}
+            </Button>
+        ),
     },
     {
         key: 'isCompleted',
@@ -56,19 +70,30 @@ const headers = [
     {
         key: 'latestCompletedAmount',
         label: '입금확인금액',
-        span: 2,
-        render: (latestCompletedAmount) => latestCompletedAmount.toLocaleString(),
+        span: 3,
+        render: (latestCompletedAmount, data) => (
+            <Button
+                type={'secondary'}
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onClick(data);
+                }}
+            >
+                {latestCompletedAmount.toLocaleString()}
+            </Button>
+        ),
     },
     {
         key: 'details',
         label: '비고',
-        span: 5,
+        span: 3,
     },
 ];
 
 function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year, month }) {
     const router = useRouter();
-    const [checkedItems, setCheckedItems] = useState([]);
+    const [openSettlementModal, setOpenSettlementModal] = useState(false);
+    const [openSettlementDoc, setOpenSettlementDoc] = useState(false);
 
     const searchQueries = {
         supplierName,
@@ -82,19 +107,46 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
     const fetchSettlements = useSettlementStore((state) => state.fetchSettlements);
     const settlements = useSettlementStore((state) => state.settlements);
     const updateSettlements = useSettlementStore((state) => state.updateSettlements);
+    const updateSettlement = useSettlementStore((state) => state.updateSettlement);
+    const fetchSettlement = useSettlementStore((state) => state.fetchSettlement);
+    const settlement = useSettlementStore((state) => state.settlement);
+
+    const lists = useMemo(() => {
+        const onItemClick = async (data) => {
+            await fetchSettlement(data._id);
+            setOpenSettlementModal(true);
+        };
+        return headers(onItemClick);
+    }, [settlements]);
 
     const supplierList = settlements?.map((result) => {
         return {
             id: result._id,
-            rows: headers.map(({ key, span, render }) => {
+            rows: lists.map(({ key, span, render }) => {
                 return {
                     key,
-                    Component: render ? render(get(result, key)) : get(result, key),
+                    Component: render ? render(get(result, key), result) : get(result, key),
                     span,
                 };
             }),
         };
     });
+
+    const totalSettlement = useMemo(
+        () => settlement?.orders?.reduce((acc, order) => acc + order.totalSettlement, 0),
+        [settlement],
+    );
+
+    const handleSubmit = async (values) => {
+        try {
+            await updateSettlement(settlement._id, values);
+            setOpenSettlementModal(false);
+            message.success('저장을 완료하였습니다.');
+        } catch (e) {
+            console.log(e);
+            message.error('저장을 실패하였습니다.');
+        }
+    };
 
     const handleLoadSettlements = async ({ supplierName, supplierType, isPaid, isCompleted, year, month }) => {
         try {
@@ -128,7 +180,7 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
         <ContentLayout>
             <SearchList
                 title="정산내역"
-                headers={headers}
+                headers={lists}
                 items={supplierList}
                 totalLength={settlements.length || 0}
                 modifyButtonText={'정산내역 갱신하기'}
@@ -153,6 +205,23 @@ function SettlementsPage({ supplierName, supplierType, isPaid, isCompleted, year
                     }}
                 />
             </SearchList>
+            <BasicModal
+                title={'정산 확인'}
+                isOpen={openSettlementModal}
+                onClose={() => {
+                    setOpenSettlementModal(false);
+                }}
+            >
+                <SettlementModifyForm
+                    totalSettlement={totalSettlement}
+                    initialValues={omit(settlement, ['orders'])}
+                    onSubmit={handleSubmit}
+                    onDocButtonClick={() => setOpenSettlementDoc(true)}
+                />
+            </BasicModal>
+            <BasicModal isOpen={openSettlementDoc} onClose={() => setOpenSettlementDoc(false)}>
+                <Settlement settlement={settlement} />
+            </BasicModal>
         </ContentLayout>
     );
 }

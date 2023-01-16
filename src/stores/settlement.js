@@ -6,6 +6,7 @@ import {
     updateSettlement,
     updateSettlements,
 } from '../api/SettlementAPI';
+import produce from 'immer';
 
 const useSettlementStore = create((set, get) => ({
     settlements: [],
@@ -25,9 +26,15 @@ const useSettlementStore = create((set, get) => ({
         set({ settlement });
     },
     updateSettlement: async (settlementId, payload) => {
-        await updateSettlement(settlementId, payload);
+        const settlement = await updateSettlement(settlementId, payload);
         await get().fetchSettlement(settlementId);
-        // set({ settlement });
+
+        set(
+            produce((state) => {
+                const index = state.settlements.findIndex((item) => item._id === settlement._id);
+                state.settlements[index] = settlement;
+            }),
+        );
     },
 }));
 
