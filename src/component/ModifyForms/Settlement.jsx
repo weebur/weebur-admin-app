@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import { useFormik } from 'formik';
 import { FieldSection, Form, InputWrapper } from './styles';
 import DatePicker from '../Form/DatePicker';
@@ -9,7 +8,6 @@ import styled from 'styled-components';
 import CheckBoxInput from '../Form/CheckBoxInput';
 import NumberInput from '../Form/NumberInput';
 import TextArea from '../Form/TextArea';
-import BasicModal from '../Modal';
 import CommonButton from '../Button';
 
 const FormWrapper = styled.div`
@@ -54,8 +52,8 @@ function SettlementModifyForm({ initialValues = {}, totalSettlement, onSubmit, s
                                             formik.setFieldValue('latestPayment', totalSettlement);
                                             formik.setFieldValue('paidAt', dayjs().toISOString());
                                         } else {
-                                            formik.setFieldValue('latestPayment', formik.initialValues.latestPayment);
-                                            formik.setFieldValue('paidAt', formik.initialValues.paidAt);
+                                            formik.setFieldValue('latestPayment', 0);
+                                            formik.setFieldValue('paidAt', null);
                                         }
                                         formik.setFieldValue(name, v);
                                     }}
@@ -87,11 +85,8 @@ function SettlementModifyForm({ initialValues = {}, totalSettlement, onSubmit, s
                                             formik.setFieldValue('latestCompletedAmount', totalSettlement);
                                             formik.setFieldValue('completedAt', dayjs().toISOString());
                                         } else {
-                                            formik.setFieldValue(
-                                                'latestCompletedAmount',
-                                                formik.initialValues.latestCompletedAmount,
-                                            );
-                                            formik.setFieldValue('completedAt', formik.initialValues.completedAt);
+                                            formik.setFieldValue('latestCompletedAmount', 0);
+                                            formik.setFieldValue('completedAt', null);
                                         }
                                         formik.setFieldValue(name, v);
                                     }}
