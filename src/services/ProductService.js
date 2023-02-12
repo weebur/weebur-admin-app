@@ -152,6 +152,24 @@ ${order.onlineInfo.details}
 <br>
 `;
     };
+    getCancelEmail = ({ adminName }) => {
+        return `안녕하세요.<br>
+워크샵 추천 플랫폼 위버 ${adminName} 매니저 입니다. 이번 워크샵은 함께 진행할 수 없어서 아쉬운 마음입니다.<br>
+<br>
+앞으로 더욱 다양하고 좋은 프로그램으로 다시 찾아뵙겠습니다!<br>
+<br>
+추후 워크샵 진행 시 언제든 문의주세요^^<br>
+<br>
+다음 워크샵 계획 일정을 대략적으로 알려주시면<br>
+미리 베스트 워크샵을 안내드립니다.<br>
+<br>
+<a href='https://tally.so/r/m6DaGk' target='_blank'>
+    <u>→ 워크샵 예상 일정 작성하기→</u>
+</a>
+<br>
+감사합니다.<br>
+`;
+    };
 }
 
 export default new ProductService();

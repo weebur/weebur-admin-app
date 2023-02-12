@@ -51,6 +51,9 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
         clientName: workshop?.clientName,
         adminName: workshop?.adminName,
     });
+    const cancelEmail = ProductService.getCancelEmail({
+        adminName: workshop?.adminName,
+    });
 
     const handleEmailAccountChange = (e) => {
         setEmailAccount({
@@ -103,17 +106,21 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                         inline
                         onClick={(e) => {
                             e.preventDefault();
+                            const subject =
+                                tab === 'reservation'
+                                    ? '[위버] 예약 신청 안내해 드립니다.'
+                                    : tab === 'payment'
+                                    ? '[위버] 결제가 확인되었습니다.'
+                                    : '[위버] 예약이 취소되었습니다.';
+
                             onSendEmail({
                                 senderName: workshop.adminName,
                                 senderAddress: emailAccount.email,
                                 senderPassword: emailAccount.password,
                                 receiver: workshop.clientEmail,
-                                subject:
-                                    tab === 'reservation'
-                                        ? '[위버] 예약 신청 안내드립니다.'
-                                        : '[위버] 결제 확인 되었습니다.',
+                                subject,
                                 textBody: tab === 'reservation' ? reservationEmail : '',
-                                htmlBody: tab === 'payment' ? paymentEmail : '',
+                                htmlBody: tab === 'payment' ? paymentEmail : cancelEmail,
                                 fileKeys:
                                     tab === 'reservation'
                                         ? [
@@ -155,6 +162,9 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                         </TabPane>
                         <TabPane tab="결제확인 메일 발송" key="payment">
                             <PaymentEmailTemplate dangerouslySetInnerHTML={{ __html: paymentEmail }} />
+                        </TabPane>
+                        <TabPane tab="취소 안내 메일" key="cancel">
+                            <PaymentEmailTemplate dangerouslySetInnerHTML={{ __html: cancelEmail }} />
                         </TabPane>
                     </Tabs>
                 </div>
