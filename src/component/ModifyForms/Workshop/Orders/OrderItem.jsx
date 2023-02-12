@@ -5,7 +5,7 @@ import { DeleteOutlined, DownOutlined, UpOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../../../constants/date';
 import { getTotalPayment } from '../../../../services/OrderService';
-import { paymentStatus, reservationStatus } from '../../../../constants/order';
+import { cancellationReasons, paymentStatus, reservationStatus } from '../../../../constants/order';
 import { Checkbox, Col, Divider, Row, Statistic } from 'antd';
 import Ellipsis from '../../../Text/Ellipsis';
 import SelectBox from '../../../Form/SelectBox';
@@ -203,9 +203,27 @@ function OrderItem({
                             )})`}
                             name={`orders.${index}.reservationStatus`}
                             value={order.reservationStatus}
-                            onChange={onValueChange}
+                            onChange={(name, value) => {
+                                onValueChange(name, value);
+                                if (value !== 'CANCEL_RESERVATION') {
+                                    onValueChange(`orders.${index}.cancellationReason`, '');
+                                }
+                            }}
                             options={Object.values(reservationStatus)}
                         />
+                        <StatusDetails>
+                            {order.reservationStatus === 'CANCEL_RESERVATION' && (
+                                <SelectBox
+                                    label="취소사유"
+                                    name={`orders.${index}.cancellationReason`}
+                                    value={order.cancellationReason}
+                                    onChange={onValueChange}
+                                    options={Object.values(cancellationReasons)}
+                                />
+                            )}
+                        </StatusDetails>
+                    </StyledFields>
+                    <StyledFields>
                         <SelectBox
                             label={`결제상태(최근변경일 ${dayjs(order.latestPaymentStatusUpdatedAt).format(
                                 COMMON_FORMAT,

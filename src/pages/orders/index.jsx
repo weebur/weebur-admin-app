@@ -226,6 +226,7 @@ function Orders({
                     initialValues={{
                         reservationStatus: '',
                         paymentStatus: '',
+                        cancellationReason: '',
                         latestReservationStatusUpdatedAt: dayjs().startOf('day').toISOString(),
                         latestPaymentStatusUpdatedAt: dayjs().startOf('day').toISOString(),
                     }}

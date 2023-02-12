@@ -2,7 +2,7 @@ import React from 'react';
 import { ButtonsWrapper, FieldSection, Form, InputWrapper } from './styles';
 import SelectBox from '../Form/SelectBox';
 import { useFormik } from 'formik';
-import { paymentStatus, reservationStatus } from '../../constants/order';
+import { cancellationReasons, paymentStatus, reservationStatus } from '../../constants/order';
 import CommonButton from '../Button';
 import styled from 'styled-components';
 import { pick } from 'lodash-es';
@@ -25,9 +25,23 @@ function OrderStatusModifyForm({ initialValues, onSubmit, onClose }) {
                         label={'예약상태'}
                         name={'reservationStatus'}
                         value={formik.values.reservationStatus}
-                        onChange={formik.setFieldValue}
+                        onChange={(name, value) => {
+                            formik.setFieldValue(name, value);
+                            if (value !== 'CANCEL_RESERVATION') {
+                                formik.setFieldValue('cancellationReason', '');
+                            }
+                        }}
                         options={Object.values(reservationStatus)}
                     />
+                    {formik.values.reservationStatus === 'CANCEL_RESERVATION' && (
+                        <SelectBox
+                            label="취소사유"
+                            name={'cancellationReason'}
+                            value={formik.values.cancellationReason}
+                            onChange={formik.setFieldValue}
+                            options={Object.values(cancellationReasons)}
+                        />
+                    )}
                     <ButtonWrapper>
                         <CommonButton
                             small
@@ -37,7 +51,11 @@ function OrderStatusModifyForm({ initialValues, onSubmit, onClose }) {
                                 e.preventDefault();
                                 await onSubmit(
                                     'reservation',
-                                    pick(formik.values, ['reservationStatus', 'latestReservationStatusUpdatedAt']),
+                                    pick(formik.values, [
+                                        'reservationStatus',
+                                        'latestReservationStatusUpdatedAt',
+                                        'cancellationReason',
+                                    ]),
                                 );
                             }}
                         >

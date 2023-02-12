@@ -37,12 +37,18 @@ export const fetchOrders = ({
         .then((res) => res.data);
 };
 
-export const updateOrderReservationStatus = ({ orderIds, reservationStatus, latestReservationStatusUpdatedAt }) => {
+export const updateOrderReservationStatus = ({
+    orderIds,
+    reservationStatus,
+    latestReservationStatusUpdatedAt,
+    cancellationReason,
+}) => {
     return api
         .put('/orders/status/reservation', {
             orderIds,
             reservationStatus,
             latestReservationStatusUpdatedAt,
+            cancellationReason,
         })
         .then((res) => res.data);
 };

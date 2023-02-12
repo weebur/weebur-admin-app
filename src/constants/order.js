@@ -20,6 +20,16 @@ export const reservationStatus = {
     UNKNOWN: { key: 'UNKNOWN', label: '미정' },
 };
 
+export const cancellationReasons = {
+    TEACHER_SCHEDULE: { key: 'TEACHER_SCHEDULE', label: '강사 일정 불가' },
+    NON_RESPONSE: { key: 'NON_RESPONSE', label: '고객사 무응답' },
+    CHANGE_PLAN: { key: 'CHANGE_PLAN', label: '계획 연기/취소' },
+    CHANGE_PRODUCT: { key: 'CHANGE_PRODUCT', label: '타프로그램으로 변경' },
+    BUDGET_ISSUE: { key: 'BUDGET_ISSUE', label: '예산 이슈' },
+    ANOTHER_VENDOR: { key: 'ANOTHER_VENDOR', label: '타업체 이용' },
+    OTHER: { key: 'OTHER', label: '기타' },
+};
+
 export const paymentStatus = {
     WAITING: { key: 'WAITING', label: '결제대기' },
     IN_PROGRESS: { key: 'IN_PROGRESS', label: '결제중' },

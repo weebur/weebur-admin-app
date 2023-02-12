@@ -26,6 +26,7 @@ const initialOrder = {
     mainTeacherMobile: '',
     reservationDate: dayjs().toISOString(),
     participants: 0,
+    cancellationReason: '',
     payment: {
         personal: {
             total: 0,

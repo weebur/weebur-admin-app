@@ -167,12 +167,14 @@ const useOrdersStore = create((set) => ({
         latestPaymentStatusUpdatedAt,
         paymentStatus,
         latestReservationStatusUpdatedAt,
+        cancellationReason,
     }) => {
         if (type === 'reservation') {
             await updateOrderReservationStatus({
                 orderIds,
                 reservationStatus,
                 latestReservationStatusUpdatedAt,
+                cancellationReason,
             });
         }
         if (type === 'payment') {
