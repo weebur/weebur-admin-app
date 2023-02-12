@@ -6,6 +6,7 @@ import { cancellationReasons, paymentStatus, reservationStatus } from '../../con
 import CommonButton from '../Button';
 import styled from 'styled-components';
 import { pick } from 'lodash-es';
+import { Col, Row } from 'antd';
 
 const ButtonWrapper = styled.div`
     padding-top: 10px;
@@ -21,27 +22,33 @@ function OrderStatusModifyForm({ initialValues, onSubmit, onClose }) {
         <Form onSubmit={formik.handleSubmit}>
             <FieldSection direction="column">
                 <InputWrapper>
-                    <SelectBox
-                        label={'예약상태'}
-                        name={'reservationStatus'}
-                        value={formik.values.reservationStatus}
-                        onChange={(name, value) => {
-                            formik.setFieldValue(name, value);
-                            if (value !== 'CANCEL_RESERVATION') {
-                                formik.setFieldValue('cancellationReason', '');
-                            }
-                        }}
-                        options={Object.values(reservationStatus)}
-                    />
-                    {formik.values.reservationStatus === 'CANCEL_RESERVATION' && (
-                        <SelectBox
-                            label="취소사유"
-                            name={'cancellationReason'}
-                            value={formik.values.cancellationReason}
-                            onChange={formik.setFieldValue}
-                            options={Object.values(cancellationReasons)}
-                        />
-                    )}
+                    <Row style={{ width: '100%' }} gutter={8}>
+                        <Col flex={'50%'}>
+                            <SelectBox
+                                label={'예약상태'}
+                                name={'reservationStatus'}
+                                value={formik.values.reservationStatus}
+                                onChange={(name, value) => {
+                                    formik.setFieldValue(name, value);
+                                    if (value !== 'CANCEL_RESERVATION') {
+                                        formik.setFieldValue('cancellationReason', '');
+                                    }
+                                }}
+                                options={Object.values(reservationStatus)}
+                            />
+                        </Col>
+                        <Col flex={'50%'}>
+                            {formik.values.reservationStatus === 'CANCEL_RESERVATION' && (
+                                <SelectBox
+                                    label="취소사유"
+                                    name={'cancellationReason'}
+                                    value={formik.values.cancellationReason}
+                                    onChange={formik.setFieldValue}
+                                    options={Object.values(cancellationReasons)}
+                                />
+                            )}
+                        </Col>
+                    </Row>
                     <ButtonWrapper>
                         <CommonButton
                             small
