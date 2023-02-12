@@ -11,6 +11,9 @@ import { ThemeProvider } from 'styled-components';
 import { setTwoToneColor } from '@ant-design/icons';
 import AppLayout from '../component/Layout';
 import useAdminUser from '../hooks/useAdminUser';
+import { usePageLoading } from '../hooks/usePageLoading';
+import Loader from '../component/Loader';
+import PageLoader from '../component/PageLoader';
 
 setTwoToneColor(theme.color.primary);
 
@@ -30,6 +33,8 @@ function App({ Component, pageProps }) {
     const { me } = useAdminUser();
     const { withoutSidebar, withoutContext, wide, ...props } = pageProps;
 
+    const { isRouting } = usePageLoading();
+
     if (withoutContext) {
         return <Component {...props} />;
     }
@@ -48,6 +53,7 @@ function App({ Component, pageProps }) {
                 <AppLayout me={me} withoutSidebar={withoutSidebar} wide={wide}>
                     <Component {...props} />
                 </AppLayout>
+                {isRouting && <PageLoader />}
             </ThemeProvider>
         </>
     );
