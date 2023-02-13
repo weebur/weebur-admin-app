@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FieldSection, PaymentEmailTemplate, TemplateContainer } from './styles';
-import { Divider, Tabs, Descriptions } from 'antd';
+import { Upload, Divider, Tabs, Descriptions, Button, message } from 'antd';
 import dayjs from 'dayjs';
 import ProductService from '../../../services/ProductService';
 import TextArea from '../../Form/TextArea';
@@ -10,6 +10,8 @@ import CommonButton from '../../Button';
 import useAdminsStore from '../../../stores/admins';
 import AttachList from './lib/AttachList';
 import SendMessageTemplate from './lib/SendMessageTemplate';
+import { uploadImages } from '../../../api/UploadApi';
+import { UploadOutlined } from '@ant-design/icons';
 
 const AdminAccount = styled.div`
     flex: 1;
@@ -32,6 +34,7 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
     const [attachedEstimates, setAttachedEstimates] = useState([]);
     const [attachedReceipts, setAttachedReceipts] = useState([]);
     const [isAttachedShipping, setIsAttachedShipping] = useState(false);
+    const [fileList, setFileList] = useState([]);
 
     const notAttachedApplication =
         workshop?.applications
@@ -61,6 +64,8 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
             [e.target.name]: e.target.value,
         });
     };
+
+    console.log(fileList);
 
     useEffect(() => {
         setReservationEmail(ProductService.getEmailTextByOrder(workshop));
@@ -104,35 +109,41 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                             (tab === 'reservation' ? !reservationEmail : !paymentEmail)
                         }
                         inline
-                        onClick={(e) => {
-                            e.preventDefault();
-                            const subject =
-                                tab === 'reservation'
-                                    ? '[위버] 예약 신청 안내해 드립니다.'
-                                    : tab === 'payment'
-                                    ? '[위버] 결제가 확인되었습니다.'
-                                    : '[위버] 예약이 취소되었습니다.';
+                        onClick={async (e) => {
+                            try {
+                                e.preventDefault();
 
-                            onSendEmail({
-                                senderName: workshop.adminName,
-                                senderAddress: emailAccount.email,
-                                senderPassword: emailAccount.password,
-                                receiver: workshop.clientEmail,
-                                subject,
-                                textBody: tab === 'reservation' ? reservationEmail : '',
-                                htmlBody: tab === 'payment' ? paymentEmail : cancelEmail,
-                                fileKeys:
+                                const subject =
                                     tab === 'reservation'
-                                        ? [
-                                              ...attachedEstimates,
-                                              ...attachedReceipts,
-                                              ...attachedApplication,
-                                              ...(isAttachedShipping
-                                                  ? [{ key: 'shipping/weebur_shippingform.xlsx' }]
-                                                  : []),
-                                          ].map((attach) => attach.key)
-                                        : [],
-                            });
+                                        ? '[위버] 예약 신청 안내해 드립니다.'
+                                        : tab === 'payment'
+                                        ? '[위버] 결제가 확인되었습니다.'
+                                        : '[위버] 예약이 취소되었습니다.';
+
+                                onSendEmail({
+                                    senderName: workshop.adminName,
+                                    senderAddress: emailAccount.email,
+                                    senderPassword: emailAccount.password,
+                                    receiver: workshop.clientEmail,
+                                    subject,
+                                    textBody: tab === 'reservation' ? reservationEmail : '',
+                                    htmlBody: tab === 'payment' ? paymentEmail : cancelEmail,
+                                    fileKeys:
+                                        tab === 'reservation'
+                                            ? [
+                                                  ...attachedEstimates,
+                                                  ...attachedReceipts,
+                                                  ...attachedApplication,
+                                                  ...fileList,
+                                                  ...(isAttachedShipping
+                                                      ? [{ key: 'shipping/weebur_shippingform.xlsx' }]
+                                                      : []),
+                                              ].map((attach) => attach.key)
+                                            : [],
+                                });
+                            } catch (e) {
+                                message.error('메일 발송을 실패히였습니다.');
+                            }
                         }}
                     >
                         메일발송
@@ -322,6 +333,37 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                 <CommonButton onClick={() => setIsAttachedShipping(!isAttachedShipping)}>
                                     첨부하기
                                 </CommonButton>
+                            </TabPane>
+
+                            <TabPane tab="이미지 첨부" key="image">
+                                <Divider orientation="left">첨부된 이미지</Divider>
+
+                                <Upload
+                                    name={'email_images'}
+                                    customRequest={(options) => {
+                                        const data = new FormData();
+                                        data.append('email_images', options.file);
+
+                                        uploadImages(data)
+                                            .then(({ files }) => {
+                                                options.onSuccess();
+
+                                                setFileList((list) => [...list, ...files]);
+                                            })
+                                            .catch((err) => {
+                                                options.onError();
+                                            });
+                                    }}
+                                    onChange={(info) => {
+                                        if (info.file.status === 'done') {
+                                            message.success(`${info.file.name} file uploaded successfully`);
+                                        } else if (info.file.status === 'error') {
+                                            message.error(`${info.file.name} file upload failed.`);
+                                        }
+                                    }}
+                                >
+                                    <Button icon={<UploadOutlined />}>Select File</Button>
+                                </Upload>
                             </TabPane>
                         </Tabs>
                     </div>
