@@ -120,14 +120,20 @@ function SendEmailTemplate({ workshop, onSendEmail }) {
                                         ? '[위버] 결제가 확인되었습니다.'
                                         : '[위버] 예약이 취소되었습니다.';
 
+                                const body =
+                                    tab === 'reservation'
+                                        ? { textBody: reservationEmail }
+                                        : tab === 'payment'
+                                        ? { htmlBody: paymentEmail }
+                                        : { htmlBody: cancelEmail };
+
                                 onSendEmail({
                                     senderName: workshop.adminName,
                                     senderAddress: emailAccount.email,
                                     senderPassword: emailAccount.password,
                                     receiver: workshop.clientEmail,
                                     subject,
-                                    textBody: tab === 'reservation' ? reservationEmail : '',
-                                    htmlBody: tab === 'payment' ? paymentEmail : cancelEmail,
+                                    ...body,
                                     fileKeys:
                                         tab === 'reservation'
                                             ? [
