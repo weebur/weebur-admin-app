@@ -1,27 +1,21 @@
 import create from 'zustand';
 import produce from 'immer';
-import {
-    createCompany,
-    fetchCompanies,
-    fetchCompany,
-    updateCompany,
-} from '../api/companyAPI';
+import { createCompany, fetchCompanies, fetchCompany, updateCompany } from '../api/companyAPI';
 import { companyCategoryOptions } from '../constants/company';
 
 const defaultValues = {
     name: '',
-    category: companyCategoryOptions.ETC,
+    category: 'ETC',
     partner: false,
     details: '',
+    sector: null,
+    businessId: null,
 };
 
 const useCompaniesStore = create((set) => ({
     companies: {},
     company: null,
-    fetchCompanies: async (
-        { name, category, from, to, page, limit },
-        loadMore,
-    ) => {
+    fetchCompanies: async ({ name, category, from, to, page, limit, businessId, sector }, loadMore) => {
         const companies = await fetchCompanies({
             name,
             category,
@@ -29,16 +23,15 @@ const useCompaniesStore = create((set) => ({
             to,
             page,
             limit,
+            businessId,
+            sector,
         });
 
         if (loadMore) {
             set((state) => ({
                 companies: {
                     ...companies,
-                    result: [
-                        ...(state.companies?.result || []),
-                        ...companies.result,
-                    ],
+                    result: [...(state.companies?.result || []), ...companies.result],
                 },
             }));
         } else {
@@ -59,30 +52,32 @@ const useCompaniesStore = create((set) => ({
 
         set({ company });
     },
-    createCompany: async ({ name, category, details, partner }) => {
+    createCompany: async ({ name, category, details, partner, businessId, sector }) => {
         const company = await createCompany({
             name,
             category,
             details,
             partner,
+            businessId,
+            sector,
         });
 
         set({ company });
     },
-    updateCompany: async (companyId, { name, category, details, partner }) => {
+    updateCompany: async (companyId, { name, category, details, partner, businessId, sector }) => {
         const company = await updateCompany(companyId, {
             name,
             category,
             details,
             partner,
+            businessId,
+            sector,
         });
 
         set({ company });
         set(
             produce((state) => {
-                const index = state.companies.result.findIndex(
-                    (item) => item._id === company._id,
-                );
+                const index = state.companies.result.findIndex((item) => item._id === company._id);
                 state.companies.result[index] = company;
             }),
         );

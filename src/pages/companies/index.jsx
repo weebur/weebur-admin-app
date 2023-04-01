@@ -1,6 +1,6 @@
 import ContentLayout from '../../component/Layout/ContentLayout';
 import useCompaniesStore from '../../stores/companies';
-import { companyCategories } from '../../constants/company';
+import { companyCategories, companySectors } from '../../constants/company';
 import SearchList from '../../component/page-components/SearchList';
 import { useEffect, useState } from 'react';
 import { SEARCH_LIMIT } from '../../constants';
@@ -9,27 +9,53 @@ import { toQueryObject } from '../../utils/queryString';
 import { useRouter } from 'next/router';
 import BasicModal from '../../component/Modal';
 import ModifyCompanyForm from '../../component/ModifyForms/Company';
-import { message } from 'antd';
+import { message, Typography } from 'antd';
 import { downloadCompanies } from '../../api/companyAPI';
 import { download } from '../../services/FileDownloadService';
 import { withToken } from '../../services/SsrService';
+import { toBusinessId } from '../../utils/text';
+import List from '../../component/List';
+import { clientsTypes } from '../../constants/client';
+import dayjs from 'dayjs';
+import { COMMON_FORMAT } from '../../constants/date';
+import styled from 'styled-components';
 
 const headers = [
-    { key: 'name', label: '회사명', span: 8 },
+    { key: 'name', label: '회사명', span: 6 },
+    { key: 'businessId', label: '사업자등록번호', span: 4, render: (value) => toBusinessId(value || '') },
+    { key: 'sector', label: '산업구분', span: 6, render: (key) => companySectors[key]?.label || '' },
     {
         key: 'category',
         label: '등급',
-        span: 4,
-        render: (key) => companyCategories[key].label,
+        span: 2,
+        render: (key) => companyCategories[key]?.label || '',
     },
-    { key: 'details', label: '특징', span: 12 },
+    { key: 'details', label: '특징', span: 6 },
+];
+
+const clientHeaders = [
+    { key: 'name', label: '회원명', span: 6 },
+    { key: 'mobile', label: '모바일', span: 6 },
+    { key: 'type', label: '산업구분', span: 6, render: (type) => clientsTypes[type]?.label || '' },
+    {
+        key: 'category',
+        label: '등급',
+        span: 2,
+        render: (key) => companyCategories[key]?.label || '',
+    },
+    {
+        key: 'createdAt',
+        label: '가입일',
+        span: 2,
+        render: (createdAt) => dayjs(createdAt).format(COMMON_FORMAT),
+    },
 ];
 
 function Companies() {
     const router = useRouter();
 
-    const { name, category, from, to } = router.query;
-    const searchQueries = { name, category, from, to };
+    const { name, category, from, to, businessId, sector } = router.query;
+    const searchQueries = { name, category, from, to, businessId, sector };
     const [createMode, setCreateMode] = useState(true);
 
     const fetchCompanies = useCompaniesStore((state) => state.fetchCompanies);
@@ -48,6 +74,19 @@ function Companies() {
         return {
             id: result._id,
             rows: headers.map(({ key, span, render }) => {
+                return {
+                    key,
+                    Component: render ? render(result[key]) : result[key],
+                    span,
+                };
+            }),
+        };
+    });
+    console.log(company?.statements?.totalClients);
+    const clientList = company?.clients?.map((result) => {
+        return {
+            id: result._id,
+            rows: clientHeaders.map(({ key, span, render }) => {
                 return {
                     key,
                     Component: render ? render(result[key]) : result[key],
@@ -111,7 +150,7 @@ function Companies() {
             fetchMore(true);
             router.replace({ pathname: router.pathname, query });
         }
-    }, [name, category, from, to]);
+    }, [name, category, from, to, businessId, sector]);
 
     return (
         <>
@@ -138,8 +177,8 @@ function Companies() {
                     }}
                 >
                     <CompaniesSearchForm
-                        initialValues={{ name, category, from, to }}
-                        onSubmit={({ name, category, from, to }) => {
+                        initialValues={{ name, category, from, to, businessId, sector }}
+                        onSubmit={({ name, category, from, to, businessId, sector }) => {
                             resetCompanies();
                             router.replace({
                                 pathname: '/companies',
@@ -148,6 +187,8 @@ function Companies() {
                                     category,
                                     from,
                                     to,
+                                    businessId,
+                                    sector,
                                 }),
                             });
                         }}
@@ -169,6 +210,20 @@ function Companies() {
                     initialValues={company}
                     onSubmit={handleSubmit}
                 />
+                <ClientTitle>
+                    <Typography.Title level={4}>
+                        총 고객 수: <span>{company?.statements?.totalClients || ''} 명</span>
+                    </Typography.Title>
+                </ClientTitle>
+                <List
+                    useInfiniteScroll={false}
+                    headers={clientHeaders}
+                    withCheckBox={false}
+                    onItemClick={(v) => {
+                        router.push({ pathname: '/clients', query: { init: true, company: company._id, clientId: v } });
+                    }}
+                    data={clientList || []}
+                />
             </BasicModal>
         </>
     );
@@ -186,5 +241,12 @@ export const getServerSideProps = withToken((ctx) => {
         },
     };
 });
+
+const ClientTitle = styled.div`
+    display: flex;
+    justify-content: space-between;
+    margin-top: 84px;
+    margin-bottom: 16px;
+`;
 
 export default Companies;

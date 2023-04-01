@@ -1,10 +1,11 @@
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
-import { companyCategories } from '../../constants/company';
+import { companyCategories, companySectors } from '../../constants/company';
 import SelectBox from '../Form/SelectBox';
 import RangePicker from '../Form/DatePicker/RangePicker';
 import { Form, InputWrapper } from './styles';
 import SearchButtons from '../Button/SearchButtons';
+import { toBusinessId, toBusinessIdString } from '../../utils/text';
 
 function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
     const formik = useFormik({
@@ -32,6 +33,26 @@ function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
                     onChange={formik.setFieldValue}
                     value={formik.values.category}
                     options={Object.values(companyCategories)}
+                />
+            </InputWrapper>
+            <InputWrapper>
+                <Input
+                    label="사업자등록번호"
+                    name="businessId"
+                    value={toBusinessId(formik.values.businessId || '')}
+                    onChange={(e) => {
+                        e.target.value = toBusinessIdString(e.target.value);
+                        formik.handleChange(e);
+                    }}
+                    placeholder={'000-00-00000'}
+                />
+                <SelectBox
+                    allowClear
+                    name="sector"
+                    label="산업구분"
+                    onChange={formik.setFieldValue}
+                    value={formik.values.sector}
+                    options={Object.values(companySectors)}
                 />
             </InputWrapper>
             <InputWrapper centered>

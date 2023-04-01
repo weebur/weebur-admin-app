@@ -42,7 +42,7 @@ const headers = [
     },
 ];
 
-function Client({ name, company, mobile, email, from, to }) {
+function Client({ name, company, mobile, email, from, to, clientId }) {
     const router = useRouter();
 
     const searchQueries = {
@@ -134,6 +134,12 @@ function Client({ name, company, mobile, email, from, to }) {
         }
     }, [name, company, mobile, email, from, to]);
 
+    useEffect(() => {
+        if (clientId) {
+            handleClientClick(clientId);
+        }
+    }, [clientId]);
+
     return (
         <>
             <ContentLayout>
@@ -191,7 +197,7 @@ function Client({ name, company, mobile, email, from, to }) {
 }
 
 export const getServerSideProps = withToken((ctx) => {
-    const { name = '', company = '', mobile = '', email = '', from = '', to = '' } = ctx.query;
+    const { name = '', company = '', mobile = '', email = '', from = '', to = '', clientId = '' } = ctx.query;
 
     return {
         props: {
@@ -201,6 +207,7 @@ export const getServerSideProps = withToken((ctx) => {
             email,
             from,
             to,
+            clientId,
         },
     };
 });

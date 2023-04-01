@@ -2,20 +2,16 @@ import React from 'react';
 import { ButtonsWrapper, Form, InputWrapper } from './styles';
 import { useFormik } from 'formik';
 import Input from '../Form/Input';
-import { companyCategories } from '../../constants/company';
+import { companyCategories, companySectors } from '../../constants/company';
 import SelectBox from '../Form/SelectBox';
 import SubmitButton from '../Form/SubmitButton';
 import CommonButton from '../Button';
 import TextArea from '../Form/TextArea';
 import dayjs from 'dayjs';
 import { COMMON_FORMAT } from '../../constants/date';
+import { toBusinessId, toBusinessIdString } from '../../utils/text';
 
-function ModifyCompanyForm({
-    initialValues,
-    onSubmit,
-    onReset,
-    submitButtonLabel,
-}) {
+function ModifyCompanyForm({ initialValues, onSubmit, onReset, submitButtonLabel }) {
     const formik = useFormik({
         enableReinitialize: true,
         initialValues,
@@ -25,19 +21,34 @@ function ModifyCompanyForm({
     return (
         <Form onSubmit={formik.handleSubmit}>
             <InputWrapper>
-                <Input
-                    required
-                    label="회사명"
-                    name="name"
-                    value={formik.values.name}
-                    onChange={formik.handleChange}
-                />
+                <Input required label="회사명" name="name" value={formik.values.name} onChange={formik.handleChange} />
                 <Input
                     disabled
                     label="등록일"
                     name="createdAt"
                     value={dayjs(formik.values.createdAt).format(COMMON_FORMAT)}
                     onChange={formik.handleChange}
+                />
+            </InputWrapper>
+            <InputWrapper>
+                <Input
+                    label="사업자등록번호"
+                    name="businessId"
+                    value={toBusinessId(formik.values.businessId || '')}
+                    onChange={(e) => {
+                        e.target.value = toBusinessIdString(e.target.value);
+                        formik.handleChange(e);
+                    }}
+                    placeholder={'000-00-00000'}
+                />
+
+                <SelectBox
+                    allowClear
+                    name="sector"
+                    label="산업분야"
+                    onChange={formik.setFieldValue}
+                    value={formik.values.sector}
+                    options={Object.values(companySectors)}
                 />
             </InputWrapper>
             <InputWrapper>
@@ -53,7 +64,7 @@ function ModifyCompanyForm({
                 <SelectBox
                     allowClear
                     name="partner"
-                    label="분류"
+                    label="제휴여부"
                     onChange={formik.setFieldValue}
                     value={formik.values.partner}
                     options={[
@@ -81,12 +92,7 @@ function ModifyCompanyForm({
                 >
                     초기화
                 </CommonButton>
-                <SubmitButton
-                    disabled={!formik.dirty || formik.isSubmitting}
-                    small
-                    primary
-                    text={submitButtonLabel}
-                />
+                <SubmitButton disabled={!formik.dirty || formik.isSubmitting} small primary text={submitButtonLabel} />
             </ButtonsWrapper>
         </Form>
     );
