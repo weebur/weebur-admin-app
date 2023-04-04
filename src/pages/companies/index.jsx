@@ -82,7 +82,7 @@ function Companies() {
             }),
         };
     });
-    console.log(company?.statements?.totalClients);
+
     const clientList = company?.clients?.map((result) => {
         return {
             id: result._id,
@@ -98,14 +98,22 @@ function Companies() {
 
     const handleSubmit = async (values) => {
         try {
+            const payload = {
+                ...values,
+            };
+
+            if (!values.businessId) {
+                delete payload.businessId;
+            }
+
             if (createMode) {
-                await createCompany(values);
+                await createCompany(payload);
                 await fetchCompanies({
                     page: 1,
                     limit: SEARCH_LIMIT,
                 });
             } else {
-                await updateCompany(company._id, values);
+                await updateCompany(company._id, payload);
             }
 
             resetCompany();

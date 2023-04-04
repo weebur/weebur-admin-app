@@ -9,7 +9,7 @@ const defaultValues = {
     partner: false,
     details: '',
     sector: null,
-    businessId: null,
+    businessId: '',
 };
 
 const useCompaniesStore = create((set) => ({
