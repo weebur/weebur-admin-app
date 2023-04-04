@@ -210,20 +210,27 @@ function Companies() {
                     initialValues={company}
                     onSubmit={handleSubmit}
                 />
-                <ClientTitle>
-                    <Typography.Title level={4}>
-                        총 고객 수: <span>{company?.statements?.totalClients || ''} 명</span>
-                    </Typography.Title>
-                </ClientTitle>
-                <List
-                    useInfiniteScroll={false}
-                    headers={clientHeaders}
-                    withCheckBox={false}
-                    onItemClick={(v) => {
-                        router.push({ pathname: '/clients', query: { init: true, company: company._id, clientId: v } });
-                    }}
-                    data={clientList || []}
-                />
+                {company?.statements?.totalClients && (
+                    <>
+                        <ClientTitle>
+                            <Typography.Title level={4}>
+                                총 고객 수: <span>{company?.statements?.totalClients || ''} 명</span>
+                            </Typography.Title>
+                        </ClientTitle>
+                        <List
+                            useInfiniteScroll={false}
+                            headers={clientHeaders}
+                            withCheckBox={false}
+                            onItemClick={(v) => {
+                                router.push({
+                                    pathname: '/clients',
+                                    query: { init: true, company: company._id, clientId: v },
+                                });
+                            }}
+                            data={clientList || []}
+                        />
+                    </>
+                )}
             </BasicModal>
         </>
     );

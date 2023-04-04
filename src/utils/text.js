@@ -22,5 +22,11 @@ export const toBusinessId = (string) => {
 };
 
 export const toBusinessIdString = (string) => {
-    return string.split('-').join('');
+    return string
+        .trim()
+        .replaceAll('-', '')
+        .slice(0, 10)
+        .split('')
+        .filter((v) => !isNaN(v))
+        .join('');
 };
