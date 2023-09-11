@@ -21,6 +21,10 @@ function ModifyCompanyForm({ initialValues, onSubmit, onReset, submitButtonLabel
     return (
         <Form onSubmit={formik.handleSubmit}>
             <InputWrapper>
+                <Input disabled label="회사ID" name="_id" value={formik.values._id} onChange={formik.handleChange} />
+                <Input label="현재ID" name="weeburId" value={formik.values.weeburId} onChange={formik.handleChange} />
+            </InputWrapper>
+            <InputWrapper>
                 <Input required label="회사명" name="name" value={formik.values.name} onChange={formik.handleChange} />
                 <Input
                     disabled

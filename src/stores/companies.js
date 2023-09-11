@@ -15,7 +15,7 @@ const defaultValues = {
 const useCompaniesStore = create((set) => ({
     companies: {},
     company: null,
-    fetchCompanies: async ({ name, category, from, to, page, limit, businessId, sector }, loadMore) => {
+    fetchCompanies: async ({ name, category, from, to, page, limit, businessId, sector, weeburId }, loadMore) => {
         const companies = await fetchCompanies({
             name,
             category,
@@ -25,6 +25,7 @@ const useCompaniesStore = create((set) => ({
             limit,
             businessId,
             sector,
+            weeburId,
         });
 
         if (loadMore) {
@@ -52,7 +53,7 @@ const useCompaniesStore = create((set) => ({
 
         set({ company });
     },
-    createCompany: async ({ name, category, details, partner, businessId, sector }) => {
+    createCompany: async ({ name, category, details, partner, businessId, sector, weeburId }) => {
         const company = await createCompany({
             name,
             category,
@@ -60,11 +61,12 @@ const useCompaniesStore = create((set) => ({
             partner,
             businessId,
             sector,
+            weeburId,
         });
 
         set({ company });
     },
-    updateCompany: async (companyId, { name, category, details, partner, businessId, sector }) => {
+    updateCompany: async (companyId, { name, category, details, partner, businessId, sector, weeburId }) => {
         const company = await updateCompany(companyId, {
             name,
             category,
@@ -72,6 +74,7 @@ const useCompaniesStore = create((set) => ({
             partner,
             businessId,
             sector,
+            weeburId,
         });
 
         set({ company });

@@ -17,12 +17,22 @@ function CompaniesSearchForm({ initialValues = {}, onSubmit, onReset }) {
     return (
         <Form onSubmit={formik.handleSubmit}>
             <InputWrapper>
-                <RangePicker
-                    label="등록일"
-                    onChange={formik.setFieldValue}
-                    from={formik.values.from}
-                    to={formik.values.to}
-                />
+                <div style={{ flex: 1 }}>
+                    <RangePicker
+                        label="등록일"
+                        onChange={formik.setFieldValue}
+                        from={formik.values.from}
+                        to={formik.values.to}
+                    />
+                </div>
+                <div style={{ flex: 1 }}>
+                    <Input
+                        name="weeburId"
+                        label="현재ID"
+                        onChange={formik.handleChange}
+                        value={formik.values.weeburId}
+                    />
+                </div>
             </InputWrapper>
             <InputWrapper>
                 <Input name="name" label="이름" onChange={formik.handleChange} value={formik.values.name} />

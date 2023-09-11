@@ -23,7 +23,7 @@ import styled from 'styled-components';
 const headers = [
     { key: 'name', label: '회사명', span: 6 },
     { key: 'businessId', label: '사업자등록번호', span: 4, render: (value) => toBusinessId(value || '') },
-    { key: 'sector', label: '산업구분', span: 6, render: (key) => companySectors[key]?.label || '' },
+    { key: 'sector', label: '산업구분', span: 3, render: (key) => companySectors[key]?.label || '' },
     {
         key: 'category',
         label: '등급',
@@ -31,6 +31,11 @@ const headers = [
         render: (key) => companyCategories[key]?.label || '',
     },
     { key: 'details', label: '특징', span: 6 },
+    {
+        key: 'weeburId',
+        label: '현재ID',
+        span: 3,
+    },
 ];
 
 const clientHeaders = [
@@ -54,8 +59,8 @@ const clientHeaders = [
 function Companies() {
     const router = useRouter();
 
-    const { name, category, from, to, businessId, sector } = router.query;
-    const searchQueries = { name, category, from, to, businessId, sector };
+    const { name, category, from, to, businessId, sector, weeburId } = router.query;
+    const searchQueries = { name, category, from, to, businessId, sector, weeburId };
     const [createMode, setCreateMode] = useState(true);
 
     const fetchCompanies = useCompaniesStore((state) => state.fetchCompanies);
@@ -158,7 +163,7 @@ function Companies() {
             fetchMore(true);
             router.replace({ pathname: router.pathname, query });
         }
-    }, [name, category, from, to, businessId, sector]);
+    }, [name, category, from, to, businessId, sector, weeburId]);
 
     return (
         <>
@@ -185,8 +190,8 @@ function Companies() {
                     }}
                 >
                     <CompaniesSearchForm
-                        initialValues={{ name, category, from, to, businessId, sector }}
-                        onSubmit={({ name, category, from, to, businessId, sector }) => {
+                        initialValues={{ name, category, from, to, businessId, sector, weeburId }}
+                        onSubmit={({ name, category, from, to, businessId, sector, weeburId }) => {
                             resetCompanies();
                             router.replace({
                                 pathname: '/companies',
@@ -197,6 +202,7 @@ function Companies() {
                                     to,
                                     businessId,
                                     sector,
+                                    weeburId,
                                 }),
                             });
                         }}
